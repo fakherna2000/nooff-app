@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --sat: env(safe-area-inset-top);
+  --sar: env(safe-area-inset-right);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+}
+
+* {
+  font-family: 'Tajawal', system-ui, sans-serif;
+}
+
+html {
+  direction: rtl;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: linear-gradient(135deg, #f0f9ff 0%, #fdf4ff 100%);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: var(--sat);
+  padding-right: var(--sar);
+  padding-bottom: var(--sab);
+  padding-left: var(--sal);
+  overscroll-behavior-y: none;
+}
+
+/* لوحة الإدارة: إلغاء جميع تحسينات الموبايل والـ PWA Safe Area */
+body.admin-web-mode,
+html.admin-web-mode body {
+  background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  overscroll-behavior-y: auto;
+  -webkit-text-size-adjust: 100%;
+}
+
+body.admin-web-mode {
+  min-height: 100vh;
+  min-height: auto;
+}
+
+@media (display-mode: standalone) {
+  body {
+    background: #f8fafc;
+  }
+}
+
+@layer utilities {
+  .pt-safe { padding-top: env(safe-area-inset-top); }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+  .pr-safe { padding-right: env(safe-area-inset-right); }
+  .pl-safe { padding-left: env(safe-area-inset-left); }
+  .bottom-safe-nav {
+    bottom: calc(env(safe-area-inset-bottom) + 0px);
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 shadow-md hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-100 text-gray-700 hover:bg-gray-200;
+  }
+
+  .btn-success {
+    @apply btn bg-success-500 text-white hover:bg-success-600;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger-500 text-white hover:bg-danger-600;
+  }
+
+  .btn-warning {
+    @apply btn bg-warning-500 text-white hover:bg-warning-600;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-6;
+  }
+
+  .input {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all duration-200;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .status-not-started {
+    @apply badge bg-gray-100 text-gray-700;
+  }
+
+  .status-in-progress {
+    @apply badge bg-blue-100 text-blue-700;
+  }
+
+  .status-completed {
+    @apply badge bg-green-100 text-green-700;
+  }
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

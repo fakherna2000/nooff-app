@@ -1,0 +1,50 @@
+-- =============================================================
+-- بيانات تجريبية لمركز نوف لطب الأسنان
+-- Demo Seed Data
+-- =============================================================
+-- ملاحظة: يتم إنشاء المستخدمين من خلال واجهة Supabase Auth Dashboard
+-- هذا الملف يحتوي على بيانات تجريبية للمرضى والمواعيد
+-- بعد إنشاء المستخدمين، عدّل user_id ليطابق معرّفاتهم
+
+-- مثال لإنشاء مستخدم إدارة من SQL:
+-- INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data)
+-- VALUES (gen_random_uuid(), 'admin@noof.com', crypt('admin123', gen_salt('bf')), now(), '{"role":"admin"}', '{"role":"admin","name":"Admin"}');
+
+-- مثال لمريض تجريبي:
+-- INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data)
+-- VALUES (gen_random_uuid(), 'patient@noof.com', crypt('patient123', gen_salt('bf')), now(), '{"role":"patient"}', '{"role":"patient"}');
+
+-- بعد الحصول على معرف المريض من auth.users:
+-- DO $$
+-- DECLARE
+--   v_patient_id uuid := 'ضع_هنا_معرف_المريض';
+--   v_user_id uuid := 'ضع_هنا_معرف_المستخدم';
+--   v_plan_id uuid;
+-- BEGIN
+--   -- إضافة مريض
+--   INSERT INTO patients (id, full_name, phone, email, date_of_birth, gender, address, user_id)
+--   VALUES (v_patient_id, 'محمد علي أحمد', '0501234567', 'patient@noof.com', '1990-01-15', 'male', 'الرياض - حي الملقا', v_user_id);
+--
+--   -- إضافة خطة علاج
+--   INSERT INTO treatment_plans (id, patient_id, title, description, total_cost)
+--   VALUES (gen_random_uuid(), v_patient_id, 'تقويم أسنان كامل', 'تقويم معدني كامل للفكين مع متابعة لمدة سنة', 8000)
+--   RETURNING id INTO v_plan_id;
+--
+--   -- مراحل العلاج
+--   INSERT INTO treatment_stages (plan_id, name, description, status, is_current, order_index, cost) VALUES
+--     (v_plan_id, 'الفحص والتشخيص', 'أشعة وفحص كامل وتحليل الحالة', 'completed', false, 0, 500),
+--     (v_plan_id, 'التنظيف والعلاجات السابقة', 'تنظيف الأسنان وحشو التسوس إن وجد', 'completed', false, 1, 800),
+--     (v_plan_id, 'تركيب التقويم', 'تركيب الأقواس والأسلاك الأولية', 'in_progress', true, 2, 3000),
+--     (v_plan_id, 'المتابعة الشهرية', 'زيارات المتابعة والتعديلات اللازمة', 'not_started', false, 3, 1000),
+--     (v_plan_id, 'التركيب النهائي', 'إزالة التقويم وتركيب المثبتات', 'not_started', false, 4, 2700);
+--
+--   -- دفعات
+--   INSERT INTO payments (patient_id, plan_id, amount, payment_method, payment_date) VALUES
+--     (v_patient_id, v_plan_id, 1300, 'cash', CURRENT_DATE - INTERVAL '20 days'),
+--     (v_patient_id, v_plan_id, 3000, 'card', CURRENT_DATE - INTERVAL '7 days');
+--
+--   -- مواعيد
+--   INSERT INTO appointments (patient_id, appointment_date, appointment_time, duration_minutes, type, status) VALUES
+--     (v_patient_id, CURRENT_DATE + INTERVAL '3 days', '17:00', 30, 'متابعة تقويم', 'scheduled'),
+--     (v_patient_id, CURRENT_DATE + INTERVAL '1 month', '16:30', 30, 'متابعة تقويم', 'scheduled');
+-- END $$;

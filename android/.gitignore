@@ -1,0 +1,11 @@
+# Android Builds (APK/AAB)
+**/android/**/build/
+**/android/**/*.apk
+**/android/**/*.aab
+**/android/**/output-metadata.json
+
+# Keystore (سري جداً لاترفعه على GitHub تحت أي ظرف!)
+/android/app/noof-release-key.jks
+/android/keystore.properties
+/android/**/*.jks
+/android/**/*.keystore

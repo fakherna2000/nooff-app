@@ -1,0 +1,40 @@
+{
+	"appId": "com.noof.dental.clinic",
+	"appName": "مركز نوف",
+	"webDir": "public",
+	"android": {
+		"backgroundColor": "#ffffff"
+	},
+	"server": {
+		"androidScheme": "https",
+		"cleartext": true,
+		"allowNavigation": [
+			"localhost",
+			"127.0.0.1",
+			"appassets.androidplatform.net"
+		],
+		"url": "http://127.0.0.1:18080/patient/index.html"
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 2500,
+			"launchAutoHide": true,
+			"backgroundColor": "#1a84f5",
+			"androidSplashResourceName": "splash",
+			"androidScaleType": "CENTER_CROP",
+			"showSpinner": true,
+			"androidSpinnerStyle": "large",
+			"spinnerColor": "#ffffff",
+			"splashFullScreen": true,
+			"splashImmersive": true
+		},
+		"StatusBar": {
+			"style": "LIGHT",
+			"backgroundColor": "#1a84f5",
+			"overlaysWebView": false
+		},
+		"Keyboard": {
+			"resizeOnFullScreen": true
+		}
+	}
+}

@@ -1,0 +1,48 @@
+workflows:
+  noof-ios-ipa:
+    name: 🍏 Noof iOS IPA Build
+    max_build_duration: 60
+    environment:
+      groups:
+        - apple_credentials
+      vars:
+        BUNDLE_ID: "com.noof.dental.clinic"
+        APP_STORE_APP_ID: "REPLACE_WITH_YOUR_APPLE_APP_ID_NUMBER"
+      xcode: 16.0
+      node: 22
+      cocoapods: default
+    triggering:
+      events:
+        - push
+        - tag
+        - pull_request
+      branch_patterns:
+        - pattern: main
+          include: true
+    scripts:
+      - name: Install npm dependencies + Capacitor sync
+        script: |
+          set -e
+          npm ci --ignore-scripts --no-audit --no-fund
+          npx --yes cap sync ios
+      - name: Build iOS
+        script: |
+          set -e
+          cd ios/App
+          xcode-project use-profiles
+          xcode-project build-ipa \
+            --workspace "App.xcworkspace" \
+            --scheme "App" \
+            --archive-xcargs "CODE_SIGNING_STYLE=manual"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - ios/App/App/public/**
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+        beta_groups:
+          - Internal Testers

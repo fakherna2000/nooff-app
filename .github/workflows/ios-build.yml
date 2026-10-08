@@ -1,0 +1,128 @@
+name: iOS Build IPA (No Mac Required — GitHub macOS runner)
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  BUNDLE_ID: com.noof.dental.clinic
+  XCODE_SCHEME: App
+  XCODE_WORKSPACE: ios/App/App.xcworkspace
+
+jobs:
+  build_ios:
+    name: 🍏 Build iOS IPA (Capacitor v8)
+    runs-on: macos-15
+    timeout-minutes: 60
+
+    steps:
+      - name: 1. Checkout code
+        uses: actions/checkout@v4
+
+      - name: 2. Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: 3. Install npm dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: 4. Capacitor sync iOS
+        run: npx --yes cap sync ios
+
+      - name: 5. Build App (unsigned .app) for simulator verification + Package as ZIP for Appetize.io
+        run: |
+          set -e
+          cd ios/App
+          BUILD_DIR="$RUNNER_TEMP/simulator-build"
+          mkdir -p "$BUILD_DIR"
+          xcodebuild -workspace "App.xcworkspace" \
+            -scheme "App" \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$BUILD_DIR" \
+            CODE_SIGNING_ALLOWED=NO \
+            clean build | xcpretty || true
+          # Locate the .app bundle
+          APP_PATH=$(find "$BUILD_DIR" -name "App.app" -type d -path "*/Debug-iphonesimulator/*" | head -n1)
+          echo "ℹ️ Found .app at: $APP_PATH"
+          if [ -z "$APP_PATH" ]; then echo "❌ Could not find .app"; ls -laR "$BUILD_DIR" | head -n 40; exit 1; fi
+          # Copy + zip for appetize.io upload (expects .app inside a zip for iOS simulator builds)
+          OUT_ZIP="$RUNNER_TEMP/NoofDental-iOS-Simulator-App.zip"
+          TMPDIR_APP="$RUNNER_TEMP/app-staging"
+          mkdir -p "$TMPDIR_APP"
+          cp -R "$APP_PATH" "$TMPDIR_APP/"
+          cd "$TMPDIR_APP"
+          /usr/bin/zip -qr "$OUT_ZIP" "App.app"
+          ls -lh "$OUT_ZIP"
+          echo "✅ Simulator .app packaged successfully."
+
+      - name: 6. Build generic .app archive (unsigned, export-ready)
+        run: |
+          set -e
+          cd ios/App
+          xcodebuild archive \
+            -workspace "App.xcworkspace" \
+            -scheme "App" \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/NoofDental.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            | xcpretty || true
+
+      - name: 7. Generate ExportOptions.plist (manual signing)
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store</string>
+            <key>uploadBitcode</key>
+            <false/>
+            <key>uploadSymbols</key>
+            <true/>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.noof.dental.clinic</key>
+              <string>NoofDentalAppStore</string>
+            </dict>
+          </dict>
+          </plist>
+          PLIST
+          echo "✅ ExportOptions.plist written."
+          cat "$RUNNER_TEMP/ExportOptions.plist"
+
+      - name: 8. Upload xcarchive as artifact (unsigned — for reference only)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: NoofDental-XCArchive-Unsigned
+          path: ${{ runner.temp }}/NoofDental.xcarchive
+          retention-days: 7
+          compression-level: 6
+
+      - name: 9. Upload iOS Simulator App ZIP (for Appetize.io — test directly in browser FREE)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: NoofDental-iOS-Simulator-App
+          path: ${{ runner.temp }}/NoofDental-iOS-Simulator-App.zip
+          retention-days: 30
+          compression-level: 6
+
+      - name: 10. Upload Capacitor public assets (verification)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: NoofDental-iOS-Public-Assets
+          path: ios/App/App/public
+          retention-days: 30
+          compression-level: 6
