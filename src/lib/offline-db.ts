@@ -58,7 +58,7 @@ export function onOnlineStatusChange(handler: (online: boolean) => void) {
 }
 
 export async function savePatientDataOffline(patient: PatientWithAllRelations) {
-  await localDB.transaction('rw', localDB.patients, localDB.treatmentPlans, localDB.treatmentStages, localDB.payments, localDB.appointments, async () => {
+  await localDB.transaction('rw', [localDB.patients, localDB.treatmentPlans, localDB.treatmentStages, localDB.payments, localDB.appointments, localDB.metadata], async () => {
     await localDB.patients.put(patient);
     await localDB.treatmentPlans.bulkPut(patient.treatment_plans);
     const allStages = patient.treatment_plans.flatMap(p => p.stages);
@@ -113,7 +113,14 @@ export async function syncPatientDataWithServer(
       .eq('id', patientId)
       .single();
 
-    if (patientError || !patient) return null;
+    if (patientError) {
+      console.error('[syncPatient] Patient query error:', patientError.message);
+      return null;
+    }
+    if (!patient) {
+      console.error('[syncPatient] Patient not found for id:', patientId);
+      return null;
+    }
 
     const { data: plans } = await supabase
       .from('treatment_plans')
@@ -151,6 +158,12 @@ export async function syncPatientDataWithServer(
   }
 }
 
+export async function getAdminDataOffline() {
+  const patients = await localDB.patients.toArray();
+  const appointments = await localDB.appointments.toArray();
+  return { patients, appointments };
+}
+
 export async function saveAllAdminDataOffline(data: {
   patients: Patient[];
   appointments: Appointment[];
@@ -164,12 +177,6 @@ export async function saveAllAdminDataOffline(data: {
       updated_at: new Date().toISOString(),
     });
   });
-}
-
-export async function getAdminDataOffline() {
-  const patients = await localDB.patients.toArray();
-  const appointments = await localDB.appointments.toArray();
-  return { patients, appointments };
 }
 
 export async function savePostsOffline(posts: Post[]) {
