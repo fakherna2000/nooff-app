@@ -183,9 +183,9 @@ function LoginForm() {
           <div className="mt-6 pt-6 border-t border-gray-100">
             <p className="text-xs text-gray-500 text-center">
               {mode === 'admin' ? (
-                'للتجربة: admin@noof.com / admin123'
+                'للتجربة: admin@noof.com / admin1234'
               ) : (
-                'للتجربة: patient@noof.com / patient123'
+                'للتجربة: sara@noof.com / sara1234'
               )}
             </p>
           </div>
