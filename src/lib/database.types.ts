@@ -179,7 +179,7 @@ export interface Database {
           duration_minutes: number;
           type: string;
           notes: string | null;
-          status: 'scheduled' | 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'no_show';
+          status: 'scheduled' | 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'no_show' | 'requested';
           created_at: string;
           updated_at: string;
         };
@@ -191,7 +191,7 @@ export interface Database {
           duration_minutes?: number;
           type?: string;
           notes?: string | null;
-          status?: 'scheduled' | 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'no_show';
+          status?: 'scheduled' | 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'no_show' | 'requested';
           created_at?: string;
           updated_at?: string;
         };
@@ -203,7 +203,7 @@ export interface Database {
           duration_minutes?: number;
           type?: string;
           notes?: string | null;
-          status?: 'scheduled' | 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'no_show';
+          status?: 'scheduled' | 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'no_show' | 'requested';
           created_at?: string;
           updated_at?: string;
         };

@@ -179,6 +179,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 .login-error{background:#fef2f2;color:#b91c1c;font-size:13px;padding:10px 12px;border-radius:10px;margin-bottom:14px;display:none}
 .login-error.show{display:block}
 .login-hint{text-align:center;font-size:11.5px;color:#94a3b8;margin-top:16px;line-height:1.6}
+
+/* Appointment Modal */
+.modal-overlay{position:fixed;inset:0;z-index:150;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;padding:0}
+.modal-overlay.hidden{display:none}
+.modal{width:100%;max-width:420px;background:#fff;border-radius:24px 24px 0 0;padding:22px 18px 24px;box-shadow:0 -10px 40px -10px rgba(15,23,42,.3);animation:slideUp .25s ease;max-height:88vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-size:18px;font-weight:800;color:#0f172a}
+.modal-close{width:34px;height:34px;border-radius:10px;border:0;background:#f1f5f9;color:#64748b;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:12.5px;font-weight:700;color:#475569;margin-bottom:6px}
+.modal-field input, .modal-field select, .modal-field textarea{width:100%;padding:12px 13px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:14px;background:#f8fafc;color:#0f172a;outline:none;transition:border .15s ease;font-family:inherit}
+.modal-field input:focus, .modal-field select:focus, .modal-field textarea:focus{border-color:#1a84f5;background:#fff}
+.type-chips{display:flex;flex-wrap:wrap;gap:8px}
+.type-chip{padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#475569;transition:all .15s ease}
+.type-chip.active{border-color:#1a84f5;background:#eff6ff;color:#1d4ed8}
+.modal-btn{width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,#1a84f5,#0ea5e9);color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px;font-family:inherit}
+.modal-btn:active{transform:scale(.98)}
+.modal-btn:disabled{opacity:.6}
 </style>
 </head>
 <body>
@@ -567,6 +586,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- نموذج طلب موعد جديد -->
+<div class="modal-overlay hidden" id="apptModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">طلب موعد جديد</div>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-field">
+      <label>نوع الزيارة</label>
+      <div class="type-chips" id="typeChips">
+        <button class="type-chip" data-type="فحص">فحص</button>
+        <button class="type-chip" data-type="تنظيف">تنظيف</button>
+        <button class="type-chip" data-type="حشو">حشو</button>
+        <button class="type-chip" data-type="خلع">خلع</button>
+        <button class="type-chip" data-type="تقويم">تقويم</button>
+        <button class="type-chip" data-type="زراعة">زراعة</button>
+        <button class="type-chip" data-type="تركيب">تركيب</button>
+        <button class="type-chip" data-type="متابعة">متابعة</button>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>التاريخ المفضل</label>
+      <input type="date" id="apptDate" />
+    </div>
+    <div class="modal-field">
+      <label>الوقت المفضل</label>
+      <input type="time" id="apptTime" value="17:00" />
+    </div>
+    <div class="modal-field">
+      <label>ملاحظات (اختياري)</label>
+      <textarea id="apptNotes" rows="2" placeholder="أي معلومة تريد إخبار الطبيب بها..."></textarea>
+    </div>
+    <button class="modal-btn" id="submitAppt">إرسال الطلب</button>
+  </div>
+</div>
+
 <script>
 (function(){
   var SUPABASE_URL = 'https://pcxuausibbcfycvhiolj.supabase.co';
@@ -738,7 +793,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     return APPOINTMENTS.filter(function(a) {
       var d = new Date(a.appointment_date);
       d.setHours(0,0,0,0);
-      return d >= now && a.status === 'scheduled';
+      return d >= now && (a.status === 'scheduled' || a.status === 'requested');
     }).sort(function(a,b) { return new Date(a.appointment_date) - new Date(b.appointment_date); });
   }
 
@@ -792,6 +847,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
       var d = new Date(a.appointment_date); d.setHours(0,0,0,0);
       if (a.status === 'completed') { statusClass = 'done'; statusLabel = 'انتهى'; rightLabel = 'تم'; }
       else if (a.status === 'cancelled') { statusClass = 'cancel'; statusLabel = 'ملغي'; rightLabel = 'ملغي'; }
+      else if (a.status === 'requested') { statusClass = ''; statusLabel = 'قيد التأكيد'; rightLabel = 'مطلوب'; }
       else if (d < now) { statusClass = 'cancel'; statusLabel = 'انتهى'; rightLabel = 'تم'; }
       html += '<div class="list-item">' +
         '<div class="list-date"><div class="dm">' + dm.dm + '</div><div class="mn">' + dm.mn + '</div></div>' +
@@ -943,7 +999,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     var a = btn.dataset.action;
     if (a === 'confirm') showToast('✅ تم تأكيد حضورك لموعدك القادم!');
     else if (a === 'reschedule') showToast('📅 تم إرسال طلب إعادة الجدولة، سنتواصل معك قريباً.');
-    else if (a === 'new-appt') showToast('🗓️ تم إرسال طلب موعد جديد، سيتم التواصل لتأكيده خلال 24 ساعة.');
+    else if (a === 'new-appt') openApptModal();
     else if (a === 'call-clinic') showToast('📞 يتم فتح الاتصال بالعيادة...');
     else if (a === 'logout') { clearSession(); location.reload(); }
   });
@@ -991,6 +1047,88 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   loginBtn.addEventListener('click', doLogin);
   passInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') doLogin(); });
   emailInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') passInput.focus(); });
+
+  // ===== نموذج طلب موعد جديد =====
+  var apptModal = document.getElementById('apptModal');
+  var apptDateInput = document.getElementById('apptDate');
+  var apptTimeInput = document.getElementById('apptTime');
+  var apptNotesInput = document.getElementById('apptNotes');
+  var submitApptBtn = document.getElementById('submitAppt');
+  var modalCloseBtn = document.getElementById('modalClose');
+  var typeChipsWrap = document.getElementById('typeChips');
+  var selectedType = 'فحص';
+
+  function openApptModal() {
+    if (!PATIENT || !PATIENT.id) { showToast('⚠️ يجب تسجيل الدخول أولاً'); return; }
+    var tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+    apptDateInput.value = tomorrow.toISOString().split('T')[0];
+    apptDateInput.min = new Date().toISOString().split('T')[0];
+    apptTimeInput.value = '17:00';
+    apptNotesInput.value = '';
+    selectedType = 'فحص';
+    typeChipsWrap.querySelectorAll('.type-chip').forEach(function(c){
+      c.classList.toggle('active', c.dataset.type === selectedType);
+    });
+    apptModal.classList.remove('hidden');
+  }
+
+  function closeApptModal() { apptModal.classList.add('hidden'); }
+
+  modalCloseBtn.addEventListener('click', closeApptModal);
+  apptModal.addEventListener('click', function(e){ if (e.target === apptModal) closeApptModal(); });
+
+  typeChipsWrap.addEventListener('click', function(e){
+    var chip = e.target.closest('.type-chip');
+    if (!chip) return;
+    selectedType = chip.dataset.type;
+    typeChipsWrap.querySelectorAll('.type-chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+  });
+
+  submitApptBtn.addEventListener('click', function(){
+    var dateVal = apptDateInput.value;
+    var timeVal = apptTimeInput.value;
+    if (!dateVal) { showToast('⚠️ الرجاء اختيار التاريخ'); return; }
+    if (!timeVal) { showToast('⚠️ الرجاء اختيار الوقت'); return; }
+
+    submitApptBtn.disabled = true;
+    submitApptBtn.textContent = 'جاري الإرسال...';
+
+    var body = JSON.stringify({
+      patient_id: PATIENT.id,
+      appointment_date: dateVal,
+      appointment_time: timeVal,
+      duration_minutes: 30,
+      type: selectedType,
+      notes: apptNotesInput.value || null,
+      status: 'requested'
+    });
+
+    fetch(SUPABASE_URL + '/rest/v1/appointments', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + PATIENT._token,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: body
+    }).then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function(){
+      closeApptModal();
+      showToast('✅ تم إرسال طلب الموعد بنجاح! سيتم التواصل لتأكيده.');
+      return loadPatientData({ access_token: PATIENT._token, user: { id: PATIENT._userId } });
+    }).then(function(){
+      renderPatient();
+    }).catch(function(err){
+      showToast('❌ فشل إرسال الطلب، حاول مرة أخرى');
+    }).finally(function(){
+      submitApptBtn.disabled = false;
+      submitApptBtn.textContent = 'إرسال الطلب';
+    });
+  });
 
   var session = getSession();
   if (session) {

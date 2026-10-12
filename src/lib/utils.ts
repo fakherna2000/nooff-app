@@ -56,6 +56,7 @@ export function getStatusLabel(status: string): string {
     scheduled: 'مجدول',
     cancelled: 'ملغي',
     no_show: 'لم يحضر',
+    requested: 'قيد التأكيد',
     cash: 'نقدي',
     card: 'بطاقة بنكية',
     bank_transfer: 'تحويل بنكي',
@@ -74,6 +75,7 @@ export function getStatusClass(status: string): string {
     scheduled: 'badge bg-blue-100 text-blue-700',
     cancelled: 'badge bg-red-100 text-red-700',
     no_show: 'badge bg-gray-100 text-gray-700',
+    requested: 'badge bg-amber-100 text-amber-700',
   };
   return classes[status] || 'badge bg-gray-100 text-gray-700';
 }

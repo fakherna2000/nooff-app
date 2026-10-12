@@ -36,7 +36,7 @@ export default function AdminAppointmentsPage() {
   >([]);
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'scheduled' | 'completed' | 'cancelled'>('all');
+  const [filter, setFilter] = useState<'all' | 'scheduled' | 'requested' | 'completed' | 'cancelled'>('all');
   const [showModal, setShowModal] = useState(false);
   const [viewDate, setViewDate] = useState(new Date());
 
@@ -134,6 +134,7 @@ export default function AdminAppointmentsPage() {
         {(
           [
             ['all', 'الكل'],
+            ['requested', 'قيد التأكيد'],
             ['scheduled', 'مجدول'],
             ['completed', 'مكتمل'],
             ['cancelled', 'ملغي'],
@@ -221,6 +222,7 @@ export default function AdminAppointmentsPage() {
                           className={cn(
                             'p-2.5 rounded-lg border text-xs',
                             appt.status === 'scheduled' && 'bg-blue-50 border-blue-100',
+                            appt.status === 'requested' && 'bg-amber-50 border-amber-200',
                             appt.status === 'completed' && 'bg-green-50 border-green-100',
                             appt.status === 'cancelled' && 'bg-red-50 border-red-100 opacity-60'
                           )}
@@ -243,6 +245,7 @@ export default function AdminAppointmentsPage() {
                               }}
                               className="!py-1 !px-1.5 !text-[10px] input w-full bg-white"
                             >
+                              <option value="requested">قيد التأكيد</option>
                               <option value="scheduled">مجدول</option>
                               <option value="completed">مكتمل</option>
                               <option value="cancelled">ملغي</option>
