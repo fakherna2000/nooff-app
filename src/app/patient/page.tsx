@@ -5,21 +5,18 @@ import Link from 'next/link';
 import {
   User,
   Calendar,
-  CreditCard,
   ChevronRight,
   Sparkles,
   FileText,
   Clock,
   CheckCircle2,
-  DollarSign,
+  Stethoscope,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { usePatients } from '@/hooks/useData';
 import { isSupabaseConfigured } from '@/lib/supabase/client';
 import type { PatientWithAllRelations } from '@/lib/offline-db';
 import {
-  calculateTotals,
-  formatCurrency,
   formatDate,
   formatTime,
   generateArabicInitials,
@@ -97,8 +94,6 @@ export default function PatientHomePage() {
     );
   }
 
-  const allPlansCost = patient.treatment_plans.reduce((s, p) => s + p.total_cost, 0);
-  const totals = calculateTotals(patient.payments, allPlansCost);
   const activeStatuses = new Set(['scheduled', 'confirmed', 'pending'] as const);
   const nextAppointment = patient.appointments
     .filter((a) => activeStatuses.has(a.status as any))
@@ -107,6 +102,7 @@ export default function PatientHomePage() {
         new Date(`${a.appointment_date}T${a.appointment_time}`).getTime() -
         new Date(`${b.appointment_date}T${b.appointment_time}`).getTime()
     )[0];
+  const isOrtho = patient.treatment_type === 'orthodontics';
   const currentStage = patient.treatment_plans
     .flatMap((p) => p.stages)
     .find((s) => s.is_current);
@@ -155,74 +151,72 @@ export default function PatientHomePage() {
         </Link>
       )}
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="card !p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="w-5 h-5 text-green-600" />
-            <p className="text-xs text-gray-500">المدفوع</p>
-          </div>
-          <p className="text-lg font-black text-green-700">{formatCurrency(totals.paid)}</p>
-        </div>
-        <div className="card !p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <CreditCard className="w-5 h-5 text-orange-600" />
-            <p className="text-xs text-gray-500">المتبقي</p>
-          </div>
-          <p className="text-lg font-black text-orange-700">{formatCurrency(totals.remaining)}</p>
-        </div>
-      </div>
+      {isOrtho ? (
+        patient.treatment_plans.length > 0 && (
+          <Link href="/patient/treatment" className="block">
+            <div className="card hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-accent-500" />
+                  خطة العلاج
+                </h3>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+              </div>
 
-      {patient.treatment_plans.length > 0 && (
-        <Link href="/patient/treatment" className="block">
-          <div className="card hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-accent-500" />
-                خطة العلاج
-              </h3>
-              <ChevronRight className="w-4 h-4 text-gray-400" />
+              {currentStage ? (
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-primary-50 border border-primary-100 mb-4">
+                  <p className="text-xs font-semibold text-primary-700 mb-1.5">المرحلة الحالية</p>
+                  <p className="font-bold text-gray-900 text-lg">{currentStage.name}</p>
+                  {currentStage.description && (
+                    <p className="text-sm text-gray-600 mt-1">{currentStage.description}</p>
+                  )}
+                </div>
+              ) : null}
+
+              <div>
+                <div className="flex items-center justify-between text-sm mb-2">
+                  <span className="text-gray-600">التقدم الإجمالي</span>
+                  <span className="font-bold text-gray-900">
+                    {completedStages}/{totalStages} مرحلة
+                  </span>
+                </div>
+                <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-l from-primary-500 via-accent-500 to-green-500 rounded-full transition-all duration-700"
+                    style={{ width: totalStages > 0 ? `${(completedStages / totalStages) * 100}%` : '0%' }}
+                  />
+                </div>
+              </div>
             </div>
-
-            {currentStage ? (
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-primary-50 border border-primary-100 mb-4">
-                <p className="text-xs font-semibold text-primary-700 mb-1.5">المرحلة الحالية</p>
-                <p className="font-bold text-gray-900 text-lg">{currentStage.name}</p>
-                {currentStage.description && (
-                  <p className="text-sm text-gray-600 mt-1">{currentStage.description}</p>
-                )}
+          </Link>
+        )
+      ) : (
+        <Link href="/patient/treatment" className="block">
+          <div className="card border-amber-200 bg-gradient-to-br from-amber-50 to-white hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                <Stethoscope className="w-6 h-6" />
               </div>
-            ) : null}
-
-            <div>
-              <div className="flex items-center justify-between text-sm mb-2">
-                <span className="text-gray-600">التقدم الإجمالي</span>
-                <span className="font-bold text-gray-900">
-                  {completedStages}/{totalStages} مرحلة
-                </span>
+              <div>
+                <h3 className="font-bold text-gray-900">تشخيص الطبيب</h3>
+                <p className="text-xs text-gray-500">آخر تحديث: {patient.updated_at ? formatDate(patient.updated_at) : '—'}</p>
               </div>
-              <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-l from-primary-500 via-accent-500 to-green-500 rounded-full transition-all duration-700"
-                  style={{ width: totalStages > 0 ? `${(completedStages / totalStages) * 100}%` : '0%' }}
-                />
-              </div>
+            </div>
+            {patient.diagnosis ? (
+              <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">{patient.diagnosis}</p>
+            ) : (
+              <p className="text-sm text-gray-400">لم يتم إضافة تشخيص بعد.</p>
+            )}
+            <div className="flex items-center justify-end mt-3">
+              <span className="text-xs text-primary-600 font-semibold flex items-center gap-1">
+                عرض التفاصيل <ChevronRight className="w-3.5 h-3.5" />
+              </span>
             </div>
           </div>
         </Link>
       )}
 
       <div className="grid grid-cols-2 gap-3">
-        <Link href="/patient/payments" className="card hover:shadow-md transition-shadow block">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-9 h-9 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
-              <CreditCard className="w-5 h-5" />
-            </div>
-          </div>
-          <p className="font-semibold text-gray-900 text-sm">الحساب</p>
-          <p className="text-xs text-gray-500 mt-0.5">الدفعات والباقي</p>
-          <p className="font-bold text-lg text-gray-900 mt-2">{patient.payments.length} دفعة</p>
-        </Link>
-
         <Link href="/patient/appointments" className="card hover:shadow-md transition-shadow block">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
@@ -236,15 +230,28 @@ export default function PatientHomePage() {
           </p>
         </Link>
 
-        <Link href="/patient/treatment" className="card hover:shadow-md transition-shadow block">
+        {isOrtho && (
+          <Link href="/patient/treatment" className="card hover:shadow-md transition-shadow block">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-9 h-9 rounded-xl bg-accent-50 text-accent-600 flex items-center justify-center">
+                <FileText className="w-5 h-5" />
+              </div>
+            </div>
+            <p className="font-semibold text-gray-900 text-sm">خطة العلاج</p>
+            <p className="text-xs text-gray-500 mt-0.5">المراحل والحالات</p>
+            <p className="font-bold text-lg text-gray-900 mt-2">{patient.treatment_plans.length} خطة</p>
+          </Link>
+        )}
+
+        <Link href="/patient/posts" className="card hover:shadow-md transition-shadow block">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-9 h-9 rounded-xl bg-accent-50 text-accent-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
               <FileText className="w-5 h-5" />
             </div>
           </div>
-          <p className="font-semibold text-gray-900 text-sm">خطط العلاج</p>
-          <p className="text-xs text-gray-500 mt-0.5">المراحل والحالات</p>
-          <p className="font-bold text-lg text-gray-900 mt-2">{patient.treatment_plans.length} خطة</p>
+          <p className="font-semibold text-gray-900 text-sm">منشورات المركز</p>
+          <p className="text-xs text-gray-500 mt-0.5">العروض والنصائح</p>
+          <p className="font-bold text-lg text-gray-900 mt-2">جديد</p>
         </Link>
 
         <Link href="/patient/profile" className="card hover:shadow-md transition-shadow block">

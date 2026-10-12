@@ -15,6 +15,7 @@ import {
   Wifi,
   WifiOff,
   Monitor,
+  Newspaper,
 } from 'lucide-react';
 import { Tooth } from '@/components/icons/Tooth';
 import { useAuth } from '@/hooks/useAuth';
@@ -26,6 +27,7 @@ const navItems = [
   { href: '/admin', label: 'لوحة التحكم', icon: LayoutDashboard, exact: true },
   { href: '/admin/patients', label: 'المرضى', icon: Users, exact: false },
   { href: '/admin/appointments', label: 'المواعيد', icon: Calendar, exact: false },
+  { href: '/admin/posts', label: 'المنشورات', icon: Newspaper, exact: false },
   { href: '/admin/settings', label: 'الإعدادات', icon: Settings, exact: false },
 ];
 

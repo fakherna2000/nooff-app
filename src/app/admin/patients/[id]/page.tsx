@@ -893,6 +893,8 @@ function EditPatientTab({
     address: patient.address || '',
     medical_history: patient.medical_history || '',
     notes: patient.notes || '',
+    treatment_type: (patient.treatment_type || 'general') as 'orthodontics' | 'general',
+    diagnosis: patient.diagnosis || '',
   });
   const [saving, setSaving] = useState(false);
 
@@ -915,6 +917,8 @@ function EditPatientTab({
         address: form.address || null,
         medical_history: form.medical_history || null,
         notes: form.notes || null,
+        treatment_type: form.treatment_type,
+        diagnosis: form.diagnosis || null,
       });
       onSaved();
     } catch (e: any) {
@@ -978,6 +982,29 @@ function EditPatientTab({
               ))}
             </div>
           </div>
+          <div>
+            <label className="label">نوع العلاج</label>
+            <div className="flex gap-3">
+              {([
+                { v: 'general', l: 'علاجات عامة' },
+                { v: 'orthodontics', l: 'تقويم أسنان' },
+              ] as const).map((t) => (
+                <button
+                  key={t.v}
+                  type="button"
+                  onClick={() => handle('treatment_type', t.v)}
+                  className={cn(
+                    'flex-1 py-3 rounded-xl border-2 font-medium',
+                    form.treatment_type === t.v
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 text-gray-600'
+                  )}
+                >
+                  {t.l}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="md:col-span-2">
             <label className="label">العنوان</label>
             <input className="input" value={form.address} onChange={(e) => handle('address', e.target.value)} />
@@ -988,6 +1015,17 @@ function EditPatientTab({
               className="input min-h-[100px]"
               value={form.medical_history}
               onChange={(e) => handle('medical_history', e.target.value)}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="label">
+              تشخيص الطبيب {form.treatment_type === 'orthodontics' && '(للمرضى غير التقويم فقط)'}
+            </label>
+            <textarea
+              className="input min-h-[100px]"
+              value={form.diagnosis}
+              onChange={(e) => handle('diagnosis', e.target.value)}
+              placeholder="اكتب التشخيص الذي سيظهر للمريض داخل تطبيقه..."
             />
           </div>
           <div className="md:col-span-2">

@@ -1,6 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import Dexie, { Table } from 'dexie';
-import type { Patient, TreatmentPlan, TreatmentStage, Payment, Appointment } from './database.types';
+import type { Patient, TreatmentPlan, TreatmentStage, Payment, Appointment, Post } from './database.types';
 
 export class ClinicDB extends Dexie {
   patients!: Table<Patient, string>;
@@ -8,6 +8,7 @@ export class ClinicDB extends Dexie {
   treatmentStages!: Table<TreatmentStage, string>;
   payments!: Table<Payment, string>;
   appointments!: Table<Appointment, string>;
+  posts!: Table<Post, string>;
   metadata!: Table<{ key: string; value: any; updated_at: string }, string>;
 
   constructor() {
@@ -18,6 +19,15 @@ export class ClinicDB extends Dexie {
       treatmentStages: 'id, plan_id, order_index, updated_at',
       payments: 'id, patient_id, plan_id, payment_date, created_at',
       appointments: 'id, patient_id, appointment_date, status, updated_at',
+      metadata: 'key',
+    });
+    this.version(2).stores({
+      patients: 'id, full_name, phone, user_id, treatment_type, updated_at',
+      treatmentPlans: 'id, patient_id, updated_at',
+      treatmentStages: 'id, plan_id, order_index, updated_at',
+      payments: 'id, patient_id, plan_id, payment_date, created_at',
+      appointments: 'id, patient_id, appointment_date, status, updated_at',
+      posts: 'id, type, created_at, order_index',
       metadata: 'key',
     });
   }
@@ -160,4 +170,50 @@ export async function getAdminDataOffline() {
   const patients = await localDB.patients.toArray();
   const appointments = await localDB.appointments.toArray();
   return { patients, appointments };
+}
+
+export async function savePostsOffline(posts: Post[]) {
+  await localDB.transaction('rw', localDB.posts, async () => {
+    await localDB.posts.clear();
+    await localDB.posts.bulkPut(posts);
+    await localDB.metadata.put({
+      key: 'posts_last_sync',
+      value: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+  });
+}
+
+export async function getPostsOffline(): Promise<Post[]> {
+  const posts = await localDB.posts.filter((p) => p.is_published).toArray();
+  return posts.sort((a, b) => {
+    if (a.order_index !== b.order_index) return a.order_index - b.order_index;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+}
+
+export async function getAllPostsOffline(): Promise<Post[]> {
+  const posts = await localDB.posts.toArray();
+  return posts.sort((a, b) => {
+    if (a.order_index !== b.order_index) return a.order_index - b.order_index;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+}
+
+export async function syncPostsWithServer(supabase: SupabaseClient): Promise<Post[]> {
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .order('order_index', { ascending: true })
+      .order('created_at', { ascending: false });
+
+    if (error || !data) return [];
+
+    await savePostsOffline(data);
+    return data;
+  } catch (error) {
+    console.error('Posts sync error:', error);
+    return [];
+  }
 }

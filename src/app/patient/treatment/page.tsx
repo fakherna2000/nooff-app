@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { usePatients } from '@/hooks/useData';
+import { isSupabaseConfigured } from '@/lib/supabase/client';
 import type { PatientWithAllRelations } from '@/lib/offline-db';
 import {
   FileText,
@@ -10,12 +11,9 @@ import {
   Clock,
   Circle,
   Sparkles,
-  DollarSign,
-  CreditCard,
+  Stethoscope,
 } from 'lucide-react';
 import {
-  calculateTotals,
-  formatCurrency,
   formatDate,
   getStatusLabel,
   cn,
@@ -31,13 +29,23 @@ export default function PatientTreatmentPage() {
     async function load() {
       if (!user) return;
       setLoading(true);
-      const res = await fetch('/api/patient/me');
-      if (res.ok) {
-        const data = await res.json();
-        if (data.patientId) {
-          const p = await getPatientById(data.patientId);
-          setPatient(p);
+      let patientId: string | null = null;
+
+      if (!isSupabaseConfigured()) {
+        patientId =
+          (user.user_metadata && (user.user_metadata as any).patient_id) ||
+          'demo-patient-1';
+      } else {
+        const res = await fetch('/api/patient/me');
+        if (res.ok) {
+          const data = await res.json();
+          patientId = data.patientId;
         }
+      }
+
+      if (patientId) {
+        const p = await getPatientById(patientId);
+        setPatient(p);
       }
       setLoading(false);
     }
@@ -57,7 +65,63 @@ export default function PatientTreatmentPage() {
     );
   }
 
-  if (!patient || patient.treatment_plans.length === 0) {
+  if (!patient) {
+    return (
+      <div className="text-center py-20">
+        <Sparkles className="w-20 h-20 mx-auto mb-5 text-gray-200" />
+        <h2 className="text-xl font-bold mb-2">لا توجد بيانات</h2>
+        <p className="text-gray-500">يرجى التواصل مع الإدارة</p>
+      </div>
+    );
+  }
+
+  const isOrtho = patient.treatment_type === 'orthodontics';
+
+  if (!isOrtho) {
+    return (
+      <div className="space-y-5">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">تشخيص الطبيب</h1>
+          <p className="text-gray-600 mt-1 text-sm">تتشخيص الطبيب الخاص بك</p>
+        </div>
+
+        <div className="card border-amber-200 bg-gradient-to-br from-amber-50 to-white">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <Stethoscope className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg text-gray-900">تشخيص الطبيب</h3>
+              <p className="text-xs text-gray-500">
+                آخر تحديث: {patient.updated_at ? formatDate(patient.updated_at) : '—'}
+              </p>
+            </div>
+          </div>
+
+          {patient.diagnosis ? (
+            <p className="text-base text-gray-800 leading-relaxed whitespace-pre-wrap">
+              {patient.diagnosis}
+            </p>
+          ) : (
+            <p className="text-sm text-gray-400 text-center py-8">
+              لم يتم إضافة تشخيص بعد. سيتم عرض تشخيص الطبيب هنا فور إضافته.
+            </p>
+          )}
+        </div>
+
+        {patient.notes && (
+          <div className="card border-gray-200">
+            <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-1.5">
+              <FileText className="w-4 h-4" /> ملاحظات إضافية
+            </h3>
+            <p className="text-sm text-gray-600 leading-relaxed">{patient.notes}</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (patient.treatment_plans.length === 0) {
     return (
       <div className="text-center py-20">
         <Sparkles className="w-20 h-20 mx-auto mb-5 text-gray-200" />
@@ -67,9 +131,6 @@ export default function PatientTreatmentPage() {
     );
   }
 
-  const allPlansCost = patient.treatment_plans.reduce((s, p) => s + p.total_cost, 0);
-  const totals = calculateTotals(patient.payments, allPlansCost);
-
   return (
     <div className="space-y-5">
       <div>
@@ -77,32 +138,10 @@ export default function PatientTreatmentPage() {
         <p className="text-gray-600 mt-1 text-sm">تابع مراحل علاجك وتقدمها</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        <div className="card !p-3 text-center">
-          <DollarSign className="w-5 h-5 mx-auto text-primary-600 mb-1" />
-          <p className="text-[11px] text-gray-500">الإجمالي</p>
-          <p className="font-bold text-sm text-gray-900">{formatCurrency(allPlansCost)}</p>
-        </div>
-        <div className="card !p-3 text-center">
-          <CreditCard className="w-5 h-5 mx-auto text-green-600 mb-1" />
-          <p className="text-[11px] text-gray-500">المدفوع</p>
-          <p className="font-bold text-sm text-green-700">{formatCurrency(totals.paid)}</p>
-        </div>
-        <div className="card !p-3 text-center">
-          <Clock className="w-5 h-5 mx-auto text-orange-600 mb-1" />
-          <p className="text-[11px] text-gray-500">المتبقي</p>
-          <p className="font-bold text-sm text-orange-700">{formatCurrency(totals.remaining)}</p>
-        </div>
-      </div>
-
       <div className="space-y-4">
         {patient.treatment_plans.map((plan) => {
           const completedCount = plan.stages.filter((s) => s.status === 'completed').length;
           const progress = plan.stages.length > 0 ? (completedCount / plan.stages.length) * 100 : 0;
-          const planTotals = calculateTotals(
-            patient.payments.filter((p) => p.plan_id === plan.id),
-            plan.total_cost
-          );
           return (
             <div key={plan.id} className="card overflow-hidden">
               <div className="mb-4">
@@ -112,12 +151,6 @@ export default function PatientTreatmentPage() {
                     {plan.description && (
                       <p className="text-sm text-gray-500 mt-1">{plan.description}</p>
                     )}
-                  </div>
-                  <div className="text-left shrink-0">
-                    <p className="font-bold text-primary-600 text-lg">{formatCurrency(plan.total_cost)}</p>
-                    <p className="text-[11px] text-gray-500 mt-0.5">
-                      مدفوع {formatCurrency(planTotals.paid)}
-                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 mt-4">
@@ -201,11 +234,6 @@ export default function PatientTreatmentPage() {
                                 </p>
                               )}
                               <div className="flex items-center gap-3 mt-2.5 text-xs text-gray-500">
-                                {stage.cost && (
-                                  <span className="font-semibold text-primary-600">
-                                    {formatCurrency(stage.cost)}
-                                  </span>
-                                )}
                                 {stage.completed_at && (
                                   <span>
                                     اكتملت في {formatDate(stage.completed_at)}

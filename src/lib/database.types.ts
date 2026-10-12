@@ -15,6 +15,8 @@ export interface Database {
           medical_history: string | null;
           allergies: string | null;
           notes: string | null;
+          treatment_type: 'orthodontics' | 'general';
+          diagnosis: string | null;
           created_at: string;
           updated_at: string;
           user_id: string | null;
@@ -30,6 +32,8 @@ export interface Database {
           medical_history?: string | null;
           allergies?: string | null;
           notes?: string | null;
+          treatment_type?: 'orthodontics' | 'general';
+          diagnosis?: string | null;
           created_at?: string;
           updated_at?: string;
           user_id?: string | null;
@@ -45,6 +49,8 @@ export interface Database {
           medical_history?: string | null;
           allergies?: string | null;
           notes?: string | null;
+          treatment_type?: 'orthodontics' | 'general';
+          diagnosis?: string | null;
           created_at?: string;
           updated_at?: string;
           user_id?: string | null;
@@ -224,6 +230,41 @@ export interface Database {
           created_at?: string;
         };
       };
+      posts: {
+        Row: {
+          id: string;
+          title: string;
+          body: string | null;
+          image_url: string | null;
+          type: 'offer' | 'ad' | 'tip' | 'general';
+          is_published: boolean;
+          order_index: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          body?: string | null;
+          image_url?: string | null;
+          type?: 'offer' | 'ad' | 'tip' | 'general';
+          is_published?: boolean;
+          order_index?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          body?: string | null;
+          image_url?: string | null;
+          type?: 'offer' | 'ad' | 'tip' | 'general';
+          is_published?: boolean;
+          order_index?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
@@ -245,6 +286,7 @@ export type TreatmentPlan = Database['public']['Tables']['treatment_plans']['Row
 export type TreatmentStage = Database['public']['Tables']['treatment_stages']['Row'];
 export type Payment = Database['public']['Tables']['payments']['Row'];
 export type Appointment = Database['public']['Tables']['appointments']['Row'];
+export type Post = Database['public']['Tables']['posts']['Row'];
 
 export type PatientWithDetails = Patient & {
   treatment_plans: (TreatmentPlan & {

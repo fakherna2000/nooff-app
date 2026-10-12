@@ -6,7 +6,6 @@ import Link from 'next/link';
 import {
   Home,
   FileText,
-  CreditCard,
   Calendar,
   User,
   LogOut,
@@ -17,6 +16,7 @@ import {
   Download,
   X,
   Smartphone,
+  Newspaper,
 } from 'lucide-react';
 import { Tooth } from '@/components/icons/Tooth';
 import { useAuth } from '@/hooks/useAuth';
@@ -27,8 +27,8 @@ import { isPushSupported, isPushPermissionGranted, requestNotificationPermission
 
 const navItems = [
   { href: '/patient', label: 'الرئيسية', icon: Home },
-  { href: '/patient/treatment', label: 'خطة العلاج', icon: FileText },
-  { href: '/patient/payments', label: 'الحساب', icon: CreditCard },
+  { href: '/patient/treatment', label: 'العلاج', icon: FileText },
+  { href: '/patient/posts', label: 'المنشورات', icon: Newspaper },
   { href: '/patient/appointments', label: 'المواعيد', icon: Calendar },
   { href: '/patient/profile', label: 'حسابي', icon: User },
 ];

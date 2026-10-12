@@ -21,6 +21,7 @@ export default function NewPatientPage() {
     address: '',
     medical_history: '',
     notes: '',
+    treatment_type: 'general' as 'orthodontics' | 'general',
   });
 
   const handleChange = (field: string, value: any) => {
@@ -44,6 +45,8 @@ export default function NewPatientPage() {
         address: form.address || null,
         medical_history: form.medical_history || null,
         notes: form.notes || null,
+        treatment_type: form.treatment_type,
+        diagnosis: null,
       };
       const patient = await createPatient(data);
       toast.success('تمت إضافة المريض بنجاح');
@@ -136,6 +139,28 @@ export default function NewPatientPage() {
                     }`}
                   >
                     {g.l}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="label">نوع العلاج</label>
+              <div className="flex gap-3">
+                {[
+                  { v: 'general', l: 'علاجات عامة' },
+                  { v: 'orthodontics', l: 'تقويم أسنان' },
+                ].map((t) => (
+                  <button
+                    key={t.v}
+                    type="button"
+                    onClick={() => handleChange('treatment_type', t.v)}
+                    className={`flex-1 py-3 rounded-xl border-2 font-medium transition-all ${
+                      form.treatment_type === t.v
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                    }`}
+                  >
+                    {t.l}
                   </button>
                 ))}
               </div>

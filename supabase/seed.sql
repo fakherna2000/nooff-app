@@ -22,8 +22,8 @@
 --   v_plan_id uuid;
 -- BEGIN
 --   -- إضافة مريض
---   INSERT INTO patients (id, full_name, phone, email, date_of_birth, gender, address, user_id)
---   VALUES (v_patient_id, 'محمد علي أحمد', '0501234567', 'patient@noof.com', '1990-01-15', 'male', 'الرياض - حي الملقا', v_user_id);
+--   INSERT INTO patients (id, full_name, phone, email, date_of_birth, gender, address, user_id, treatment_type, diagnosis)
+--   VALUES (v_patient_id, 'محمد علي أحمد', '0501234567', 'patient@noof.com', '1990-01-15', 'male', 'الرياض - حي الملقا', v_user_id, 'general', 'يحتاج إلى حشو ضرسين وتنظيف دوري');
 --
 --   -- إضافة خطة علاج
 --   INSERT INTO treatment_plans (id, patient_id, title, description, total_cost)
@@ -48,3 +48,15 @@
 --     (v_patient_id, CURRENT_DATE + INTERVAL '3 days', '17:00', 30, 'متابعة تقويم', 'scheduled'),
 --     (v_patient_id, CURRENT_DATE + INTERVAL '1 month', '16:30', 30, 'متابعة تقويم', 'scheduled');
 -- END $$;
+
+-- =============================================================
+-- منشورات المركز (Posts)
+-- =============================================================
+-- ملاحظة: type يمكن أن يكون: 'offer' | 'ad' | 'tip' | 'general'
+-- is_published: تتحكم في ظهور المنشور للمريض أم لا
+-- order_index: ترتيب العرض (الأعلى يظهر أولاً)
+
+-- INSERT INTO posts (title, body, image_url, type, is_published, order_index) VALUES
+--   ('خصم 20% على تنظيف الأسنان', 'لحظة مميزة! خصم 20% على جلسة تنظيف الأسنان الاحترافية لفترة محدودة. احجز موعدك الآن.', NULL, 'offer', true, 0),
+--   ('نصيحة لنظافة فم أفضل', 'استخدم خيط الأسنان يوميًا لتنظيف المناطق التي لا تصل لها الفرشاة، وغسل الفم بعد الأكل.', NULL, 'tip', true, 1),
+--   ('مركز نوف يوسّع خدمات التقويم', 'نعلن عن افتتاح قسم التقويم المتطور بأحدث الأجهزة. احجز استشارة مجانية.', NULL, 'ad', true, 2);

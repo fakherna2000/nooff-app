@@ -8,6 +8,7 @@ import type {
   TreatmentStage,
   Payment,
   Appointment,
+  Post,
 } from '@/lib/database.types';
 import {
   syncPatientDataWithServer,
@@ -15,6 +16,10 @@ import {
   getAdminDataOffline,
   saveAllAdminDataOffline,
   isOnline as checkOnline,
+  syncPostsWithServer,
+  getPostsOffline,
+  getAllPostsOffline,
+  savePostsOffline,
   type PatientWithAllRelations,
 } from '@/lib/offline-db';
 
@@ -42,6 +47,8 @@ const DEMO_PATIENTS: Patient[] = [
     medical_history: 'لا يعاني من أمراض مزمنة',
     allergies: 'لا توجد',
     notes: 'مريضة منتظمة للزيارات',
+    treatment_type: 'orthodontics',
+    diagnosis: null,
     created_at: '2025-09-01T10:00:00Z',
     updated_at: '2026-10-01T09:20:00Z',
   },
@@ -57,6 +64,8 @@ const DEMO_PATIENTS: Patient[] = [
     medical_history: 'ضغط دم مرتفع',
     allergies: 'البنسلين',
     notes: 'يعاني من رهاب الأسنان',
+    treatment_type: 'general',
+    diagnosis: 'يوجد تسوس في الضرس العلوي الأيمن يتطلب حشوة ضوئية. يُنصح بزيارة نظافة كل 6 أشهر.',
     created_at: '2025-08-10T08:30:00Z',
     updated_at: '2026-09-28T12:00:00Z',
   },
@@ -72,6 +81,8 @@ const DEMO_PATIENTS: Patient[] = [
     medical_history: 'سليمة',
     allergies: 'لا توجد',
     notes: 'طلبت تقويم أسنان',
+    treatment_type: 'orthodontics',
+    diagnosis: null,
     created_at: '2026-01-15T11:00:00Z',
     updated_at: '2026-10-05T15:00:00Z',
   },
@@ -87,6 +98,8 @@ const DEMO_PATIENTS: Patient[] = [
     medical_history: 'داء السكري من النوع 2',
     allergies: 'لا توجد',
     notes: 'يتطلب زيارات طويلة',
+    treatment_type: 'general',
+    diagnosis: 'فقدان الضرس السفلي الأوسط يتطلب زراعة غرسة. مستوى السكر مستقر، يُنصح بإجراء الزراعة خلال أسبوعين.',
     created_at: '2025-11-20T14:00:00Z',
     updated_at: '2026-09-15T10:30:00Z',
   },
@@ -102,6 +115,8 @@ const DEMO_PATIENTS: Patient[] = [
     medical_history: 'سليمة',
     allergies: 'الليدوكايين',
     notes: 'نظافة أسنان ممتازة',
+    treatment_type: 'general',
+    diagnosis: 'بقعة تصبغ خفيفة على الأسنان الأمامية. تم إجراء تنظيف وتلميع. يُنصح باستخدام فرشاة ناعمة وخيط الأسنان يومياً.',
     created_at: '2026-02-20T09:15:00Z',
     updated_at: '2026-10-03T08:45:00Z',
   },
@@ -305,6 +320,53 @@ const DEMO_PAYMENTS: Payment[] = [
     status: 'pending',
     notes: 'قسط الشهر الثالث (القوالب)',
     created_at: '2026-10-07T08:00:00Z',
+  },
+];
+
+const DEMO_POSTS: Post[] = [
+  {
+    id: 'post-1',
+    title: 'عرض تنظيف وتلميع الأسنان',
+    body: 'احصلي على تنظيف وتلميع احترافي بأسعار خاصة هذا الشهر. نساعدك على ابتسامة أجمل وأكثر إشراقاً.',
+    image_url: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=dental%20clinic%20cleaning%20smile%20teeth%20whitening%20modern%20professional&image_size=landscape_16_9',
+    type: 'offer',
+    is_published: true,
+    order_index: 0,
+    created_at: '2026-10-10T08:00:00Z',
+    updated_at: '2026-10-10T08:00:00Z',
+  },
+  {
+    id: 'post-2',
+    title: 'الطائلة مع الرفقات.. أحلى',
+    body: 'نصيحة من مركز نوف: استخدم خيط الأسنان يومياً للوصول إلى الأماكن التي لا تصلها الفرشاة، للحفاظ على صحة اللثة ومنع التسوس.',
+    image_url: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=dental%20floss%20oral%20hygiene%20healthy%20teeth%20clean%20smile&image_size=landscape_16_9',
+    type: 'tip',
+    is_published: true,
+    order_index: 1,
+    created_at: '2026-10-08T10:30:00Z',
+    updated_at: '2026-10-08T10:30:00Z',
+  },
+  {
+    id: 'post-3',
+    title: 'مركز نوف للطب و تجميل الأسنان',
+    body: 'أهلاً بكم في مركز نوف لطب الأسنان. نقدم لكم أحدث تقنيات طب وتجميل الأسنان بأيدي خبراء مختصين.',
+    image_url: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=modern%20dental%20clinic%20interior%20comfortable%20professional%20teeth%20care&image_size=landscape_16_9',
+    type: 'ad',
+    is_published: true,
+    order_index: 2,
+    created_at: '2026-10-05T09:00:00Z',
+    updated_at: '2026-10-05T09:00:00Z',
+  },
+  {
+    id: 'post-4',
+    title: 'أهمية زيارة طبيب الأسنان كل 6 أشهر',
+    body: 'الزيارات الدورية تساعد على الكشف المبكر عن المشاكل وتجنب العلاجات المعقدة. احجز موعدك الآن.',
+    image_url: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=dentist%20checkup%20patient%20smile%20dental%20care%20professional&image_size=landscape_16_9',
+    type: 'tip',
+    is_published: true,
+    order_index: 3,
+    created_at: '2026-10-01T12:00:00Z',
+    updated_at: '2026-10-01T12:00:00Z',
   },
 ];
 
@@ -916,5 +978,112 @@ export function useAppointments() {
     deleteAppointment,
     getDashboardStats,
     refreshAdminCache,
+  };
+}
+
+export function usePosts() {
+  const getAllPosts = useCallback(async (): Promise<Post[]> => {
+    if (demoMode()) {
+      return [...DEMO_POSTS].sort((a, b) => {
+        if (a.order_index !== b.order_index) return a.order_index - b.order_index;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    }
+    const online = await checkOnline();
+    if (online) {
+      const synced = await syncPostsWithServer(supabase);
+      if (synced.length > 0) return synced;
+    }
+    return await getAllPostsOffline();
+  }, []);
+
+  const getPublishedPosts = useCallback(async (): Promise<Post[]> => {
+    if (demoMode()) {
+      return DEMO_POSTS.filter((p) => p.is_published).sort((a, b) => {
+        if (a.order_index !== b.order_index) return a.order_index - b.order_index;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+    }
+    const online = await checkOnline();
+    if (online) {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('is_published', true)
+        .order('order_index', { ascending: true })
+        .order('created_at', { ascending: false });
+      if (!error && data) {
+        await savePostsOffline(data as Post[]);
+        return data as Post[];
+      }
+    }
+    return await getPostsOffline();
+  }, []);
+
+  const createPost = useCallback(
+    async (postData: Omit<Post, 'id' | 'created_at' | 'updated_at'>) => {
+      if (demoMode()) {
+        const newPost: Post = {
+          ...postData,
+          id: 'demo-post-' + rand(1000, 9999),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        DEMO_POSTS.unshift(newPost);
+        return newPost;
+      }
+      const { data, error } = await supabase
+        .from('posts')
+        .insert(postData)
+        .select()
+        .single();
+      if (error) throw error;
+      return data as Post;
+    },
+    []
+  );
+
+  const updatePost = useCallback(
+    async (id: string, postData: Partial<Post>) => {
+      if (demoMode()) {
+        const idx = DEMO_POSTS.findIndex((p) => p.id === id);
+        if (idx >= 0) {
+          DEMO_POSTS[idx] = {
+            ...DEMO_POSTS[idx],
+            ...postData,
+            updated_at: new Date().toISOString(),
+          };
+          return DEMO_POSTS[idx];
+        }
+        throw new Error('المنشور غير موجود');
+      }
+      const { data, error } = await supabase
+        .from('posts')
+        .update(postData)
+        .eq('id', id)
+        .select()
+        .single();
+      if (error) throw error;
+      return data as Post;
+    },
+    []
+  );
+
+  const deletePost = useCallback(async (id: string) => {
+    if (demoMode()) {
+      const idx = DEMO_POSTS.findIndex((p) => p.id === id);
+      if (idx >= 0) DEMO_POSTS.splice(idx, 1);
+      return { error: null };
+    }
+    const { error } = await supabase.from('posts').delete().eq('id', id);
+    if (error) throw error;
+  }, []);
+
+  return {
+    getAllPosts,
+    getPublishedPosts,
+    createPost,
+    updatePost,
+    deletePost,
   };
 }
