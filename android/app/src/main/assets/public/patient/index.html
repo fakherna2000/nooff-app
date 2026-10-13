@@ -776,36 +776,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
       fcmLog('calling register() immediately...');
       PN.register();
 
-      function showPermissionButton() {
-        if (document.getElementById('fcm-perm-btn')) return;
-        var btn = document.createElement('button');
-        btn.id = 'fcm-perm-btn';
-        btn.innerHTML = '🔔 تفعيل الإشعارات';
-        btn.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:999999;background:#e74c3c;color:#fff;border:none;padding:14px 28px;border-radius:28px;font-size:16px;font-weight:bold;box-shadow:0 4px 16px rgba(0,0,0,0.4);cursor:pointer;';
-        btn.onclick = function() {
-          fcmLog('permission button clicked, calling requestPermissions...');
-          PN.requestPermissions().then(function(result) {
-            fcmLog('requestPermissions result: ' + JSON.stringify(result));
-            if (result && result.receive === 'granted') {
-              btn.style.display = 'none';
-              fcmLog('permission granted! registering...');
-              PN.register();
-            } else {
-              fcmLog('permission not granted, trying register anyway...');
-              PN.register();
-            }
-          }).catch(function(e) {
-            fcmLog('requestPermissions error: ' + (e && e.message ? e.message : JSON.stringify(e)));
-            PN.register();
-          });
-        };
-        document.body.appendChild(btn);
-        fcmLog('permission button shown');
+      try {
+        PN.requestPermissions().then(function(result) {
+          fcmLog('requestPermissions result: ' + JSON.stringify(result));
+        }).catch(function(e) {
+          fcmLog('requestPermissions error (ignored): ' + (e && e.message ? e.message : JSON.stringify(e)));
+        });
+      } catch(e) {
+        fcmLog('requestPermissions exception (ignored): ' + e.message);
       }
-
-      setTimeout(function() {
-        showPermissionButton();
-      }, 1500);
     }
     tryInit();
   }

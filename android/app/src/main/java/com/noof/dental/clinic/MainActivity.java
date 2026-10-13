@@ -1,10 +1,15 @@
 package com.noof.dental.clinic;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
@@ -19,6 +24,7 @@ public class MainActivity extends BridgeActivity {
     private static final int LOCAL_PORT = 18080;
     private static final String LOAD_URL = "http://127.0.0.1:" + LOCAL_PORT + "/index.html";
     private static final String CHANNEL_ID = "default";
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 1001;
     private LocalWebServer localServer;
 
     @Override
@@ -47,6 +53,36 @@ public class MainActivity extends BridgeActivity {
                    " — proceeding to super.onCreate() which will call loadUrl(" + LOAD_URL + ") by Capacitor config.");
 
         super.onCreate(savedInstanceState);
+
+        requestNotificationPermission();
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "Requesting POST_NOTIFICATIONS permission...");
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        REQUEST_NOTIFICATION_PERMISSION);
+            } else {
+                Log.i(TAG, "POST_NOTIFICATIONS permission already granted");
+            }
+        } else {
+            Log.i(TAG, "Notification permission not required for this Android version");
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "POST_NOTIFICATIONS permission GRANTED");
+            } else {
+                Log.i(TAG, "POST_NOTIFICATIONS permission DENIED");
+            }
+        }
     }
 
     private static boolean ping() {
