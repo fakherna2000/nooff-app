@@ -77,6 +77,15 @@ export async function sendPushNotification(patientId: string, title: string, bod
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ patient_id: patientId, title, body, data }),
   });
-  if (!response.ok) throw new Error('Failed to send push notification');
+  if (!response.ok) {
+    let errorMsg = 'فشل إرسال الإشعار';
+    try {
+      const errData = await response.json();
+      if (errData?.error) errorMsg = errData.error;
+    } catch {
+      // ignore parse error
+    }
+    throw new Error(errorMsg);
+  }
   return response.json();
 }

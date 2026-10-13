@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     const { patient_id, title, body: messageBody, data } = body;
 
     if (!patient_id || !title || !messageBody) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json({ error: 'الرجاء إدخال جميع الحقول المطلوبة' }, { status: 400 });
     }
 
     const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     if (!vapidPrivateKey || !vapidPublicKey) {
       return NextResponse.json(
-        { error: 'VAPID keys not configured. Push notifications disabled.' },
+        { error: 'مفاتيح VAPID غير مُعدّة. الإشعارات معطلة.' },
         { status: 501 }
       );
     }

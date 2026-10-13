@@ -223,10 +223,16 @@ export default function PatientDetailPage() {
             allPlansCost={allPlansCost}
             onNotify={async (title, body) => {
               try {
-                await sendPushNotification(patient.id, title, body);
-                toast.success('تم إرسال الإشعار');
-              } catch (e) {
-                toast.error('فشل إرسال الإشعار');
+                const result = await sendPushNotification(patient.id, title, body);
+                if (result.total === 0) {
+                  toast.warning('لا يوجد اشتراك إشعارات نشط لهذا المريض');
+                } else if (result.sent === 0) {
+                  toast.error('فشل إرسال الإشعار لجميع الأجهزة');
+                } else {
+                  toast.success(`تم إرسال الإشعار (${result.sent}/${result.total})`);
+                }
+              } catch (e: any) {
+                toast.error(e?.message || 'فشل إرسال الإشعار');
               }
             }}
           />
