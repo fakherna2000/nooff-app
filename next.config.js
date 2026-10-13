@@ -5,7 +5,16 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
   importScripts: ['/push-sw.js'],
-  exclude: [/app-build-manifest/],
+  exclude: [
+    /app-build-manifest/,
+    /build-manifest/,
+    /react-loadable-manifest/,
+    /client-reference-manifest/,
+    /_next\/server\//,
+    /_buildManifest/,
+    /_ssgManifest/,
+    /next-font-manifest/,
+  ],
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
