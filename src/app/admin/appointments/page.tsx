@@ -239,8 +239,19 @@ export default function AdminAppointmentsPage() {
                             <select
                               defaultValue={appt.status}
                               onChange={async (e) => {
-                                await updateAppointment(appt.id, { status: e.target.value as any });
-                                toast.success('تم تحديث الحالة');
+                                const newStatus = e.target.value;
+                                if (newStatus === 'scheduled') {
+                                  const res = await fetch(`/api/admin/appointments/${appt.id}/confirm`, { method: 'POST' });
+                                  const data = await res.json();
+                                  if (res.ok && data.success) {
+                                    toast.success('تم تأكيد الموعد وإشعار المريض');
+                                  } else {
+                                    toast.error(data.error || 'تعذّر تأكيد الموعد');
+                                  }
+                                } else {
+                                  await updateAppointment(appt.id, { status: newStatus as any });
+                                  toast.success('تم تحديث الحالة');
+                                }
                                 refresh();
                               }}
                               className="!py-1 !px-1.5 !text-[10px] input w-full bg-white"
