@@ -753,6 +753,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
       PN.addListener('pushNotificationReceived', function(notification) {
         fcmLog('pushNotificationReceived: ' + JSON.stringify(notification));
+        try {
+          var title = (notification && notification.title) || 'إشعار جديد';
+          var body = (notification && notification.body) || (notification && notification.data && notification.data.body) || '';
+          if (body) {
+            alert(title + '\n\n' + body);
+          }
+        } catch(e) {}
       });
 
       PN.addListener('pushNotificationActionPerformed', function(notification) {
