@@ -70,7 +70,7 @@ export default function RootLayout({
         </Providers>
         <script
           dangerouslySetInnerHTML={{
-            __html: `if ('serviceWorker' in navigator) { window.addEventListener('load', function() { navigator.serviceWorker.register('/sw.js').catch(function() {}); }); }`,
+            __html: `if ('serviceWorker' in navigator) { function registerSW() { navigator.serviceWorker.register('/sw.js').catch(function() {}); } if (document.readyState === 'complete') { registerSW(); } else { window.addEventListener('load', registerSW); } }`,
           }}
         />
       </body>
