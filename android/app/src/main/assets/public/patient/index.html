@@ -161,9 +161,65 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 /* Toast */
 .toast{position:fixed;left:50%;bottom:120px;transform:translate(-50%,18px);background:#0f172a;color:#fff;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:all .22s ease;z-index:80;box-shadow:0 10px 30px -10px rgba(15,23,42,.45)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* Login Screen */
+.login-screen{position:fixed;inset:0;z-index:200;background:linear-gradient(160deg,#1a84f5 0%,#2563eb 55%,#0ea5e9 100%);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-screen.hidden{display:none}
+.login-card{width:100%;max-width:380px;background:#fff;border-radius:24px;padding:28px 22px;box-shadow:0 30px 80px -20px rgba(15,23,42,.4)}
+.login-logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#1a84f5,#0ea5e9);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:#fff;font-size:28px;font-weight:900;box-shadow:0 10px 24px -8px rgba(26,132,245,.5)}
+.login-title{text-align:center;font-size:20px;font-weight:800;color:#0f172a;margin-bottom:4px}
+.login-sub{text-align:center;font-size:13px;color:#64748b;margin-bottom:22px}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:12.5px;font-weight:700;color:#475569;margin-bottom:6px}
+.login-field input{width:100%;padding:13px 14px;border:1.5px solid #e2e8f0;border-radius:14px;font-size:15px;background:#f8fafc;color:#0f172a;outline:none;transition:border .15s ease,background .15s ease;direction:ltr;text-align:right;font-family:inherit}
+.login-field input:focus{border-color:#1a84f5;background:#fff}
+.login-btn{width:100%;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,#1a84f5,#0ea5e9);color:#fff;font-size:15.5px;font-weight:800;cursor:pointer;transition:transform .08s ease,box-shadow .15s ease;box-shadow:0 10px 22px -8px rgba(26,132,245,.55);margin-top:6px;font-family:inherit}
+.login-btn:active{transform:scale(.98)}
+.login-btn:disabled{opacity:.6;cursor:not-allowed}
+.login-error{background:#fef2f2;color:#b91c1c;font-size:13px;padding:10px 12px;border-radius:10px;margin-bottom:14px;display:none}
+.login-error.show{display:block}
+.login-hint{text-align:center;font-size:11.5px;color:#94a3b8;margin-top:16px;line-height:1.6}
+
+/* Appointment Modal */
+.modal-overlay{position:fixed;inset:0;z-index:150;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;padding:0}
+.modal-overlay.hidden{display:none}
+.modal{width:100%;max-width:420px;background:#fff;border-radius:24px 24px 0 0;padding:22px 18px 24px;box-shadow:0 -10px 40px -10px rgba(15,23,42,.3);animation:slideUp .25s ease;max-height:88vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-size:18px;font-weight:800;color:#0f172a}
+.modal-close{width:34px;height:34px;border-radius:10px;border:0;background:#f1f5f9;color:#64748b;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:12.5px;font-weight:700;color:#475569;margin-bottom:6px}
+.modal-field input, .modal-field select, .modal-field textarea{width:100%;padding:12px 13px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:14px;background:#f8fafc;color:#0f172a;outline:none;transition:border .15s ease;font-family:inherit}
+.modal-field input:focus, .modal-field select:focus, .modal-field textarea:focus{border-color:#1a84f5;background:#fff}
+.type-chips{display:flex;flex-wrap:wrap;gap:8px}
+.type-chip{padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#475569;transition:all .15s ease}
+.type-chip.active{border-color:#1a84f5;background:#eff6ff;color:#1d4ed8}
+.modal-btn{width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,#1a84f5,#0ea5e9);color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px;font-family:inherit}
+.modal-btn:active{transform:scale(.98)}
+.modal-btn:disabled{opacity:.6}
 </style>
 </head>
 <body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">ن</div>
+    <div class="login-title">مركز نوف لطب الأسنان</div>
+    <div class="login-sub">البوابة الإلكترونية للمرضى</div>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-field">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="loginEmail" placeholder="patient@email.com" autocomplete="email" />
+    </div>
+    <div class="login-field">
+      <label>كلمة المرور</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="login-btn" id="loginBtn">تسجيل الدخول</button>
+    <div class="login-hint">للدخول، استخدم البريد الإلكتروني وكلمة المرور التي زودك بها المركز</div>
+  </div>
+</div>
 
 <header class="header">
   <div class="container">
@@ -530,48 +586,53 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- نموذج طلب موعد جديد -->
+<div class="modal-overlay hidden" id="apptModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">طلب موعد جديد</div>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-field">
+      <label>نوع الزيارة</label>
+      <div class="type-chips" id="typeChips">
+        <button class="type-chip" data-type="فحص">فحص</button>
+        <button class="type-chip" data-type="تنظيف">تنظيف</button>
+        <button class="type-chip" data-type="حشو">حشو</button>
+        <button class="type-chip" data-type="خلع">خلع</button>
+        <button class="type-chip" data-type="تقويم">تقويم</button>
+        <button class="type-chip" data-type="زراعة">زراعة</button>
+        <button class="type-chip" data-type="تركيب">تركيب</button>
+        <button class="type-chip" data-type="متابعة">متابعة</button>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>التاريخ المفضل</label>
+      <input type="date" id="apptDate" />
+    </div>
+    <div class="modal-field">
+      <label>الوقت المفضل</label>
+      <input type="time" id="apptTime" value="17:00" />
+    </div>
+    <div class="modal-field">
+      <label>ملاحظات (اختياري)</label>
+      <textarea id="apptNotes" rows="2" placeholder="أي معلومة تريد إخبار الطبيب بها..."></textarea>
+    </div>
+    <button class="modal-btn" id="submitAppt">إرسال الطلب</button>
+  </div>
+</div>
+
 <script>
 (function(){
-  // نوع المريض: 'orthodontics' (تقويم) أو 'general' (عام)
-  // في وضع العرض التجريبي، المريضة سارة هي مريضة تقويم
-  var PATIENT_TYPE = 'orthodontics';
-  var DIAGNOSIS_TEXT = 'يوجد تسوس في الضرس العلوي الأيمن يتطلب حشوة ضوئية. يُنصح بزيارة نظافة كل 6 أشهر.';
+  var SUPABASE_URL = 'https://pcxuausibbcfycvhiolj.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjeHVhdXNpYmJjZnljdmhpb2xqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4MDQ0MjUsImV4cCI6MjEwNzM4MDQyNX0.WDFItDSrd_MC3diC2hjn_jALt7YEKZRMpkAFXLXDaDE';
+  var STORAGE_KEY = 'noof_patient_session';
 
-  // بيانات المنشورات التجريبية
-  var POSTS = [
-    {
-      id: 1,
-      title: 'عرض تنظيف وتلميع الأسنان',
-      body: 'احصلي على تنظيف وتلميع احترافي بأسعار خاصة هذا الشهر. نساعدك على ابتسامة أجمل وأكثر إشراقاً.',
-      image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=dental%20clinic%20cleaning%20smile%20teeth%20whitening%20modern%20professional&image_size=landscape_16_9',
-      type: 'offer',
-      date: '10 تشرين الأول 2026'
-    },
-    {
-      id: 2,
-      title: 'الطائلة مع الرفقات.. أحلى',
-      body: 'نصيحة من مركز نوف: استخدم خيط الأسنان يومياً للوصول إلى الأماكن التي لا تصلها الفرشاة، للحفاظ على صحة اللثة ومنع التسوس.',
-      image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=dental%20floss%20oral%20hygiene%20healthy%20teeth%20clean%20smile&image_size=landscape_16_9',
-      type: 'tip',
-      date: '8 تشرين الأول 2026'
-    },
-    {
-      id: 3,
-      title: 'مركز نوف للطب و تجميل الأسنان',
-      body: 'أهلاً بكم في مركز نوف لطب الأسنان. نقدم لكم أحدث تقنيات طب وتجميل الأسنان بأيدي خبراء مختصين.',
-      image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=modern%20dental%20clinic%20interior%20comfortable%20professional%20teeth%20care&image_size=landscape_16_9',
-      type: 'ad',
-      date: '5 تشرين الأول 2026'
-    },
-    {
-      id: 4,
-      title: 'أهمية زيارة طبيب الأسنان كل 6 أشهر',
-      body: 'الزيارات الدورية تساعد على الكشف المبكر عن المشاكل وتجنب العلاجات المعقدة. احجز موعدك الآن.',
-      image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=dentist%20checkup%20patient%20smile%20dental%20care%20professional&image_size=landscape_16_9',
-      type: 'tip',
-      date: '1 تشرين الأول 2026'
-    }
-  ];
+  var PATIENT = null;
+  var PLANS = [];
+  var STAGES = [];
+  var APPOINTMENTS = [];
+  var POSTS = [];
 
   var TYPE_LABELS = {
     offer: 'عرض خاص',
@@ -580,31 +641,283 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     general: 'منشور'
   };
 
-  // عرض أو إخفاء الأقسام حسب نوع المريض
-  function applyPatientType() {
+  var MONTHS_AR = ['كانون الثاني','شباط','آذار','نيسان','أيار','حزيران','تموز','آب','أيلول','تشرين الأول','تشرين الثاني','كانون الأول'];
+  var DAYS_AR = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return DAYS_AR[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS_AR[d.getMonth()];
+  }
+  function formatDateFull(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return d.getDate() + ' ' + MONTHS_AR[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function formatTime(t) {
+    if (!t) return '';
+    var parts = t.split(':');
+    var h = parseInt(parts[0], 10);
+    var m = parts[1];
+    var ampm = h >= 12 ? 'مساءً' : 'صباحاً';
+    h = h % 12; if (h === 0) h = 12;
+    return h + ':' + m + ' ' + ampm;
+  }
+  function dayMonth(iso) {
+    if (!iso) return {dm:'00', mn:'--'};
+    var d = new Date(iso);
+    return { dm: String(d.getDate()).padStart(2,'0'), mn: MONTHS_AR[d.getMonth()] };
+  }
+
+  function sbFetch(path, opts) {
+    opts = opts || {};
+    opts.headers = opts.headers || {};
+    opts.headers['apikey'] = SUPABASE_ANON_KEY;
+    opts.headers['Content-Type'] = 'application/json';
+    if (PATIENT && PATIENT._token) {
+      opts.headers['Authorization'] = 'Bearer ' + PATIENT._token;
+    }
+    return fetch(SUPABASE_URL + path, opts).then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+  }
+
+  function login(email, password) {
+    return fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: password })
+    }).then(function(r) {
+      if (!r.ok) throw new Error('بيانات الدخول غير صحيحة');
+      return r.json();
+    });
+  }
+
+  function loadPatientData(authData) {
+    var userId = authData.user.id;
+    var token = authData.access_token;
+    PATIENT = { _token: token, _userId: userId };
+
+    return sbFetch('/rest/v1/patients?user_id=eq.' + userId + '&select=*', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    }).then(function(rows) {
+      if (!rows || rows.length === 0) throw new Error('لم يتم العثور على بيانات المريض');
+      var p = rows[0];
+      p._token = token;
+      p._userId = userId;
+      PATIENT = p;
+      return Promise.all([
+        sbFetch('/rest/v1/treatment_plans?patient_id=eq.' + p.id + '&select=*', { headers: { 'Authorization': 'Bearer ' + token } }),
+        sbFetch('/rest/v1/appointments?patient_id=eq.' + p.id + '&select=*&order=appointment_date.desc', { headers: { 'Authorization': 'Bearer ' + token } }),
+        sbFetch('/rest/v1/posts?is_published=eq.true&select=*&order=order_index.asc', { headers: { 'Authorization': 'Bearer ' + token } })
+      ]);
+    }).then(function(results) {
+      PLANS = results[0] || [];
+      APPOINTMENTS = results[1] || [];
+      POSTS = (results[2] || []).map(function(p) {
+        return {
+          id: p.id,
+          title: p.title,
+          body: p.body || '',
+          image: p.image_url || 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=modern%20dental%20clinic%20smile%20teeth%20care%20professional&image_size=landscape_16_9',
+          type: p.type || 'general',
+          date: formatDateFull(p.created_at)
+        };
+      });
+      if (PLANS.length > 0) {
+        var planIds = PLANS.map(function(pl) { return pl.id; });
+        return sbFetch('/rest/v1/treatment_stages?plan_id=in.(' + planIds.join(',') + ')&select=*&order=order_index.asc', { headers: { 'Authorization': 'Bearer ' + token } });
+      }
+      return [];
+    }).then(function(stages) {
+      STAGES = stages || [];
+    });
+  }
+
+  function saveSession(authData) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      token: authData.access_token,
+      userId: authData.user.id,
+      expiresAt: Date.now() + (authData.expires_in * 1000)
+    }));
+  }
+  function getSession() {
+    try {
+      var s = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (s && s.expiresAt > Date.now()) return s;
+    } catch(e) {}
+    return null;
+  }
+  function clearSession() {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  function showLogin() {
+    document.getElementById('loginScreen').classList.remove('hidden');
+  }
+  function hideLogin() {
+    document.getElementById('loginScreen').classList.add('hidden');
+  }
+
+  function renderPatient() {
+    if (!PATIENT) return;
+    var nameEl = document.querySelector('.patient-name');
+    if (nameEl) nameEl.textContent = PATIENT.full_name || '';
+    var avatarEl = document.querySelector('.avatar');
+    if (avatarEl) avatarEl.textContent = (PATIENT.full_name || '?').charAt(0);
+
+    var isOrtho = PATIENT.treatment_type === 'orthodontics';
     var orthoEls = document.querySelectorAll('[data-ortho-only]');
     var generalEls = document.querySelectorAll('[data-general-only]');
-    var isOrtho = PATIENT_TYPE === 'orthodontics';
     orthoEls.forEach(function(el){ el.style.display = isOrtho ? '' : 'none'; });
     generalEls.forEach(function(el){ el.style.display = isOrtho ? 'none' : ''; });
 
-    // تعيين نص التشخيص
-    var d1 = document.getElementById('home-diagnosis-text');
-    var d2 = document.getElementById('treatment-diagnosis-text');
-    if (d1) d1.textContent = DIAGNOSIS_TEXT;
-    if (d2) d2.textContent = DIAGNOSIS_TEXT;
-
-    // تغيير عنوان تبويب العلاج
     var treatTab = document.querySelector('[data-tab="treatment"] span');
     if (treatTab) treatTab.textContent = isOrtho ? 'الخطة' : 'التشخيص';
+
+    var d1 = document.getElementById('home-diagnosis-text');
+    var d2 = document.getElementById('treatment-diagnosis-text');
+    if (d1) d1.textContent = PATIENT.diagnosis || 'لا يوجد تشخيص بعد';
+    if (d2) d2.textContent = PATIENT.diagnosis || 'لا يوجد تشخيص بعد';
+
+    renderNextAppointment();
+    renderAppointmentsList();
+    renderMetrics();
+    if (isOrtho) renderTreatmentPlan();
   }
 
-  // بناء كاروسيل المنشورات
+  function getUpcomingAppointments() {
+    var now = new Date();
+    now.setHours(0,0,0,0);
+    return APPOINTMENTS.filter(function(a) {
+      var d = new Date(a.appointment_date);
+      d.setHours(0,0,0,0);
+      return d >= now && (a.status === 'scheduled' || a.status === 'requested');
+    }).sort(function(a,b) { return new Date(a.appointment_date) - new Date(b.appointment_date); });
+  }
+
+  function renderNextAppointment() {
+    var upcoming = getUpcomingAppointments();
+    var next = upcoming[0];
+    var big = document.querySelector('.appt-big');
+    var sub = document.querySelector('.appt-sub');
+    if (next) {
+      if (big) big.textContent = formatDate(next.appointment_date);
+      if (sub) sub.textContent = 'الساعة ' + formatTime(next.appointment_time) + ' — ' + (next.type || 'فحص');
+    } else {
+      if (big) big.textContent = 'لا يوجد مواعيد قادمة';
+      if (sub) sub.textContent = 'يمكنك طلب موعد جديد من زر "طلب موعد جديد"';
+    }
+  }
+
+  function renderMetrics() {
+    var upcoming = getUpcomingAppointments();
+    var isOrtho = PATIENT.treatment_type === 'orthodontics';
+    if (isOrtho) {
+      var nums = document.querySelectorAll('[data-ortho-only] .metric .num');
+      if (nums[0]) nums[0].textContent = upcoming.length;
+      var completed = STAGES.filter(function(s){ return s.status === 'completed'; }).length;
+      var total = STAGES.length || 1;
+      var pct = Math.round((completed / total) * 100);
+      if (nums[2]) nums[2].textContent = pct + '%';
+      if (nums[1]) {
+        var current = STAGES.find(function(s){ return s.is_current; });
+        nums[1].textContent = current ? (current.order_index + 1) + '/' + total : '0/' + total;
+      }
+      var fill = document.querySelector('.bar-fill');
+      if (fill) fill.style.width = pct + '%';
+    } else {
+      var gnums = document.querySelectorAll('[data-general-only] .metric .num');
+      if (gnums[0]) gnums[0].textContent = upcoming.length;
+      var done = APPOINTMENTS.filter(function(a){ return a.status === 'completed'; }).length;
+      if (gnums[1]) gnums[1].textContent = done;
+    }
+  }
+
+  function renderAppointmentsList() {
+    var list = document.querySelector('[data-page="appointments"] .card');
+    if (!list) return;
+    var html = '';
+    APPOINTMENTS.forEach(function(a) {
+      var dm = dayMonth(a.appointment_date);
+      var statusClass = 'coming', statusLabel = 'مؤكد';
+      var rightLabel = 'قادم';
+      var now = new Date(); now.setHours(0,0,0,0);
+      var d = new Date(a.appointment_date); d.setHours(0,0,0,0);
+      if (a.status === 'completed') { statusClass = 'done'; statusLabel = 'انتهى'; rightLabel = 'تم'; }
+      else if (a.status === 'cancelled') { statusClass = 'cancel'; statusLabel = 'ملغي'; rightLabel = 'ملغي'; }
+      else if (a.status === 'requested') { statusClass = ''; statusLabel = 'قيد التأكيد'; rightLabel = 'مطلوب'; }
+      else if (d < now) { statusClass = 'cancel'; statusLabel = 'انتهى'; rightLabel = 'تم'; }
+      html += '<div class="list-item">' +
+        '<div class="list-date"><div class="dm">' + dm.dm + '</div><div class="mn">' + dm.mn + '</div></div>' +
+        '<div class="list-body">' +
+          '<div class="t">' + (a.type || 'فحص') + '</div>' +
+          '<div class="d">' + formatDate(a.appointment_date) + ' ' + formatTime(a.appointment_time) + '</div>' +
+        '</div>' +
+        '<div class="list-right"><div>' + rightLabel + '</div><div class="sub"><span class="list-status ' + statusClass + '">' + statusLabel + '</span></div></div>' +
+      '</div>';
+    });
+    if (APPOINTMENTS.length === 0) {
+      html = '<div style="text-align:center;padding:20px;color:#94a3b8">لا توجد مواعيد بعد</div>';
+    }
+    list.innerHTML = html;
+  }
+
+  function renderTreatmentPlan() {
+    if (PLANS.length === 0) return;
+    var plan = PLANS[0];
+    var stages = STAGES.filter(function(s){ return s.plan_id === plan.id; });
+    var completed = stages.filter(function(s){ return s.status === 'completed'; }).length;
+    var total = stages.length || 1;
+    var pct = Math.round((completed / total) * 100);
+
+    var chips = document.querySelectorAll('[data-ortho-only] .chip.blue');
+    chips.forEach(function(c){ c.textContent = 'المرحلة ' + (completed) + ' من ' + total; });
+    var pctEls = document.querySelectorAll('[data-ortho-only] [style*="font-weight:800;font-size:14px"]');
+    pctEls.forEach(function(e){ e.textContent = pct + '%'; });
+    var fills = document.querySelectorAll('[data-ortho-only] .bar-fill');
+    fills.forEach(function(f){ f.style.width = pct + '%'; });
+
+    var stagesContainer = document.querySelector('[data-page="treatment"] [data-ortho-only] .card .list-item');
+    if (stagesContainer && stagesContainer.parentNode) {
+      var parent = stagesContainer.parentNode;
+      parent.innerHTML = '';
+      stages.forEach(function(s) {
+        var statusCls = s.status === 'completed' ? 'done' : (s.status === 'in_progress' ? 'coming' : '');
+        var statusLbl = s.status === 'completed' ? 'انتهى' : (s.status === 'in_progress' ? 'حالي' : 'قادم');
+        var bg = s.status === 'completed' ? 'background:#ecfdf5;color:#047857' : '';
+        var dm = s.completed_at ? dayMonth(s.completed_at) : {dm:'--', mn:''};
+        parent.innerHTML += '<div class="list-item">' +
+          '<div class="list-date" style="' + bg + '"><div class="dm">' + dm.dm + '</div><div class="mn">' + dm.mn + '</div></div>' +
+          '<div class="list-body">' +
+            '<div class="t">' + s.name + '</div>' +
+            '<div class="d">' + (s.description || '') + '</div>' +
+          '</div>' +
+          '<div class="list-right"><div class="list-status ' + statusCls + '">' + statusLbl + '</div></div>' +
+        '</div>';
+      });
+    }
+
+    var currentStep = stages.find(function(s){ return s.is_current || s.status === 'in_progress'; });
+    var stepLbl = document.querySelector('[data-page="home"] [data-ortho-only] .step-body .lbl');
+    var stepT = document.querySelector('[data-page="home"] [data-ortho-only] .step-body .t');
+    var stepD = document.querySelector('[data-page="home"] [data-ortho-only] .step-body .d');
+    if (currentStep) {
+      if (stepLbl) stepLbl.textContent = currentStep.name;
+      if (stepT) stepT.textContent = currentStep.description || '';
+    }
+  }
+
   function buildPostsCarousel() {
     var scroll = document.getElementById('postsScroll');
     var dotsWrap = document.getElementById('postsDots');
     if (!scroll || !dotsWrap) return;
-
+    if (POSTS.length === 0) {
+      scroll.innerHTML = '<div style="text-align:center;padding:30px;color:#94a3b8">لا توجد منشورات بعد</div>';
+      dotsWrap.innerHTML = '';
+      return;
+    }
     var html = '';
     POSTS.forEach(function(p, i) {
       html += '<article class="post-card">' +
@@ -618,15 +931,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
       '</article>';
     });
     scroll.innerHTML = html;
-
-    // بناء النقاط
     var dotsHtml = '';
     POSTS.forEach(function(_, i) {
       dotsHtml += '<button class="dot' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '" aria-label="منشور ' + (i+1) + '"></button>';
     });
     dotsWrap.innerHTML = dotsHtml;
-
-    // تحديث النقطة النشطة عند التمرير
     function updateDots() {
       var cardW = scroll.querySelector('.post-card');
       if (!cardW) return;
@@ -637,8 +946,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
       });
     }
     scroll.addEventListener('scroll', updateDots, { passive: true });
-
-    // النقر على النقاط
     dotsWrap.addEventListener('click', function(e) {
       var dot = e.target.closest('.dot');
       if (!dot) return;
@@ -648,10 +955,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     });
   }
 
-  // بناء قائمة المنشورات المصغرة
   function buildPostsList() {
     var list = document.getElementById('postsList');
     if (!list) return;
+    if (POSTS.length === 0) {
+      list.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">لا توجد منشورات</div>';
+      return;
+    }
     var html = '';
     POSTS.forEach(function(p) {
       html += '<div class="post-mini">' +
@@ -667,7 +977,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     list.innerHTML = html;
   }
 
-  // التبديل بين التبويبات
   var pages = document.querySelectorAll('.page');
   var tabs  = document.querySelectorAll('.tab');
   var toast = document.getElementById('toast');
@@ -690,12 +999,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     var a = btn.dataset.action;
     if (a === 'confirm') showToast('✅ تم تأكيد حضورك لموعدك القادم!');
     else if (a === 'reschedule') showToast('📅 تم إرسال طلب إعادة الجدولة، سنتواصل معك قريباً.');
-    else if (a === 'new-appt') showToast('🗓️ تم إرسال طلب موعد جديد، سيتم التواصل لتأكيده خلال 24 ساعة.');
+    else if (a === 'new-appt') openApptModal();
     else if (a === 'call-clinic') showToast('📞 يتم فتح الاتصال بالعيادة...');
-    else if (a === 'logout') showToast('⚙️ يتم فتح نموذج تعديل البيانات...');
+    else if (a === 'logout') { clearSession(); location.reload(); }
   });
 
-  // منع التكبير مع الضغط المزدوج على iOS/Android
   var lastTouch = 0;
   document.addEventListener('touchend', function(e){
     var now = Date.now();
@@ -703,11 +1011,148 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     lastTouch = now;
   }, { passive: false });
 
-  // تهيئة
-  applyPatientType();
-  buildPostsCarousel();
-  buildPostsList();
+  var loginBtn = document.getElementById('loginBtn');
+  var emailInput = document.getElementById('loginEmail');
+  var passInput = document.getElementById('loginPassword');
+  var loginError = document.getElementById('loginError');
+
+  function doLogin() {
+    var email = emailInput.value.trim();
+    var pass = passInput.value;
+    if (!email || !pass) {
+      loginError.textContent = 'الرجاء إدخال البريد الإلكتروني وكلمة المرور';
+      loginError.classList.add('show');
+      return;
+    }
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'جاري الدخول...';
+    loginError.classList.remove('show');
+    login(email, pass).then(function(authData) {
+      saveSession(authData);
+      return loadPatientData(authData);
+    }).then(function() {
+      hideLogin();
+      renderPatient();
+      buildPostsCarousel();
+      buildPostsList();
+    }).catch(function(err) {
+      loginError.textContent = err.message || 'حدث خطأ، حاول مرة أخرى';
+      loginError.classList.add('show');
+    }).finally(function() {
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'تسجيل الدخول';
+    });
+  }
+
+  loginBtn.addEventListener('click', doLogin);
+  passInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') doLogin(); });
+  emailInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') passInput.focus(); });
+
+  // ===== نموذج طلب موعد جديد =====
+  var apptModal = document.getElementById('apptModal');
+  var apptDateInput = document.getElementById('apptDate');
+  var apptTimeInput = document.getElementById('apptTime');
+  var apptNotesInput = document.getElementById('apptNotes');
+  var submitApptBtn = document.getElementById('submitAppt');
+  var modalCloseBtn = document.getElementById('modalClose');
+  var typeChipsWrap = document.getElementById('typeChips');
+  var selectedType = 'فحص';
+
+  function openApptModal() {
+    if (!PATIENT || !PATIENT.id) { showToast('⚠️ يجب تسجيل الدخول أولاً'); return; }
+    var tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+    apptDateInput.value = tomorrow.toISOString().split('T')[0];
+    apptDateInput.min = new Date().toISOString().split('T')[0];
+    apptTimeInput.value = '17:00';
+    apptNotesInput.value = '';
+    selectedType = 'فحص';
+    typeChipsWrap.querySelectorAll('.type-chip').forEach(function(c){
+      c.classList.toggle('active', c.dataset.type === selectedType);
+    });
+    apptModal.classList.remove('hidden');
+  }
+
+  function closeApptModal() { apptModal.classList.add('hidden'); }
+
+  modalCloseBtn.addEventListener('click', closeApptModal);
+  apptModal.addEventListener('click', function(e){ if (e.target === apptModal) closeApptModal(); });
+
+  typeChipsWrap.addEventListener('click', function(e){
+    var chip = e.target.closest('.type-chip');
+    if (!chip) return;
+    selectedType = chip.dataset.type;
+    typeChipsWrap.querySelectorAll('.type-chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+  });
+
+  submitApptBtn.addEventListener('click', function(){
+    var dateVal = apptDateInput.value;
+    var timeVal = apptTimeInput.value;
+    if (!dateVal) { showToast('⚠️ الرجاء اختيار التاريخ'); return; }
+    if (!timeVal) { showToast('⚠️ الرجاء اختيار الوقت'); return; }
+
+    submitApptBtn.disabled = true;
+    submitApptBtn.textContent = 'جاري الإرسال...';
+
+    var body = JSON.stringify({
+      patient_id: PATIENT.id,
+      appointment_date: dateVal,
+      appointment_time: timeVal,
+      duration_minutes: 30,
+      type: selectedType,
+      notes: apptNotesInput.value || null,
+      status: 'requested'
+    });
+
+    fetch(SUPABASE_URL + '/rest/v1/appointments', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + PATIENT._token,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: body
+    }).then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function(){
+      closeApptModal();
+      showToast('✅ تم إرسال طلب الموعد بنجاح! سيتم التواصل لتأكيده.');
+      return loadPatientData({ access_token: PATIENT._token, user: { id: PATIENT._userId } });
+    }).then(function(){
+      renderPatient();
+    }).catch(function(err){
+      showToast('❌ فشل إرسال الطلب، حاول مرة أخرى');
+    }).finally(function(){
+      submitApptBtn.disabled = false;
+      submitApptBtn.textContent = 'إرسال الطلب';
+    });
+  });
+
+  var session = getSession();
+  if (session) {
+    fetch(SUPABASE_URL + '/auth/v1/user', {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + session.token }
+    }).then(function(r) {
+      if (!r.ok) throw new Error('session expired');
+      return r.json();
+    }).then(function(user) {
+      return loadPatientData({ access_token: session.token, user: user });
+    }).then(function() {
+      hideLogin();
+      renderPatient();
+      buildPostsCarousel();
+      buildPostsList();
+    }).catch(function() {
+      clearSession();
+      showLogin();
+    });
+  } else {
+    showLogin();
+  }
 })();
 </script>
 </body>
 </html>
+
