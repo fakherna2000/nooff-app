@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { Bell, CheckCheck, Calendar, X } from 'lucide-react';
+import { Bell, CheckCheck, Calendar, X, Check } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -154,6 +154,29 @@ export default function NotificationBell() {
     }
   };
 
+  const markAsSeen = useCallback(
+    async (id: string) => {
+      try {
+        const res = await fetch(`/api/admin/appointments/${id}/confirm`, {
+          method: 'POST',
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          toast.error(data.error || 'تعذّر تأكيد الموعد');
+          return;
+        }
+
+        seenIdsRef.current.add(id);
+        setNotifications((prev) => prev.filter((n) => n.id !== id));
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+        toast.success('تم تأكيد الموعد');
+      } catch {
+        toast.error('تعذّر تأكيد الموعد');
+      }
+    },
+    [],
+  );
+
   return (
     <div className="relative">
       <button
@@ -222,29 +245,45 @@ export default function NotificationBell() {
                         !seenIdsRef.current.has(n.id) && 'bg-blue-50/40',
                       )}
                     >
-                      <a
-                        href={`/admin/appointments`}
-                        className="block"
-                        onClick={() => setOpen(false)}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
-                            <Calendar className="w-4 h-4" />
+                      <div className="flex items-start gap-3">
+                        <a
+                          href={`/admin/appointments`}
+                          className="flex-1 min-w-0"
+                          onClick={() => {
+                            markAsSeen(n.id);
+                            setOpen(false);
+                          }}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
+                              <Calendar className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold text-gray-900 truncate">
+                                طلب موعد جديد
+                              </p>
+                              <p className="text-sm text-gray-600 truncate">
+                                {n.patient_name}
+                              </p>
+                              <p className="text-xs text-gray-400 mt-0.5">
+                                {formatDate(n.appointment_date)} • الساعة{' '}
+                                {n.appointment_time} • {n.type}
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-gray-900 truncate">
-                              طلب موعد جديد
-                            </p>
-                            <p className="text-sm text-gray-600 truncate">
-                              {n.patient_name}
-                            </p>
-                            <p className="text-xs text-gray-400 mt-0.5">
-                              {formatDate(n.appointment_date)} • الساعة{' '}
-                              {n.appointment_time} • {n.type}
-                            </p>
-                          </div>
-                        </div>
-                      </a>
+                        </a>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            markAsSeen(n.id);
+                          }}
+                          className="p-2 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition-colors flex-shrink-0"
+                          title="تمت المشاهدة"
+                        >
+                          <Check className="w-4 h-4" />
+                        </button>
+                      </div>
                     </li>
                   ))}
                 </ul>
