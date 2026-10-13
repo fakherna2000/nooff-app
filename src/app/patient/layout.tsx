@@ -65,13 +65,20 @@ export default function PatientLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!user) return;
+    const userId = user.id;
     async function check() {
-      if ((await isPushSupported()) && !(await isPushPermissionGranted()) && typeof Notification !== 'undefined' && Notification.permission === 'default') {
-        setTimeout(() => setShowPushPrompt(true), 3000);
+      if (await isPushSupported()) {
+        if (await isPushPermissionGranted()) {
+          try {
+            await subscribeUser(userId, currentPatientId || undefined);
+          } catch {}
+        } else if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+          setTimeout(() => setShowPushPrompt(true), 3000);
+        }
       }
     }
     check();
-  }, [user]);
+  }, [user, currentPatientId]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
