@@ -644,6 +644,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   var SUPABASE_URL = 'https://pcxuausibbcfycvhiolj.supabase.co';
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjeHVhdXNpYmJjZnljdmhpb2xqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4MDQ0MjUsImV4cCI6MjEwNzM4MDQyNX0.WDFItDSrd_MC3diC2hjn_jALt7YEKZRMpkAFXLXDaDE';
   var VAPID_PUBLIC_KEY = 'BFH6lBQNJ8BlDiwY0sLe6RLmLUksMawvRg1I9605C5hnLpSHjFe4wEU0GBx_v7t35omdXWv0lnUrtfoQS3WC400';
+  var API_BASE_URL = 'https://noof-app.vercel.app';
   var STORAGE_KEY = 'noof_patient_session';
 
   var PATIENT = null;
@@ -729,7 +730,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         fcmLog('registration token received: ' + (token && token.value ? token.value.substring(0, 30) + '...' : JSON.stringify(token)));
         if (PATIENT && PATIENT._userId && PATIENT.id && token && token.value) {
           fcmLog('sending token to server...');
-          fetch('/api/push/fcm-register', {
+          fetch(API_BASE_URL + '/api/push/fcm-register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
