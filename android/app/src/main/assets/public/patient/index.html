@@ -628,7 +628,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   </div>
 </div>
 
+<script>
+  if (window.AndroidBridge && !window.androidBridge) {
+    window.androidBridge = window.AndroidBridge;
+  }
+  if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.bridge && !window.androidBridge) {
+    window.androidBridge = window.webkit.messageHandlers.bridge;
+  }
+  window.WEBVIEW_SERVER_URL = window.WEBVIEW_SERVER_URL || 'http://127.0.0.1:18080';
+</script>
 <script src="/capacitor.js"></script>
+<script src="/native-bridge.js"></script>
 <script>
 (function(){
   var SUPABASE_URL = 'https://pcxuausibbcfycvhiolj.supabase.co';
@@ -650,31 +660,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
   function initFCM() {
     function tryInit() {
-      if (!window.Capacitor) {
+      if (!window.Capacitor || !window.Capacitor.nativePromise) {
         setTimeout(tryInit, 300);
         return;
       }
 
-      var PushNotifications = window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications;
+      var cap = window.Capacitor;
 
-      if (!PushNotifications && window.Capacitor.registerPlugin) {
-        try {
-          PushNotifications = window.Capacitor.registerPlugin('PushNotifications');
-        } catch (e) {}
-      }
-
-      if (!PushNotifications) {
-        setTimeout(tryInit, 500);
-        return;
-      }
-
-      PushNotifications.requestPermissions().then(function(result) {
-        if (result.receive === 'granted') {
-          PushNotifications.register();
+      cap.nativePromise('PushNotifications', 'requestPermissions', {}).then(function(result) {
+        if (result && result.receive === 'granted') {
+          cap.nativePromise('PushNotifications', 'register', {});
         }
-      }).catch(function() {});
+      }).catch(function(e) {
+        if (window.console) console.log('FCM requestPermissions error:', e);
+      });
 
-      PushNotifications.addListener('registration', function(token) {
+      cap.nativeCallback('PushNotifications', 'addListener', { eventName: 'registration' }, function(token) {
         if (PATIENT && PATIENT._userId && PATIENT.id) {
           fetch('/api/push/fcm-register', {
             method: 'POST',
@@ -688,10 +689,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         }
       });
 
-      PushNotifications.addListener('pushNotificationReceived', function(notification) {
+      cap.nativeCallback('PushNotifications', 'addListener', { eventName: 'registrationError' }, function(err) {
+        if (window.console) console.log('FCM registration error:', err);
       });
 
-      PushNotifications.addListener('pushNotificationActionPerformed', function(notification) {
+      cap.nativeCallback('PushNotifications', 'addListener', { eventName: 'pushNotificationReceived' }, function(notification) {
+      });
+
+      cap.nativeCallback('PushNotifications', 'addListener', { eventName: 'pushNotificationActionPerformed' }, function(notification) {
       });
     }
     tryInit();
