@@ -509,24 +509,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   <section class="page" data-page="profile">
     <div style="margin-top:22px" class="card">
       <div class="profile-head">
-        <div class="avatar">س</div>
+        <div class="avatar" id="profile-avatar">س</div>
         <div>
-          <div class="name">سارة أحمد محمود</div>
-          <div class="meta">#NF-0001 · عضوة منذ: 15 تموز 2026</div>
+          <div class="name" id="profile-name">سارة أحمد محمود</div>
+          <div class="meta" id="profile-meta">#NF-0001 · عضوة منذ: 15 تموز 2026</div>
         </div>
       </div>
     </div>
 
     <div class="section-title">البيانات الشخصيّة</div>
     <div class="card">
-      <div class="info-row"><span class="k">الاسم الكامل:</span><span class="v">سارة أحمد محمود الحسن</span></div>
-      <div class="info-row"><span class="k">تاريخ الميلاد:</span><span class="v">10 شباط 1999 (27 سنة)</span></div>
-      <div class="info-row"><span class="k">الجنس:</span><span class="v">أنثى</span></div>
-      <div class="info-row"><span class="k">رقم الهاتف:</span><span class="v" dir="ltr">0933 123 4567</span></div>
-      <div class="info-row"><span class="k">البريد الإلكتروني:</span><span class="v">sara.ahmed@noof.dental</span></div>
-      <div class="info-row"><span class="k">العنوان:</span><span class="v">دمشق — المزة الغربيّة</span></div>
-      <div class="info-row"><span class="k">الحالات الصحية والأدوية:</span><span class="v">لا توجد</span></div>
-      <div class="info-row"><span class="k">حساسيات معروفة:</span><span class="v">لا توجد</span></div>
+      <div class="info-row"><span class="k">الاسم الكامل:</span><span class="v" id="info-fullname">سارة أحمد محمود الحسن</span></div>
+      <div class="info-row"><span class="k">تاريخ الميلاد:</span><span class="v" id="info-dob">10 شباط 1999 (27 سنة)</span></div>
+      <div class="info-row"><span class="k">الجنس:</span><span class="v" id="info-gender">أنثى</span></div>
+      <div class="info-row"><span class="k">رقم الهاتف:</span><span class="v" id="info-phone" dir="ltr">0933 123 4567</span></div>
+      <div class="info-row"><span class="k">البريد الإلكتروني:</span><span class="v" id="info-email">sara.ahmed@noof.dental</span></div>
+      <div class="info-row"><span class="k">العنوان:</span><span class="v" id="info-address">دمشق — المزة الغربيّة</span></div>
+      <div class="info-row"><span class="k">الحالات الصحية والأدوية:</span><span class="v" id="info-medical">لا توجد</span></div>
+      <div class="info-row"><span class="k">حساسيات معروفة:</span><span class="v" id="info-allergies">لا توجد</span></div>
     </div>
 
     <div class="section-title">الإعدادات</div>
@@ -772,6 +772,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     if (nameEl) nameEl.textContent = PATIENT.full_name || '';
     var avatarEl = document.querySelector('.avatar');
     if (avatarEl) avatarEl.textContent = (PATIENT.full_name || '?').charAt(0);
+
+    var pAvatar = document.getElementById('profile-avatar');
+    if (pAvatar) pAvatar.textContent = (PATIENT.full_name || '?').charAt(0);
+    var pName = document.getElementById('profile-name');
+    if (pName) pName.textContent = PATIENT.full_name || '';
+    var pMeta = document.getElementById('profile-meta');
+    if (pMeta) pMeta.textContent = (PATIENT.created_at ? 'عضو منذ: ' + formatDateFull(PATIENT.created_at) : '');
+
+    function setInfo(id, val, fallback) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = val || fallback || '—';
+    }
+    setInfo('info-fullname', PATIENT.full_name);
+    setInfo('info-dob', PATIENT.date_of_birth ? formatDateFull(PATIENT.date_of_birth) : '');
+    setInfo('info-gender', PATIENT.gender === 'male' ? 'ذكر' : PATIENT.gender === 'female' ? 'أنثى' : PATIENT.gender);
+    setInfo('info-phone', PATIENT.phone);
+    setInfo('info-email', PATIENT.email);
+    setInfo('info-address', PATIENT.address);
+    setInfo('info-medical', PATIENT.medical_history, 'لا توجد');
+    setInfo('info-allergies', PATIENT.notes, 'لا توجد');
 
     var isOrtho = PATIENT.treatment_type === 'orthodontics';
     var orthoEls = document.querySelectorAll('[data-ortho-only]');
