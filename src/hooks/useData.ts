@@ -440,24 +440,27 @@ export function usePatients() {
   }, []);
 
   const createPatient = useCallback(
-    async (patientData: Omit<Patient, 'id' | 'created_at' | 'updated_at'>) => {
+    async (patientData: Omit<Patient, 'id' | 'created_at' | 'updated_at'> & { password?: string }) => {
       if (demoMode()) {
         const newPatient: Patient = {
           ...patientData,
           id: 'demo-new-' + rand(1000, 9999),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-        };
+        } as Patient;
         DEMO_PATIENTS.unshift(newPatient);
         return newPatient;
       }
-      const { data, error } = await supabase
-        .from('patients')
-        .insert(patientData)
-        .select()
-        .single();
-
-      if (error) throw error;
+      const res = await fetch('/api/admin/patients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patientData),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'فشل إضافة المريض');
+      }
+      const data = await res.json();
       return data as Patient;
     },
     []

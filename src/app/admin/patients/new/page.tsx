@@ -16,6 +16,8 @@ export default function NewPatientPage() {
     full_name: '',
     phone: '',
     email: '',
+    password: '',
+    confirmPassword: '',
     date_of_birth: '',
     gender: '' as '' | 'male' | 'female',
     address: '',
@@ -34,12 +36,27 @@ export default function NewPatientPage() {
       toast.error('الرجاء إدخال الاسم ورقم الهاتف');
       return;
     }
+    if (form.password || form.confirmPassword) {
+      if (!form.email) {
+        toast.error('البريد الإلكتروني مطلوب عند تعيين كلمة مرور');
+        return;
+      }
+      if (form.password.length < 6) {
+        toast.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+        return;
+      }
+      if (form.password !== form.confirmPassword) {
+        toast.error('كلمتا المرور غير متطابقتين');
+        return;
+      }
+    }
     setSubmitting(true);
     try {
       const data: any = {
         full_name: form.full_name,
         phone: form.phone,
         email: form.email || null,
+        password: form.password || undefined,
         date_of_birth: form.date_of_birth || null,
         gender: form.gender || null,
         address: form.address || null,
@@ -49,7 +66,7 @@ export default function NewPatientPage() {
         diagnosis: null,
       };
       const patient = await createPatient(data);
-      toast.success('تمت إضافة المريض بنجاح');
+      toast.success('تمت إضافة المريض بنجاح' + (form.password ? ' وتم إنشاء حساب دخول' : ''));
       router.replace(`/admin/patients/${patient.id}`);
     } catch (e: any) {
       toast.error(e.message || 'حدث خطأ أثناء إضافة المريض');
@@ -110,6 +127,28 @@ export default function NewPatientPage() {
                 value={form.email}
                 onChange={(e) => handleChange('email', e.target.value)}
                 placeholder="email@example.com"
+              />
+            </div>
+            <div>
+              <label className="label">كلمة المرور</label>
+              <input
+                type="password"
+                dir="ltr"
+                className="input text-right"
+                value={form.password}
+                onChange={(e) => handleChange('password', e.target.value)}
+                placeholder="تركها فارغة لعدم إنشاء حساب دخول"
+              />
+            </div>
+            <div>
+              <label className="label">تأكيد كلمة المرور</label>
+              <input
+                type="password"
+                dir="ltr"
+                className="input text-right"
+                value={form.confirmPassword}
+                onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                placeholder="أعد إدخال كلمة المرور"
               />
             </div>
             <div>
