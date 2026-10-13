@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1078754232526",
+    "project_id": "noof-app",
+    "storage_bucket": "noof-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078754232526:android:5db637609b5f41cf42689f",
+        "android_client_info": {
+          "package_name": "com.noof.dental.clinic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABLVtAP4iY4C00DrU-T90yjDABwpeH7Aw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

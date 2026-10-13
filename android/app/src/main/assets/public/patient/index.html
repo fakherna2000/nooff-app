@@ -632,6 +632,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 (function(){
   var SUPABASE_URL = 'https://pcxuausibbcfycvhiolj.supabase.co';
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjeHVhdXNpYmJjZnljdmhpb2xqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4MDQ0MjUsImV4cCI6MjEwNzM4MDQyNX0.WDFItDSrd_MC3diC2hjn_jALt7YEKZRMpkAFXLXDaDE';
+  var VAPID_PUBLIC_KEY = 'BFH6lBQNJ8BlDiwY0sLe6RLmLUksMawvRg1I9605C5hnLpSHjFe4wEU0GBx_v7t35omdXWv0lnUrtfoQS3WC400';
   var STORAGE_KEY = 'noof_patient_session';
 
   var PATIENT = null;
@@ -639,6 +640,47 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   var STAGES = [];
   var APPOINTMENTS = [];
   var POSTS = [];
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').catch(function() {});
+    });
+  }
+
+  function initFCM() {
+    if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.PushNotifications) {
+      return;
+    }
+    var PushNotifications = window.Capacitor.Plugins.PushNotifications;
+
+    PushNotifications.requestPermissions().then(function(result) {
+      if (result.receive === 'granted') {
+        PushNotifications.register();
+      }
+    }).catch(function() {});
+
+    window.Capacitor.Plugins.PushNotifications.addListener('registration', function(token) {
+      if (PATIENT && PATIENT._userId && PATIENT.id) {
+        fetch('/api/push/fcm-register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            token: token.value,
+            user_id: PATIENT._userId,
+            patient_id: PATIENT.id
+          })
+        }).catch(function() {});
+      }
+    });
+
+    window.Capacitor.Plugins.PushNotifications.addListener('pushNotificationReceived', function(notification) {
+      // الإشعار يظهر تلقائياً من النظام
+    });
+
+    window.Capacitor.Plugins.PushNotifications.addListener('pushNotificationActionPerformed', function(notification) {
+      // عند النقر على الإشعار
+    });
+  }
 
   var TYPE_LABELS = {
     offer: 'عرض خاص',
@@ -757,6 +799,53 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   }
   function clearSession() {
     localStorage.removeItem(STORAGE_KEY);
+  }
+
+  function urlBase64ToUint8Array(base64String) {
+    var padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    var base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    var rawData = window.atob(base64);
+    var outputArray = new Uint8Array(rawData.length);
+    for (var i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
+  function initPushNotifications() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return;
+    if (!VAPID_PUBLIC_KEY) return;
+
+    navigator.serviceWorker.ready.then(function(registration) {
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission().then(function(perm) {
+          if (perm === 'granted') subscribeToPush(registration);
+        });
+      } else {
+        subscribeToPush(registration);
+      }
+    }).catch(function() {});
+  }
+
+  function subscribeToPush(registration) {
+    var subscribeOptions = {
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    };
+    registration.pushManager.subscribe(subscribeOptions).then(function(subscription) {
+      return fetch('/api/push/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subscription: subscription,
+          user_id: PATIENT._userId,
+          patient_id: PATIENT.id,
+          user_agent: navigator.userAgent
+        })
+      });
+    }).then(function(res) {
+      if (!res.ok) throw new Error('Failed to save subscription');
+    }).catch(function() {});
   }
 
   function showLogin() {
@@ -1061,6 +1150,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
       renderPatient();
       buildPostsCarousel();
       buildPostsList();
+      initPushNotifications();
+      initFCM();
     }).catch(function(err) {
       loginError.textContent = err.message || 'حدث خطأ، حاول مرة أخرى';
       loginError.classList.add('show');
@@ -1170,6 +1261,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
       renderPatient();
       buildPostsCarousel();
       buildPostsList();
+      initPushNotifications();
+      initFCM();
     }).catch(function() {
       clearSession();
       showLogin();
