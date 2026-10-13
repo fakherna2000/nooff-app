@@ -658,21 +658,45 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     });
   }
 
+  var FCM_DEBUG = [];
+  function fcmLog(msg) {
+    FCM_DEBUG.push(msg);
+    if (window.console) console.log('[FCM]', msg);
+    var panel = document.getElementById('fcm-debug-panel');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'fcm-debug-panel';
+      panel.style.cssText = 'position:fixed;bottom:0;left:0;right:0;max-height:40%;overflow-y:auto;background:#1a1a2e;color:#0f0;font-size:11px;font-family:monospace;padding:8px;z-index:99999;white-space:pre-wrap;direction:ltr;text-align:left;';
+      document.body.appendChild(panel);
+    }
+    panel.textContent = FCM_DEBUG.slice(-15).join('\n');
+  }
+
   function initFCM() {
     function tryInit() {
+      fcmLog('tryInit called. window.Capacitor=' + (!!window.Capacitor));
+
       if (!window.Capacitor) {
         setTimeout(tryInit, 300);
         return;
       }
 
       var cap = window.Capacitor;
+      fcmLog('Capacitor loaded. platform=' + (cap.getPlatform ? cap.getPlatform() : 'unknown') + ' nativePromise=' + (!!cap.nativePromise) + ' nativeCallback=' + (!!cap.nativeCallback) + ' registerPlugin=' + (!!cap.registerPlugin));
 
       if (!cap.Plugins) cap.Plugins = {};
       if (!cap.Plugins.PushNotifications && cap.registerPlugin) {
-        try { cap.registerPlugin('PushNotifications'); } catch (e) {}
+        try {
+          cap.registerPlugin('PushNotifications');
+          fcmLog('registered PushNotifications plugin');
+        } catch (e) {
+          fcmLog('registerPlugin error: ' + e.message);
+        }
       }
 
       var PN = cap.Plugins.PushNotifications;
+      fcmLog('Plugins.PushNotifications=' + (!!PN));
+
       if (!PN) {
         if (cap.nativePromise) {
           PN = {
@@ -680,22 +704,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
             register: function() { return cap.nativePromise('PushNotifications', 'register', {}); },
             addListener: function(eventName, callback) { return cap.nativeCallback('PushNotifications', 'addListener', { eventName: eventName }, callback); }
           };
+          fcmLog('created PN fallback via nativePromise');
         } else {
+          fcmLog('no nativePromise, retrying...');
           setTimeout(tryInit, 500);
           return;
         }
       }
 
+      fcmLog('calling requestPermissions...');
       PN.requestPermissions().then(function(result) {
+        fcmLog('requestPermissions result: ' + JSON.stringify(result));
         if (result && result.receive === 'granted') {
+          fcmLog('permission granted, calling register...');
           PN.register();
+        } else {
+          fcmLog('permission NOT granted');
         }
       }).catch(function(e) {
-        if (window.console) console.log('FCM requestPermissions error:', e);
+        fcmLog('requestPermissions error: ' + (e && e.message ? e.message : JSON.stringify(e)));
       });
 
       PN.addListener('registration', function(token) {
+        fcmLog('registration token received: ' + (token && token.value ? token.value.substring(0, 30) + '...' : JSON.stringify(token)));
         if (PATIENT && PATIENT._userId && PATIENT.id && token && token.value) {
+          fcmLog('sending token to server...');
           fetch('/api/push/fcm-register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -704,16 +737,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
               user_id: PATIENT._userId,
               patient_id: PATIENT.id
             })
-          }).catch(function() {});
+          }).then(function(r) { return r.json(); }).then(function(d) {
+            fcmLog('server response: ' + JSON.stringify(d));
+          }).catch(function(e) {
+            fcmLog('server error: ' + e.message);
+          });
+        } else {
+          fcmLog('PATIENT not ready or no token value. PATIENT._userId=' + (PATIENT && PATIENT._userId) + ' PATIENT.id=' + (PATIENT && PATIENT.id));
         }
       });
 
       PN.addListener('registrationError', function(err) {
-        if (window.console) console.log('FCM registration error:', err);
+        fcmLog('registrationError: ' + JSON.stringify(err));
       });
 
-      PN.addListener('pushNotificationReceived', function(notification) {});
-      PN.addListener('pushNotificationActionPerformed', function(notification) {});
+      PN.addListener('pushNotificationReceived', function(notification) {
+        fcmLog('pushNotificationReceived: ' + JSON.stringify(notification));
+      });
+
+      PN.addListener('pushNotificationActionPerformed', function(notification) {
+        fcmLog('pushNotificationActionPerformed: ' + JSON.stringify(notification));
+      });
     }
     tryInit();
   }
