@@ -123,6 +123,14 @@ export async function POST(request: Request) {
         if (!fcmError) {
           for (const fcm of fcmTokens || []) {
             try {
+              const stringData: Record<string, string> = {};
+              if (data && typeof data === 'object') {
+                for (const [k, v] of Object.entries(data)) {
+                  stringData[k] = String(v);
+                }
+              }
+              stringData.patient_id = String(patient_id);
+
               const fcmRes = await fetch(
                 `https://fcm.googleapis.com/v1/projects/${fcmProjectId}/messages:send`,
                 {
@@ -135,10 +143,15 @@ export async function POST(request: Request) {
                     message: {
                       token: fcm.token,
                       notification: { title, body: messageBody },
-                      data: { ...data, patient_id },
+                      data: stringData,
                       android: {
                         priority: 'high',
-                        notification: { channel_id: 'default', click_action: 'OPEN_APP' },
+                        notification: {
+                          channel_id: 'default',
+                          default_sound: true,
+                          default_vibrate_timings: true,
+                          default_light_settings: true,
+                        },
                       },
                     },
                   }),
