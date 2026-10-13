@@ -628,6 +628,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   </div>
 </div>
 
+<script src="/capacitor.js"></script>
 <script>
 (function(){
   var SUPABASE_URL = 'https://pcxuausibbcfycvhiolj.supabase.co';
@@ -648,38 +649,52 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   }
 
   function initFCM() {
-    if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.PushNotifications) {
-      return;
+    function tryInit() {
+      if (!window.Capacitor) {
+        setTimeout(tryInit, 300);
+        return;
+      }
+
+      var PushNotifications = window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications;
+
+      if (!PushNotifications && window.Capacitor.registerPlugin) {
+        try {
+          PushNotifications = window.Capacitor.registerPlugin('PushNotifications');
+        } catch (e) {}
+      }
+
+      if (!PushNotifications) {
+        setTimeout(tryInit, 500);
+        return;
+      }
+
+      PushNotifications.requestPermissions().then(function(result) {
+        if (result.receive === 'granted') {
+          PushNotifications.register();
+        }
+      }).catch(function() {});
+
+      PushNotifications.addListener('registration', function(token) {
+        if (PATIENT && PATIENT._userId && PATIENT.id) {
+          fetch('/api/push/fcm-register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              token: token.value,
+              user_id: PATIENT._userId,
+              patient_id: PATIENT.id
+            })
+          }).catch(function() {});
+        }
+      });
+
+      PushNotifications.addListener('pushNotificationReceived', function(notification) {
+      });
+
+      PushNotifications.addListener('pushNotificationActionPerformed', function(notification) {
+      });
     }
-    var PushNotifications = window.Capacitor.Plugins.PushNotifications;
-
-    PushNotifications.requestPermissions().then(function(result) {
-      if (result.receive === 'granted') {
-        PushNotifications.register();
-      }
-    }).catch(function() {});
-
-    window.Capacitor.Plugins.PushNotifications.addListener('registration', function(token) {
-      if (PATIENT && PATIENT._userId && PATIENT.id) {
-        fetch('/api/push/fcm-register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            token: token.value,
-            user_id: PATIENT._userId,
-            patient_id: PATIENT.id
-          })
-        }).catch(function() {});
-      }
-    });
-
-    window.Capacitor.Plugins.PushNotifications.addListener('pushNotificationReceived', function(notification) {
-      // الإشعار يظهر تلقائياً من النظام
-    });
-
-    window.Capacitor.Plugins.PushNotifications.addListener('pushNotificationActionPerformed', function(notification) {
-      // عند النقر على الإشعار
-    });
+    tryInit();
   }
 
   var TYPE_LABELS = {
