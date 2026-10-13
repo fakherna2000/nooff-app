@@ -1,6 +1,51 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import webpush from 'web-push';
+import crypto from 'crypto';
+
+let cachedAccessToken: { token: string; expiresAt: number } | null = null;
+
+async function getFcmAccessToken(): Promise<string | null> {
+  const clientEmail = process.env.FCM_CLIENT_EMAIL;
+  const privateKey = process.env.FCM_PRIVATE_KEY;
+  const projectId = process.env.FCM_PROJECT_ID;
+
+  if (!clientEmail || !privateKey || !projectId) return null;
+
+  const now = Math.floor(Date.now() / 1000);
+
+  if (cachedAccessToken && cachedAccessToken.expiresAt > now) {
+    return cachedAccessToken.token;
+  }
+
+  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
+  const payload = Buffer.from(JSON.stringify({
+    iss: clientEmail,
+    scope: 'https://www.googleapis.com/auth/firebase.messaging',
+    aud: 'https://oauth2.googleapis.com/token',
+    iat: now,
+    exp: now + 3600,
+  })).toString('base64url');
+
+  const signInput = `${header}.${payload}`;
+  const sign = crypto.createSign('RSA-SHA256');
+  sign.update(signInput);
+  const signature = sign.sign(privateKey).toString('base64url');
+  const jwt = `${signInput}.${signature}`;
+
+  const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${encodeURIComponent(jwt)}`,
+  });
+
+  const tokenData = await tokenRes.json();
+  if (tokenData.access_token) {
+    cachedAccessToken = { token: tokenData.access_token, expiresAt: now + 3000 };
+    return tokenData.access_token;
+  }
+  return null;
+}
 
 export async function POST(request: Request) {
   try {
@@ -57,43 +102,56 @@ export async function POST(request: Request) {
       }
     }
 
-    // === Firebase Cloud Messaging (لتطبيق الأندرويد) ===
-    const fcmServerKey = process.env.FCM_SERVER_KEY;
-    if (fcmServerKey) {
-      const { data: fcmTokens, error: fcmError } = (await supabase
-        .from('fcm_tokens')
-        .select('*')
-        .eq('patient_id', patient_id)) as {
-        data: { id: string; token: string }[] | null;
-        error: any;
-      };
+    // === Firebase Cloud Messaging V1 API (لتطبيق الأندرويد) ===
+    const fcmProjectId = process.env.FCM_PROJECT_ID;
+    if (fcmProjectId) {
+      const accessToken = await getFcmAccessToken();
+      if (accessToken) {
+        const { data: fcmTokens, error: fcmError } = (await supabase
+          .from('fcm_tokens')
+          .select('*')
+          .eq('patient_id', patient_id)) as {
+          data: { id: string; token: string }[] | null;
+          error: any;
+        };
 
-      if (!fcmError) {
-        for (const fcm of fcmTokens || []) {
-          try {
-            const fcmRes = await fetch('https://fcm.googleapis.com/fcm/send', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `key=${fcmServerKey}`,
-              },
-              body: JSON.stringify({
-                to: fcm.token,
-                notification: { title, body: messageBody },
-                data: { ...data, patient_id },
-              }),
-            });
-            const fcmData = await fcmRes.json();
-            if (fcmRes.ok && fcmData.success === 1) {
-              results.push({ channel: 'fcm', status: 'success', id: fcm.id });
-            } else {
-              if (fcmData.results?.[0]?.error === 'NotRegistered' || fcmData.results?.[0]?.error === 'InvalidRegistration') {
-                await supabase.from('fcm_tokens').delete().eq('id', fcm.id);
+        if (!fcmError) {
+          for (const fcm of fcmTokens || []) {
+            try {
+              const fcmRes = await fetch(
+                `https://fcm.googleapis.com/v1/projects/${fcmProjectId}/messages:send`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                  body: JSON.stringify({
+                    message: {
+                      token: fcm.token,
+                      notification: { title, body: messageBody },
+                      data: { ...data, patient_id },
+                      android: {
+                        priority: 'high',
+                        notification: { channel_id: 'default', click_action: 'OPEN_APP' },
+                      },
+                    },
+                  }),
+                },
+              );
+              if (fcmRes.ok) {
+                results.push({ channel: 'fcm', status: 'success', id: fcm.id });
+              } else {
+                const fcmData = await fcmRes.json();
+                const errCode = fcmData?.error?.details?.[0]?.errorCode;
+                if (errCode === 'UNREGISTERED' || errCode === 'INVALID_ARGUMENT') {
+                  await supabase.from('fcm_tokens').delete().eq('id', fcm.id);
+                }
+                results.push({ channel: 'fcm', status: 'error', id: fcm.id, message: fcmData?.error?.message || 'FCM error' });
               }
-              results.push({ channel: 'fcm', status: 'error', id: fcm.id, message: fcmData.results?.[0]?.error || 'FCM error' });
+            } catch (e: any) {
+              results.push({ channel: 'fcm', status: 'error', id: fcm.id, message: e.message });
             }
-          } catch (e: any) {
-            results.push({ channel: 'fcm', status: 'error', id: fcm.id, message: e.message });
           }
         }
       }
