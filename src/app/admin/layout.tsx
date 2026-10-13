@@ -21,6 +21,7 @@ import {
 import { Tooth } from '@/components/icons/Tooth';
 import { useAuth } from '@/hooks/useAuth';
 import { useOfflineSync } from '@/hooks/useOfflineSync';
+import NotificationBell from '@/components/admin/NotificationBell';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -174,6 +175,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <div className="flex-1" />
 
             <div className="flex items-center gap-2">
+              <NotificationBell />
               <button
                 onClick={() => {
                   triggerSync();
