@@ -39,7 +39,7 @@ type BeforeInstallPromptEvent = Event & {
 };
 
 export default function PatientLayout({ children }: { children: ReactNode }) {
-  const { role, loading, signOut, user } = useAuth();
+  const { role, loading, signOut, user, currentPatientId } = useAuth();
   const { online, syncing, triggerSync } = useOfflineSync();
   const router = useRouter();
   const pathname = usePathname();
@@ -208,7 +208,7 @@ export default function PatientLayout({ children }: { children: ReactNode }) {
                       const perm = await requestNotificationPermission();
                       if (perm === 'granted' && user) {
                         try {
-                          await subscribeUser(user.id);
+                          await subscribeUser(user.id, currentPatientId || undefined);
                           toast.success('تم تفعيل الإشعارات بنجاح');
                         } catch {}
                       }
