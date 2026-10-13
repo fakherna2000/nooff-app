@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.getcapacitor.BridgeActivity;
+import com.getcapacitor.Plugin;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends BridgeActivity {
     private static final String TAG = "NoofMain";
@@ -17,16 +19,7 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // =====================================================================
-        // 🔥 الحل الجذري النهائي لمشاكل التحميل / الوميض / السبينر 🔥
-        // =====================================================================
-        // 1) قمنا في capacitor.config.ts بتعيين server.url ثابت = LOAD_URL
-        //    يعني Capacitor راح يحمّل الصفحة التالية مباشرةً من أول loadWebView
-        //    بدون أي تحميلات تلقائية أخرى من خادم Capacitor الداخلي.
-        // 2) قبل ما نستدعي super.onCreate (اللي بيبدا فيه الـ Bridge و loadUrl)،
-        //    نبدأ خادمنا المحلي على 18080 وننتظر حتى يبدا يستجيب عبر ping.
-        //    بعده نطلب من Capacitor يحمل الصفحة وكل شيء تمام من أول خطوة.
-        // =====================================================================
+        registerPlugin(com.capacitorjs.plugins.pushnotifications.PushNotificationsPlugin.class);
 
         Log.i(TAG, "Starting embedded HTTP server BEFORE super.onCreate()...");
         try {
@@ -38,7 +31,6 @@ public class MainActivity extends BridgeActivity {
             localServer = null;
         }
 
-        // انتظار استجابة الخادم المحلي عبر ping (حتى 5 ثوانٍ، كل 50 مللي ثانية)
         int waited = 0;
         boolean ready = false;
         while (waited < 5000) {
@@ -48,8 +40,6 @@ public class MainActivity extends BridgeActivity {
         Log.i(TAG, "Server ready after " + waited + "ms? " + ready +
                    " — proceeding to super.onCreate() which will call loadUrl(" + LOAD_URL + ") by Capacitor config.");
 
-        // الآن الخادم جاهز. ندعي super.onCreate اللي بدوره بيقرأ capacitor.config وبيحمل الرابط الصحيح.
-        // لا تحتاج لأي تعديل إضافي على WebView أو أي loadUrl يدوي — الخليج كله يشتغل لحاله.
         super.onCreate(savedInstanceState);
     }
 
