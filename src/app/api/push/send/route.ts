@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createAdminClient } from '@supabase/supabase-js';
 import webpush from 'web-push';
 import crypto from 'crypto';
 
@@ -56,7 +57,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'الرجاء إدخال جميع الحقول المطلوبة' }, { status: 400 });
     }
 
-    const supabase = createClient();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const db: any = supabaseUrl && serviceKey
+      ? createAdminClient(supabaseUrl, serviceKey)
+      : createClient();
     const results: any[] = [];
 
     // === Web Push (للمتصفح) ===
@@ -67,7 +72,7 @@ export async function POST(request: Request) {
     if (vapidPrivateKey && vapidPublicKey) {
       webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
 
-      const { data: subscriptions, error: subError } = (await supabase
+      const { data: subscriptions, error: subError } = (await db
         .from('push_subscriptions')
         .select('*')
         .eq('patient_id', patient_id)) as {
@@ -94,7 +99,7 @@ export async function POST(request: Request) {
             results.push({ channel: 'web-push', status: 'success', id: sub.id, statusCode: res.statusCode });
           } catch (e: any) {
             if (e.statusCode === 410) {
-              await supabase.from('push_subscriptions').delete().eq('id', sub.id);
+              await db.from('push_subscriptions').delete().eq('id', sub.id);
             }
             results.push({ channel: 'web-push', status: 'error', id: sub.id, message: e.message });
           }
@@ -107,7 +112,7 @@ export async function POST(request: Request) {
     if (fcmProjectId) {
       const accessToken = await getFcmAccessToken();
       if (accessToken) {
-        const { data: fcmTokens, error: fcmError } = (await supabase
+        const { data: fcmTokens, error: fcmError } = (await db
           .from('fcm_tokens')
           .select('*')
           .eq('patient_id', patient_id)) as {
@@ -145,7 +150,7 @@ export async function POST(request: Request) {
                 const fcmData = await fcmRes.json();
                 const errCode = fcmData?.error?.details?.[0]?.errorCode;
                 if (errCode === 'UNREGISTERED' || errCode === 'INVALID_ARGUMENT') {
-                  await supabase.from('fcm_tokens').delete().eq('id', fcm.id);
+                  await db.from('fcm_tokens').delete().eq('id', fcm.id);
                 }
                 results.push({ channel: 'fcm', status: 'error', id: fcm.id, message: fcmData?.error?.message || 'FCM error' });
               }

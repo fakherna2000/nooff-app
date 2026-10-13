@@ -660,6 +660,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   }
 
   var FCM_DEBUG = [];
+  var FCM_STORED_TOKEN_KEY = 'noof_fcm_token';
   function fcmLog(msg) {
     FCM_DEBUG.push(msg);
     if (window.console) console.log('[FCM]', msg);
@@ -671,6 +672,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
       document.body.appendChild(panel);
     }
     panel.textContent = FCM_DEBUG.slice(-15).join('\n');
+  }
+
+  function sendTokenToServer(tokenValue) {
+    if (!PATIENT || !PATIENT._userId || !PATIENT.id || !tokenValue) {
+      fcmLog('sendToken skipped. PATIENT._userId=' + (PATIENT && PATIENT._userId) + ' PATIENT.id=' + (PATIENT && PATIENT.id) + ' hasToken=' + (!!tokenValue));
+      return;
+    }
+    fcmLog('sending token to server...');
+    fetch(API_BASE_URL + '/api/push/fcm-register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: tokenValue,
+        user_id: PATIENT._userId,
+        patient_id: PATIENT.id
+      })
+    }).then(function(r) { return r.json(); }).then(function(d) {
+      fcmLog('server response: ' + JSON.stringify(d));
+    }).catch(function(e) {
+      fcmLog('server error: ' + e.message);
+    });
+  }
+
+  function handleFcmToken(tokenValue) {
+    if (!tokenValue) return;
+    try { localStorage.setItem(FCM_STORED_TOKEN_KEY, tokenValue); } catch(e) {}
+    sendTokenToServer(tokenValue);
   }
 
   function initFCM() {
@@ -702,6 +730,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         if (cap.nativePromise) {
           PN = {
             requestPermissions: function() { return cap.nativePromise('PushNotifications', 'requestPermissions', {}); },
+            checkPermissions: function() { return cap.nativePromise('PushNotifications', 'checkPermissions', {}); },
             register: function() { return cap.nativePromise('PushNotifications', 'register', {}); },
             addListener: function(eventName, callback) { return cap.nativeCallback('PushNotifications', 'addListener', { eventName: eventName }, callback); }
           };
@@ -713,39 +742,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         }
       }
 
-      fcmLog('calling requestPermissions...');
-      PN.requestPermissions().then(function(result) {
-        fcmLog('requestPermissions result: ' + JSON.stringify(result));
-        if (result && result.receive === 'granted') {
-          fcmLog('permission granted, calling register...');
-          PN.register();
-        } else {
-          fcmLog('permission NOT granted');
-        }
-      }).catch(function(e) {
-        fcmLog('requestPermissions error: ' + (e && e.message ? e.message : JSON.stringify(e)));
-      });
-
       PN.addListener('registration', function(token) {
         fcmLog('registration token received: ' + (token && token.value ? token.value.substring(0, 30) + '...' : JSON.stringify(token)));
-        if (PATIENT && PATIENT._userId && PATIENT.id && token && token.value) {
-          fcmLog('sending token to server...');
-          fetch(API_BASE_URL + '/api/push/fcm-register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              token: token.value,
-              user_id: PATIENT._userId,
-              patient_id: PATIENT.id
-            })
-          }).then(function(r) { return r.json(); }).then(function(d) {
-            fcmLog('server response: ' + JSON.stringify(d));
-          }).catch(function(e) {
-            fcmLog('server error: ' + e.message);
-          });
-        } else {
-          fcmLog('PATIENT not ready or no token value. PATIENT._userId=' + (PATIENT && PATIENT._userId) + ' PATIENT.id=' + (PATIENT && PATIENT.id));
-        }
+        handleFcmToken(token && token.value);
       });
 
       PN.addListener('registrationError', function(err) {
@@ -758,6 +757,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
       PN.addListener('pushNotificationActionPerformed', function(notification) {
         fcmLog('pushNotificationActionPerformed: ' + JSON.stringify(notification));
+      });
+
+      var storedToken = null;
+      try { storedToken = localStorage.getItem(FCM_STORED_TOKEN_KEY); } catch(e) {}
+      if (storedToken) {
+        fcmLog('found stored token, sending to server...');
+        handleFcmToken(storedToken);
+      }
+
+      fcmLog('calling requestPermissions...');
+      var permPromise = PN.requestPermissions();
+      var timedOut = false;
+      var timeout = setTimeout(function() {
+        timedOut = true;
+        fcmLog('requestPermissions timed out, calling register anyway...');
+        PN.register();
+      }, 8000);
+
+      permPromise.then(function(result) {
+        if (timedOut) return;
+        clearTimeout(timeout);
+        fcmLog('requestPermissions result: ' + JSON.stringify(result));
+        if (result && result.receive === 'granted') {
+          fcmLog('permission granted, calling register...');
+          PN.register();
+        } else {
+          fcmLog('permission NOT granted, trying register anyway...');
+          PN.register();
+        }
+      }).catch(function(e) {
+        if (timedOut) return;
+        clearTimeout(timeout);
+        fcmLog('requestPermissions error: ' + (e && e.message ? e.message : JSON.stringify(e)) + ', trying register anyway...');
+        PN.register();
       });
     }
     tryInit();
