@@ -1,5 +1,8 @@
 package com.noof.dental.clinic;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,10 +18,13 @@ public class MainActivity extends BridgeActivity {
     private static final String TAG = "NoofMain";
     private static final int LOCAL_PORT = 18080;
     private static final String LOAD_URL = "http://127.0.0.1:" + LOCAL_PORT + "/index.html";
+    private static final String CHANNEL_ID = "default";
     private LocalWebServer localServer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        createNotificationChannel();
+
         registerPlugin(com.capacitorjs.plugins.pushnotifications.PushNotificationsPlugin.class);
 
         Log.i(TAG, "Starting embedded HTTP server BEFORE super.onCreate()...");
@@ -62,6 +68,23 @@ public class MainActivity extends BridgeActivity {
         if (localServer != null) {
             try { localServer.stop(); } catch (Throwable ignore) {}
             localServer = null;
+        }
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "إشعارات العيادة",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("إشعارات العيادة والتذكيرات بالمواعيد");
+            channel.enableVibration(true);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+                Log.i(TAG, "Notification channel created: " + CHANNEL_ID);
+            }
         }
     }
 }
