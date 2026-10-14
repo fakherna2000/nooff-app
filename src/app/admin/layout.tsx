@@ -17,6 +17,7 @@ import {
   Monitor,
   Newspaper,
   Megaphone,
+  UserCog,
 } from 'lucide-react';
 import { Tooth } from '@/components/icons/Tooth';
 import { useAuth } from '@/hooks/useAuth';
@@ -33,6 +34,7 @@ const navItems = [
   { href: '/admin/appointments', label: 'المواعيد', icon: Calendar, exact: false },
   { href: '/admin/broadcast', label: 'إشعارات عامة', icon: Megaphone, exact: false },
   { href: '/admin/posts', label: 'المنشورات', icon: Newspaper, exact: false },
+  { href: '/admin/users', label: 'المستخدمون', icon: UserCog, exact: false },
   { href: '/admin/settings', label: 'الإعدادات', icon: Settings, exact: false },
 ];
 
