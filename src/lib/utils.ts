@@ -5,12 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('ar-SA', {
-    style: 'currency',
-    currency: 'SAR',
+export function formatCurrency(amount: number, currencySymbol?: string): string {
+  const symbol = currencySymbol || 'ر.س';
+  const formatted = new Intl.NumberFormat('ar-SA', {
     minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
+  return `${formatted} ${symbol}`;
 }
 
 export function formatDate(date: string | Date): string {

@@ -144,6 +144,7 @@ export interface Database {
           notes: string | null;
           payment_date: string;
           created_at: string;
+          currency_id?: string | null;
         };
         Insert: {
           id?: string;
@@ -156,6 +157,7 @@ export interface Database {
           notes?: string | null;
           payment_date?: string;
           created_at?: string;
+          currency_id?: string | null;
         };
         Update: {
           id?: string;
@@ -168,6 +170,7 @@ export interface Database {
           notes?: string | null;
           payment_date?: string;
           created_at?: string;
+          currency_id?: string | null;
         };
       };
       appointments: {
@@ -265,6 +268,70 @@ export interface Database {
           updated_at?: string;
         };
       };
+      currencies: {
+        Row: {
+          id: string;
+          code: string;
+          name: string;
+          symbol: string;
+          exchange_rate: number;
+          is_default: boolean;
+          is_active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          name: string;
+          symbol: string;
+          exchange_rate?: number;
+          is_default?: boolean;
+          is_active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          name?: string;
+          symbol?: string;
+          exchange_rate?: number;
+          is_default?: boolean;
+          is_active?: boolean;
+          created_at?: string;
+        };
+      };
+      clinic_settings: {
+        Row: {
+          id: string;
+          clinic_name: string;
+          address: string | null;
+          phone: string | null;
+          email: string | null;
+          logo_url: string | null;
+          currency_id: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          clinic_name?: string;
+          address?: string | null;
+          phone?: string | null;
+          email?: string | null;
+          logo_url?: string | null;
+          currency_id?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          clinic_name?: string;
+          address?: string | null;
+          phone?: string | null;
+          email?: string | null;
+          logo_url?: string | null;
+          currency_id?: string | null;
+          updated_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
@@ -287,6 +354,8 @@ export type TreatmentStage = Database['public']['Tables']['treatment_stages']['R
 export type Payment = Database['public']['Tables']['payments']['Row'];
 export type Appointment = Database['public']['Tables']['appointments']['Row'];
 export type Post = Database['public']['Tables']['posts']['Row'];
+export type Currency = Database['public']['Tables']['currencies']['Row'];
+export type ClinicSettings = Database['public']['Tables']['clinic_settings']['Row'];
 
 export type PatientWithDetails = Patient & {
   treatment_plans: (TreatmentPlan & {

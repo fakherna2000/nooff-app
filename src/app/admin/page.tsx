@@ -13,6 +13,7 @@ import {
   Phone,
 } from 'lucide-react';
 import { useAppointments, usePatients } from '@/hooks/useData';
+import { useClinicSettings } from '@/hooks/useClinicSettings';
 import { formatCurrency, formatDate, formatTime, getStatusClass, getStatusLabel } from '@/lib/utils';
 import type { Appointment } from '@/lib/database.types';
 
@@ -26,6 +27,7 @@ interface DashboardStats {
 export default function AdminDashboardPage() {
   const { getDashboardStats, getAllAppointments } = useAppointments();
   const { getAllPatients } = usePatients();
+  const { defaultCurrency } = useClinicSettings();
   const [stats, setStats] = useState<DashboardStats>({});
   const [todayAppointments, setTodayAppointments] = useState<
     (Appointment & { patients: { full_name: string; phone: string } })[]
@@ -80,7 +82,7 @@ export default function AdminDashboardPage() {
     },
     {
       label: 'إيرادات الشهر',
-      value: formatCurrency(stats.monthlyRevenue ?? 0),
+      value: formatCurrency(stats.monthlyRevenue ?? 0, defaultCurrency?.symbol),
       icon: DollarSign,
       color: 'from-green-500 to-green-600',
       bg: 'bg-green-50',

@@ -26,7 +26,8 @@ import {
   Send,
 } from 'lucide-react';
 import { usePatients, useTreatmentPlans, useTreatmentStages, usePayments, useAppointments } from '@/hooks/useData';
-import type { Patient, Appointment } from '@/lib/database.types';
+import { useClinicSettings } from '@/hooks/useClinicSettings';
+import type { Patient, Appointment, Currency } from '@/lib/database.types';
 import type { PatientWithAllRelations } from '@/lib/offline-db';
 import {
   calculateTotals,
@@ -46,6 +47,9 @@ import { sendPushNotification } from '@/lib/push-notifications';
 
 type TabKey = 'overview' | 'plans' | 'payments' | 'appointments' | 'edit';
 
+let _currencySymbol = 'ر.س';
+const fc = (amount: number) => formatCurrency(amount, _currencySymbol);
+
 export default function PatientDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -55,6 +59,7 @@ export default function PatientDetailPage() {
   const { updateStage, setCurrentStage, createStage, deleteStage } = useTreatmentStages();
   const { createPayment, deletePayment } = usePayments();
   const { createAppointment, deleteAppointment, updateAppointment } = useAppointments();
+  const { defaultCurrency, currencies, settings } = useClinicSettings();
 
   const [patient, setPatient] = useState<PatientWithAllRelations | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,6 +73,10 @@ export default function PatientDetailPage() {
   const [expandedPlan, setExpandedPlan] = useState<string | null>(null);
 
   const refresh = () => setRefreshKey((k) => k + 1);
+
+  useEffect(() => {
+    if (defaultCurrency?.symbol) _currencySymbol = defaultCurrency.symbol;
+  }, [defaultCurrency]);
 
   useEffect(() => {
     async function load() {
@@ -162,7 +171,7 @@ export default function PatientDetailPage() {
             </div>
             <p className="text-gray-500 text-sm">المدفوع</p>
           </div>
-          <p className="text-2xl font-bold text-green-700">{formatCurrency(totals.paid)}</p>
+          <p className="text-2xl font-bold text-green-700">{fc(totals.paid)}</p>
         </div>
         <div className="card">
           <div className="flex items-center gap-3 mb-3">
@@ -171,7 +180,7 @@ export default function PatientDetailPage() {
             </div>
             <p className="text-gray-500 text-sm">المتبقي</p>
           </div>
-          <p className="text-2xl font-bold text-orange-700">{formatCurrency(totals.remaining)}</p>
+          <p className="text-2xl font-bold text-orange-700">{fc(totals.remaining)}</p>
         </div>
         <div className="card">
           <div className="flex items-center gap-3 mb-3">
@@ -180,7 +189,7 @@ export default function PatientDetailPage() {
             </div>
             <p className="text-gray-500 text-sm">التكلفة الإجمالية</p>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{formatCurrency(allPlansCost)}</p>
+          <p className="text-2xl font-bold text-gray-900">{fc(allPlansCost)}</p>
           <div className="mt-3 h-2 bg-gray-100 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-l from-primary-500 to-green-500 rounded-full transition-all duration-500"
@@ -331,8 +340,10 @@ export default function PatientDetailPage() {
       {showPaymentModal && (
         <PaymentModal
           plans={patient.treatment_plans}
+          currencies={currencies}
+          defaultCurrencyId={defaultCurrency?.id || settings?.currency_id || ''}
           onClose={() => setShowPaymentModal(false)}
-          onSave={async (amount, method, planId, notes, date) => {
+          onSave={async (amount, method, planId, notes, date, currencyId) => {
             await createPayment({
               patient_id: patient.id,
               amount,
@@ -340,6 +351,7 @@ export default function PatientDetailPage() {
               plan_id: planId || null,
               notes: notes || null,
               payment_date: date,
+              currency_id: currencyId || null,
             } as any);
             toast.success('تمت إضافة الدفعة');
             setShowPaymentModal(false);
@@ -462,7 +474,7 @@ function OverviewTab({
                   <div key={plan.id} className="p-4 rounded-xl border border-gray-100 bg-gray-50/50">
                     <div className="flex items-center justify-between mb-2">
                       <p className="font-semibold text-gray-900">{plan.title}</p>
-                      <span className="text-sm font-bold text-primary-600">{formatCurrency(plan.total_cost)}</span>
+                      <span className="text-sm font-bold text-primary-600">{fc(plan.total_cost)}</span>
                     </div>
                     <div className="flex items-center gap-3 mt-3">
                       <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -528,9 +540,9 @@ function OverviewTab({
         <div className="card">
           <h3 className="font-bold text-gray-900 mb-4">الحالة المالية</h3>
           <div className="space-y-3">
-            <ProgressRow label="التكلفة الإجمالية" value={formatCurrency(allPlansCost)} pct={100} color="bg-gray-400" />
-            <ProgressRow label="المدفوع" value={formatCurrency(totals.paid)} pct={totals.progress} color="bg-green-500" />
-            <ProgressRow label="المتبقي" value={formatCurrency(totals.remaining)} pct={Math.max(0, 100 - totals.progress)} color="bg-orange-500" />
+            <ProgressRow label="التكلفة الإجمالية" value={fc(allPlansCost)} pct={100} color="bg-gray-400" />
+            <ProgressRow label="المدفوع" value={fc(totals.paid)} pct={totals.progress} color="bg-green-500" />
+            <ProgressRow label="المتبقي" value={fc(totals.remaining)} pct={Math.max(0, 100 - totals.progress)} color="bg-orange-500" />
           </div>
         </div>
       </div>
@@ -612,12 +624,12 @@ function PlansTab({
               <div className="flex-1">
                 <div className="flex items-center gap-3">
                   <h3 className="font-bold text-gray-900 text-lg">{plan.title}</h3>
-                  <span className="font-bold text-primary-600">{formatCurrency(plan.total_cost)}</span>
+                  <span className="font-bold text-primary-600">{fc(plan.total_cost)}</span>
                 </div>
                 {plan.description && <p className="text-sm text-gray-500 mt-1">{plan.description}</p>}
                 <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
                   <span>{completed}/{plan.stages.length} مرحلة مكتملة</span>
-                  <span>مدفوع: {formatCurrency(planTotals.paid)}</span>
+                  <span>مدفوع: {fc(planTotals.paid)}</span>
                 </div>
               </div>
               <button
@@ -682,7 +694,7 @@ function PlansTab({
                                 )}
                                 {stage.cost && (
                                   <span className="text-xs font-bold text-primary-600">
-                                    {formatCurrency(stage.cost)}
+                                    {fc(stage.cost)}
                                   </span>
                                 )}
                               </div>
@@ -752,15 +764,15 @@ function PaymentsTab({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="card">
           <p className="text-gray-500 text-sm mb-1">التكلفة الإجمالية</p>
-          <p className="text-2xl font-bold text-gray-900">{formatCurrency(allPlansCost)}</p>
+          <p className="text-2xl font-bold text-gray-900">{fc(allPlansCost)}</p>
         </div>
         <div className="card">
           <p className="text-gray-500 text-sm mb-1">المدفوع</p>
-          <p className="text-2xl font-bold text-green-700">{formatCurrency(totals.paid)}</p>
+          <p className="text-2xl font-bold text-green-700">{fc(totals.paid)}</p>
         </div>
         <div className="card">
           <p className="text-gray-500 text-sm mb-1">المتبقي</p>
-          <p className="text-2xl font-bold text-orange-700">{formatCurrency(totals.remaining)}</p>
+          <p className="text-2xl font-bold text-orange-700">{fc(totals.remaining)}</p>
         </div>
       </div>
 
@@ -792,7 +804,7 @@ function PaymentsTab({
                   return (
                     <tr key={p.id} className="hover:bg-gray-50/50">
                       <td className="py-3 px-6 text-sm text-gray-900">{formatDateShort(p.payment_date)}</td>
-                      <td className="py-3 px-6 font-bold text-green-700">{formatCurrency(p.amount)}</td>
+                      <td className="py-3 px-6 font-bold text-green-700">{fc(p.amount)}</td>
                       <td className="py-3 px-6">
                         <span className="badge bg-gray-100 text-gray-700">{getStatusLabel(p.payment_method)}</span>
                       </td>
@@ -1179,25 +1191,30 @@ function PlanModal({
 
 function PaymentModal({
   plans,
+  currencies,
+  defaultCurrencyId,
   onClose,
   onSave,
 }: {
   plans: PatientWithAllRelations['treatment_plans'];
+  currencies: Currency[];
+  defaultCurrencyId: string;
   onClose: () => void;
-  onSave: (amount: number, method: any, planId?: string, notes?: string, date?: string) => Promise<void>;
+  onSave: (amount: number, method: any, planId?: string, notes?: string, date?: string, currencyId?: string) => Promise<void>;
 }) {
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState<any>('cash');
   const [planId, setPlanId] = useState<string>('');
   const [notes, setNotes] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [currencyId, setCurrencyId] = useState(defaultCurrencyId);
   const [saving, setSaving] = useState(false);
 
   return (
     <ModalShell title="دفعة جديدة" onClose={onClose}>
       <div className="space-y-5">
         <div>
-          <label className="label">المبلغ (ريال)</label>
+          <label className="label">المبلغ</label>
           <input
             type="number"
             className="input text-lg font-bold"
@@ -1206,6 +1223,24 @@ function PaymentModal({
             placeholder="0"
           />
         </div>
+        {currencies.length > 0 && (
+          <div>
+            <label className="label">العملة</label>
+            <select
+              className="input"
+              value={currencyId}
+              onChange={(e) => setCurrencyId(e.target.value)}
+            >
+              {currencies
+                .filter((c) => c.is_active)
+                .map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({c.symbol})
+                  </option>
+                ))}
+            </select>
+          </div>
+        )}
         <div>
           <label className="label">طريقة الدفع</label>
           <div className="grid grid-cols-2 gap-2">
@@ -1232,7 +1267,7 @@ function PaymentModal({
             <option value="">— بدون خطة —</option>
             {plans.map((p) => (
               <option key={p.id} value={p.id}>
-                {p.title} ({formatCurrency(p.total_cost)})
+                {p.title} ({fc(p.total_cost)})
               </option>
             ))}
           </select>
@@ -1255,7 +1290,7 @@ function PaymentModal({
           disabled={!amount || saving}
           onClick={async () => {
             setSaving(true);
-            await onSave(Number(amount), method, planId, notes, date);
+            await onSave(Number(amount), method, planId, notes, date, currencyId);
             setSaving(false);
           }}
         >

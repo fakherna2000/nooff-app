@@ -21,7 +21,9 @@ import {
 import { Tooth } from '@/components/icons/Tooth';
 import { useAuth } from '@/hooks/useAuth';
 import { useOfflineSync } from '@/hooks/useOfflineSync';
+import { useClinicSettings } from '@/hooks/useClinicSettings';
 import NotificationBell from '@/components/admin/NotificationBell';
+import { ThemeToggle } from '@/components/admin/ThemeToggle';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -37,6 +39,7 @@ const navItems = [
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { role, loading, signOut, user } = useAuth();
   const { online, syncing, triggerSync } = useOfflineSync();
+  const { settings } = useClinicSettings();
   const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -101,7 +104,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 <Tooth className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="font-bold text-gray-900 leading-tight">مركز نوف</h1>
+                <h1 className="font-bold text-gray-900 dark:text-gray-100 leading-tight">
+                  {settings?.clinic_name || 'مركز نوف'}
+                </h1>
                 <p className="text-xs text-gray-500">لوحة الإدارة</p>
               </div>
             </div>
@@ -175,6 +180,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <div className="flex-1" />
 
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               <NotificationBell />
               <button
                 onClick={() => {
