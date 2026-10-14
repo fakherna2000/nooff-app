@@ -84,6 +84,7 @@ export default function AdminDashboardPage() {
       label: 'إيرادات الشهر',
       value: formatCurrency(stats.monthlyRevenue ?? 0, defaultCurrency?.symbol),
       icon: DollarSign,
+      symbol: defaultCurrency?.symbol || 'ر.س',
       color: 'from-green-500 to-green-600',
       bg: 'bg-green-50',
       iconBg: 'bg-green-100 text-green-600',
@@ -123,7 +124,11 @@ export default function AdminDashboardPage() {
                 <div className={`absolute -top-10 -left-10 w-32 h-32 rounded-full opacity-5 ${s.bg} bg-gradient-to-br ${s.color}`} />
                 <div className="relative">
                   <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${s.iconBg}`}>
-                    <s.icon className="w-6 h-6" />
+                    {s.symbol ? (
+                      <span className="text-lg font-bold">{s.symbol}</span>
+                    ) : (
+                      <s.icon className="w-6 h-6" />
+                    )}
                   </div>
                   <p className="text-gray-500 text-sm mb-1">{s.label}</p>
                   <p className="text-2xl md:text-3xl font-bold text-gray-900">{s.value}</p>
