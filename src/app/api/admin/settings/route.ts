@@ -48,6 +48,13 @@ export async function PUT(request: Request) {
   const body = await request.json();
 
   const admin = createAdminClient() as any;
+
+  // تحديث العملة الافتراضية في جدول currencies
+  if (body.currency_id) {
+    await admin.from('currencies').update({ is_default: false });
+    await admin.from('currencies').update({ is_default: true }).eq('id', body.currency_id);
+  }
+
   const { data, error } = await admin
     .from('clinic_settings')
     .update({
