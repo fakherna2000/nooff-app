@@ -201,7 +201,7 @@ export default function AdminUsersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">المستخدمون</h1>
-          <p className="text-gray-600 mt-1">إدارة حسابات المستخدمين والصلاحيات</p>
+          <p className="text-gray-600 mt-1">إدارة حسابات فريق العمل والصلاحيات</p>
         </div>
         <button onClick={openAddModal} className="btn-primary">
           <UserPlus className="w-4 h-4" />

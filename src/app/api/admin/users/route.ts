@@ -37,25 +37,30 @@ export async function GET() {
 
   const { data: patients } = await admin.from('patients').select('id, full_name, phone, user_id');
 
-  const usersWithPatients = users.map((u: any) => {
-    const patient = patients?.find((p: any) => p.user_id === u.id);
-    return {
-      id: u.id,
-      email: u.email,
-      full_name:
-        (u.user_metadata?.full_name as string) ||
-        patient?.full_name ||
-        u.email?.split('@')[0] ||
-        'مستخدم',
-      phone: patient?.phone || null,
-      role: (u.app_metadata?.role as string) || (u.user_metadata?.role as string) || 'patient',
-      created_at: u.created_at,
-      last_sign_in_at: u.last_sign_in_at,
-      banned_until: u.banned_until,
-      is_patient: !!patient,
-      patient_id: patient?.id || null,
-    };
-  });
+  const usersWithPatients = users
+    .filter((u: any) => {
+      const r = (u.app_metadata?.role as string) || (u.user_metadata?.role as string);
+      return r === 'admin';
+    })
+    .map((u: any) => {
+      const patient = patients?.find((p: any) => p.user_id === u.id);
+      return {
+        id: u.id,
+        email: u.email,
+        full_name:
+          (u.user_metadata?.full_name as string) ||
+          patient?.full_name ||
+          u.email?.split('@')[0] ||
+          'مستخدم',
+        phone: patient?.phone || null,
+        role: (u.app_metadata?.role as string) || (u.user_metadata?.role as string) || 'admin',
+        created_at: u.created_at,
+        last_sign_in_at: u.last_sign_in_at,
+        banned_until: u.banned_until,
+        is_patient: !!patient,
+        patient_id: patient?.id || null,
+      };
+    });
 
   usersWithPatients.sort(
     (a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
