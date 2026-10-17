@@ -164,7 +164,7 @@ export default function PatientHomePage() {
               </div>
 
               {currentStage ? (
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-primary-50 border border-primary-100 mb-4">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-primary-50 to-primary-50 border border-primary-100 mb-4">
                   <p className="text-xs font-semibold text-primary-700 mb-1.5">المرحلة الحالية</p>
                   <p className="font-bold text-gray-900 text-lg">{currentStage.name}</p>
                   {currentStage.description && (
@@ -219,7 +219,7 @@ export default function PatientHomePage() {
       <div className="grid grid-cols-2 gap-3">
         <Link href="/patient/appointments" className="card hover:shadow-md transition-shadow block">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
               <Calendar className="w-5 h-5" />
             </div>
           </div>
@@ -245,7 +245,7 @@ export default function PatientHomePage() {
 
         <Link href="/patient/posts" className="card hover:shadow-md transition-shadow block">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-accent-50 text-accent-600 flex items-center justify-center">
               <FileText className="w-5 h-5" />
             </div>
           </div>
@@ -256,7 +256,7 @@ export default function PatientHomePage() {
 
         <Link href="/patient/profile" className="card hover:shadow-md transition-shadow block">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-accent-50 text-accent-600 flex items-center justify-center">
               <User className="w-5 h-5" />
             </div>
           </div>

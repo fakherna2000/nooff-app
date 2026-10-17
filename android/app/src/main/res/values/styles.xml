@@ -2,13 +2,13 @@
 <resources>
 
     <!-- الألوان الرسمية للتطبيق (تُستخدم في شريط الحالة و splash و accent) -->
-    <color name="colorPrimary">#1a84f5</color>
-    <color name="colorPrimaryDark">#0d69c9</color>
-    <color name="colorPrimaryLight">#6fb4ff</color>
-    <color name="colorAccent">#a855f7</color>
-    <color name="splashBackground">#1a84f5</color>
+    <color name="colorPrimary">#c19b2e</color>
+    <color name="colorPrimaryDark">#a17f24</color>
+    <color name="colorPrimaryLight">#e2c86b</color>
+    <color name="colorAccent">#d4af37</color>
+    <color name="splashBackground">#c19b2e</color>
     <color name="white">#ffffff</color>
-    <color name="statusBarColor">#1a84f5</color>
+    <color name="statusBarColor">#c19b2e</color>
 
     <!-- Basic application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">

@@ -31,13 +31,13 @@ export default function HomePage() {
       icon: <Wifi className="w-6 h-6" />,
       title: 'عمل بدون إنترنت',
       desc: 'الوصول للبيانات حتى بدون اتصال بالإنترنت',
-      color: 'bg-blue-100 text-blue-600',
+      color: 'bg-primary-100 text-primary-600',
     },
     {
       icon: <Bell className="w-6 h-6" />,
       title: 'إشعارات فورية',
       desc: 'تذكيرات المواعيد وتحديثات الحالة مباشرة على الهاتف',
-      color: 'bg-purple-100 text-purple-600',
+      color: 'bg-accent-100 text-accent-600',
     },
   ];
 

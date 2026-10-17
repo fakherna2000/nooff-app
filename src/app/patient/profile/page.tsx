@@ -107,12 +107,12 @@ export default function PatientProfilePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <InfoRow icon={User} label="الاسم الكامل" value={patient.full_name} />
             <InfoRow icon={Phone} label="رقم الهاتف" value={formatPhoneNumber(patient.phone)} accent="bg-green-50 text-green-600" />
-            <InfoRow icon={Mail} label="البريد الإلكتروني" value={patient.email || '—'} accent="bg-blue-50 text-blue-600" />
+            <InfoRow icon={Mail} label="البريد الإلكتروني" value={patient.email || '—'} accent="bg-primary-50 text-primary-600" />
             <InfoRow
               icon={Calendar}
               label="تاريخ الميلاد"
               value={patient.date_of_birth ? formatDate(patient.date_of_birth) : '—'}
-              accent="bg-purple-50 text-purple-600"
+              accent="bg-accent-50 text-accent-600"
             />
             <InfoRow
               icon={User}
@@ -142,10 +142,10 @@ export default function PatientProfilePage() {
       {patient?.notes && (
         <div className="card">
           <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-blue-500" />
+            <FileText className="w-5 h-5 text-primary-500" />
             ملاحظات الطبيب
           </h3>
-          <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-100">
+          <div className="p-4 rounded-xl bg-primary-50/50 border border-primary-100">
             <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">{patient.notes}</p>
           </div>
         </div>
@@ -176,9 +176,9 @@ export default function PatientProfilePage() {
               مزامنة
             </button>
           </div>
-          <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-100 text-sm">
-            <p className="font-semibold text-blue-800 mb-1.5">💡 نصيحة</p>
-            <p className="text-blue-900/80 leading-relaxed">
+          <div className="p-4 rounded-xl bg-primary-50/50 border border-primary-100 text-sm">
+            <p className="font-semibold text-primary-800 mb-1.5">💡 نصيحة</p>
+            <p className="text-primary-900/80 leading-relaxed">
               يمكنك الوصول لجميع بياناتك حتى بدون إنترنت. سيتم تحديث البيانات تلقائياً عند عودة الاتصال.
               فقط تأكد من فتح التطبيق مرة واحدة أثناء الاتصال ليتم حفظ البيانات محلياً.
             </p>

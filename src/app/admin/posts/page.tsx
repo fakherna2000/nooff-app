@@ -24,9 +24,9 @@ import { cn } from '@/lib/utils';
 
 const POST_TYPES = [
   { value: 'offer', label: 'عرض', icon: Tag, color: 'text-green-600 bg-green-50' },
-  { value: 'ad', label: 'إعلان', icon: Megaphone, color: 'text-blue-600 bg-blue-50' },
+  { value: 'ad', label: 'إعلان', icon: Megaphone, color: 'text-primary-600 bg-primary-50' },
   { value: 'tip', label: 'نصيحة', icon: Lightbulb, color: 'text-amber-600 bg-amber-50' },
-  { value: 'general', label: 'منشور', icon: FileText, color: 'text-purple-600 bg-purple-50' },
+  { value: 'general', label: 'منشور', icon: FileText, color: 'text-accent-600 bg-accent-50' },
 ] as const;
 
 type PostType = (typeof POST_TYPES)[number]['value'];

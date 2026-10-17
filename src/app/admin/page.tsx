@@ -76,9 +76,9 @@ export default function AdminDashboardPage() {
       label: 'المواعيد القادمة',
       value: stats.upcomingAppointments ?? 0,
       icon: Clock,
-      color: 'from-blue-500 to-blue-600',
-      bg: 'bg-blue-50',
-      iconBg: 'bg-blue-100 text-blue-600',
+      color: 'from-primary-500 to-primary-600',
+      bg: 'bg-primary-50',
+      iconBg: 'bg-primary-100 text-primary-600',
     },
     {
       label: 'إيرادات الشهر',

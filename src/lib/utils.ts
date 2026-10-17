@@ -73,7 +73,7 @@ export function getStatusClass(status: string): string {
     not_started: 'status-not-started',
     in_progress: 'status-in-progress',
     completed: 'status-completed',
-    scheduled: 'badge bg-blue-100 text-blue-700',
+    scheduled: 'badge bg-primary-100 text-primary-700',
     cancelled: 'badge bg-red-100 text-red-700',
     no_show: 'badge bg-gray-100 text-gray-700',
     requested: 'badge bg-amber-100 text-amber-700',
@@ -101,7 +101,7 @@ export function getInitialsColor(name: string): string {
     'bg-accent-100 text-accent-700',
     'bg-green-100 text-green-700',
     'bg-orange-100 text-orange-700',
-    'bg-purple-100 text-purple-700',
+    'bg-accent-100 text-accent-700',
     'bg-pink-100 text-pink-700',
   ];
   let hash = 0;

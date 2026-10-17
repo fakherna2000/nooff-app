@@ -22,7 +22,7 @@ const config: CapacitorConfig = {
   webDir: 'public',
 
   android: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#faf6ec',
   },
 
   server: {
@@ -46,8 +46,8 @@ const config: CapacitorConfig = {
 
   ios: {
     contentInset: 'automatic',
-    backgroundColor: '#1a84f5',
-    // تضمين الخلفية الزرقاء مع شاشة الـ Splash نفس الإعدادات مثل الأندرويد
+    backgroundColor: '#c19b2e',
+    // تضمين الخلفية الذهبية مع شاشة الـ Splash نفس الإعدادات مثل الأندرويد
     // (SplashScreen على iOS يتم توليده عبر Assets.xcassets في Xcode)
   },
 
@@ -55,7 +55,7 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchShowDuration: 2500,
       launchAutoHide: true,
-      backgroundColor: '#1a84f5',
+      backgroundColor: '#c19b2e',
       androidSplashResourceName: 'splash',
       androidScaleType: 'CENTER_CROP',
       showSpinner: true,
@@ -66,7 +66,7 @@ const config: CapacitorConfig = {
     },
     StatusBar: {
       style: 'LIGHT',
-      backgroundColor: '#1a84f5',
+      backgroundColor: '#c19b2e',
       overlaysWebView: false,
     },
     Keyboard: {

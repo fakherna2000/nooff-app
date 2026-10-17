@@ -219,11 +219,11 @@ export default function PatientAppointmentsPage() {
       </div>
 
       {!next && (
-        <div className="card border-blue-200 bg-blue-50/30">
-          <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-1.5 text-sm">
+        <div className="card border-primary-200 bg-primary-50/30">
+          <h3 className="font-semibold text-primary-800 mb-2 flex items-center gap-1.5 text-sm">
             <Calendar className="w-4 h-4" /> جدولة موعد
           </h3>
-          <p className="text-sm text-blue-900/80 leading-relaxed">
+          <p className="text-sm text-primary-900/80 leading-relaxed">
             يرجى التواصل مع المركز على أرقام الهواتف الرسمية لحجز موعد جديد أو إعادة جدولة موعد موجود.
           </p>
         </div>

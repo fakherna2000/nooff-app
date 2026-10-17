@@ -102,7 +102,7 @@ export default function AdminAppointmentsPage() {
 
       <div className="grid grid-cols-3 gap-4">
         <div className="card flex items-center gap-4">
-          <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+          <div className="w-11 h-11 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
             <Clock className="w-6 h-6" />
           </div>
           <div>
@@ -221,7 +221,7 @@ export default function AdminAppointmentsPage() {
                           key={appt.id}
                           className={cn(
                             'p-2.5 rounded-lg border text-xs',
-                            appt.status === 'scheduled' && 'bg-blue-50 border-blue-100',
+                            appt.status === 'scheduled' && 'bg-primary-50 border-primary-100',
                             appt.status === 'requested' && 'bg-amber-50 border-amber-200',
                             appt.status === 'completed' && 'bg-green-50 border-green-100',
                             appt.status === 'cancelled' && 'bg-red-50 border-red-100 opacity-60'

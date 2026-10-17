@@ -221,7 +221,7 @@ export default function PatientTreatmentPage() {
                                   className={cn(
                                     'badge text-[10px]',
                                     stage.status === 'completed' && 'bg-green-100 text-green-700',
-                                    stage.status === 'in_progress' && 'bg-blue-100 text-blue-700',
+                                    stage.status === 'in_progress' && 'bg-primary-100 text-primary-700',
                                     stage.status === 'not_started' && 'bg-gray-100 text-gray-600'
                                   )}
                                 >

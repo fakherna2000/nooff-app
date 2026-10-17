@@ -278,8 +278,8 @@ export default function AdminUsersPage() {
                       <span
                         className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
                           u.role === 'admin'
-                            ? 'bg-purple-50 text-purple-700'
-                            : 'bg-blue-50 text-blue-700'
+                            ? 'bg-accent-50 text-accent-700'
+                            : 'bg-primary-50 text-primary-700'
                         }`}
                       >
                         {u.role === 'admin' ? (
@@ -401,7 +401,7 @@ export default function AdminUsersPage() {
                     onClick={() => setForm({ ...form, role: 'admin' })}
                     className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-colors ${
                       form.role === 'admin'
-                        ? 'border-purple-500 bg-purple-50 text-purple-700'
+                        ? 'border-accent-500 bg-accent-50 text-accent-700'
                         : 'border-gray-200 text-gray-500 hover:border-gray-300'
                     }`}
                   >
@@ -413,7 +413,7 @@ export default function AdminUsersPage() {
                     onClick={() => setForm({ ...form, role: 'patient' })}
                     className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-colors ${
                       form.role === 'patient'
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        ? 'border-primary-500 bg-primary-50 text-primary-700'
                         : 'border-gray-200 text-gray-500 hover:border-gray-300'
                     }`}
                   >

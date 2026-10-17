@@ -7,9 +7,9 @@ import { cn } from '@/lib/utils';
 
 const CATEGORIES = [
   { value: 'offer', label: 'عرض خاص / خصم', icon: Tag, color: 'text-green-600 bg-green-50 border-green-200' },
-  { value: 'ad', label: 'إعلان', icon: Megaphone, color: 'text-blue-600 bg-blue-50 border-blue-200' },
+  { value: 'ad', label: 'إعلان', icon: Megaphone, color: 'text-primary-600 bg-primary-50 border-primary-200' },
   { value: 'tip', label: 'نصيحة طبية', icon: Lightbulb, color: 'text-amber-600 bg-amber-50 border-amber-200' },
-  { value: 'general', label: 'عام', icon: FileText, color: 'text-purple-600 bg-purple-50 border-purple-200' },
+  { value: 'general', label: 'عام', icon: FileText, color: 'text-accent-600 bg-accent-50 border-accent-200' },
 ] as const;
 
 type Category = (typeof CATEGORIES)[number]['value'];
@@ -165,7 +165,7 @@ export default function BroadcastNotificationsPage() {
         </button>
       </div>
 
-      <div className="mt-6 flex items-center gap-3 p-4 rounded-xl bg-blue-50 border border-blue-100 text-blue-700 text-sm">
+      <div className="mt-6 flex items-center gap-3 p-4 rounded-xl bg-primary-50 border border-primary-100 text-primary-700 text-sm">
         <Users className="w-5 h-5 flex-shrink-0" />
         <p>
           سيتم إرسال هذا الإشعار إلى جميع أجهزة المرضى المسجلة في التطبيق.

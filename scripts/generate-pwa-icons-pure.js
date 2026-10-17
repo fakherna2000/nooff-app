@@ -75,8 +75,8 @@ function generatePng(size, color1, color2, label) {
 
 async function main() {
   const outDir = path.join(__dirname, '..', 'public');
-  const primaryBlue = [26, 132, 245];   // #1a84f5
-  const accentPurple = [217, 70, 239];  // #d946ef
+  const lightGold = [226, 200, 107];   // #e2c86b
+  const deepGold = [161, 127, 36];     // #a17f24
 
   const files = [
     { size: 192, name: 'icon-192.png' },
@@ -85,7 +85,7 @@ async function main() {
   ];
 
   for (const f of files) {
-    const buf = generatePng(f.size, primaryBlue, accentPurple, 'نوف');
+    const buf = generatePng(f.size, lightGold, deepGold, 'نوف');
     const p = path.join(outDir, f.name);
     fs.writeFileSync(p, buf);
     console.log('✅ تم إنشاء:', f.name, `(${f.size}x${f.size}, ${Math.round(buf.length / 1024)} كيلوبايت)`);

@@ -242,7 +242,7 @@ export default function NotificationBell() {
                       key={n.id}
                       className={cn(
                         'px-4 py-3 hover:bg-gray-50 transition-colors',
-                        !seenIdsRef.current.has(n.id) && 'bg-blue-50/40',
+                        !seenIdsRef.current.has(n.id) && 'bg-primary-50/40',
                       )}
                     >
                       <div className="flex items-start gap-3">

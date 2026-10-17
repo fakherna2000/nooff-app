@@ -382,7 +382,7 @@ export default function AdminSettingsPage() {
                       )}
                       <button
                         onClick={() => openCurrencyModal(c)}
-                        className="p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 text-primary-600 transition-colors"
                         title="تعديل"
                       >
                         <Pencil className="w-4 h-4" />

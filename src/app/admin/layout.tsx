@@ -174,7 +174,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Menu className="w-5 h-5 text-gray-700" />
             </button>
 
-            <div className="hidden md:flex items-center gap-2 bg-blue-50 text-blue-700 border border-blue-100 rounded-xl px-4 py-2 text-xs font-medium">
+            <div className="hidden md:flex items-center gap-2 bg-primary-50 text-primary-700 border border-primary-100 rounded-xl px-4 py-2 text-xs font-medium">
               <Monitor className="w-4 h-4" />
               لوحة الإدارة مصممة للعمل على الكمبيوتر — للتطبيق على الجوال استخدم بوابة المريض
             </div>

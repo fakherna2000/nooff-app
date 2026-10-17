@@ -15,9 +15,9 @@ const TYPE_LABELS: Record<string, string> = {
 
 const TYPE_COLORS: Record<string, string> = {
   offer: 'bg-green-100 text-green-700',
-  ad: 'bg-blue-100 text-blue-700',
+  ad: 'bg-primary-100 text-primary-700',
   tip: 'bg-amber-100 text-amber-700',
-  general: 'bg-purple-100 text-purple-700',
+  general: 'bg-accent-100 text-accent-700',
 };
 
 export default function PatientPostsPage() {

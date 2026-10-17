@@ -99,19 +99,19 @@ function injectStaticFallbackShell(html) {
   // We add a pre-Rendered placeholder that mimics the real patient dashboard so the
   // screen is never empty/spinner. This placeholder is VISIBLE until React renders.
   const fallback = `
-<div id="__noof_fallback" class="min-h-screen bg-gradient-to-b from-sky-50 to-white pb-28" dir="rtl" lang="ar" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
+<div id="__noof_fallback" class="min-h-screen bg-gradient-to-b from-amber-50 to-white pb-28" dir="rtl" lang="ar" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
   <style>
     .nf-badge{display:inline-block;padding:4px 10px;border-radius:9999px;font-size:12px;font-weight:600;}
     .nf-card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);}
-    .nf-grad{background:linear-gradient(135deg,#1a84f5 0%,#60a5fa 100%);}
-    .nf-chip{display:inline-flex;align-items:center;padding:6px 12px;border-radius:9999px;background:#eff6ff;color:#1d4ed8;font-size:13px;font-weight:600;}
+    .nf-grad{background:linear-gradient(135deg,#c19b2e 0%,#e2c86b 100%);}
+    .nf-chip{display:inline-flex;align-items:center;padding:6px 12px;border-radius:9999px;background:#fdfaf1;color:#a17f24;font-size:13px;font-weight:600;}
     .nf-bar{height:8px;border-radius:999px;background:#e5e7eb;overflow:hidden;}
-    .nf-bar>span{display:block;height:100%;background:linear-gradient(90deg,#1a84f5,#22c55e);}
+    .nf-bar>span{display:block;height:100%;background:linear-gradient(90deg,#c19b2e,#d4af37);}
     .nf-btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:12px;font-weight:600;font-size:14px;}
-    .nf-btn-primary{background:#1a84f5;color:#fff;}
+    .nf-btn-primary{background:#c19b2e;color:#fff;}
     .nf-nav{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:space-around;background:#fff;border-top:1px solid #e5e7eb;padding:8px 4px calc(8px + env(safe-area-inset-bottom));}
     .nf-nav a{display:flex;flex:1;flex-direction:column;align-items:center;gap:2px;color:#6b7280;text-decoration:none;font-size:11px;padding:6px 2px;border-radius:10px;}
-    .nf-nav a.active{color:#1a84f5;}
+    .nf-nav a.active{color:#c19b2e;}
     .nf-svg{width:22px;height:22px;}
   </style>
 
@@ -308,7 +308,7 @@ function buildStaticShellByHand(cssHrefs, jsHrefs) {
   return `<!doctype html><html lang="ar" dir="rtl"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#1a84f5">
+<meta name="theme-color" content="#c19b2e">
 <title>مركز نوف لطب الأسنان</title>
 <meta name="description" content="بوابة المريض — مركز نوف لطب الأسنان">
 <link rel="manifest" href="/manifest.json">

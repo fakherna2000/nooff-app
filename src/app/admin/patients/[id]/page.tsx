@@ -449,9 +449,9 @@ function OverviewTab({
           {patient.notes && (
             <div className="mt-4">
               <p className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-blue-500" /> ملاحظات
+                <FileText className="w-4 h-4 text-primary-500" /> ملاحظات
               </p>
-              <p className="text-gray-600 text-sm leading-relaxed bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+              <p className="text-gray-600 text-sm leading-relaxed bg-primary-50/50 p-4 rounded-xl border border-primary-100">
                 {patient.notes}
               </p>
             </div>
@@ -680,7 +680,7 @@ function PlansTab({
                               className={cn(
                                 'w-10 h-10 rounded-full flex items-center justify-center z-10 shrink-0',
                                 stage.status === 'completed' && 'bg-green-100 text-green-600',
-                                stage.status === 'in_progress' && 'bg-blue-100 text-blue-600',
+                                stage.status === 'in_progress' && 'bg-primary-100 text-primary-600',
                                 stage.status === 'not_started' && 'bg-gray-100 text-gray-400'
                               )}
                             >
