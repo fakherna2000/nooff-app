@@ -23,7 +23,7 @@ import { useOfflineSync } from '@/hooks/useOfflineSync';
 import { useAppointments } from '@/hooks/useData';
 import { formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import {
   isPushSupported,
   isPushPermissionGranted,
@@ -127,6 +127,7 @@ export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<Partial<ClinicSettingsType>>({});
   const [settingsLoading, setSettingsLoading] = useState(true);
   const [settingsSaving, setSettingsSaving] = useState(false);
+  const [uploadingImageKey, setUploadingImageKey] = useState<string | null>(null);
 
   // العملات
   const [currencies, setCurrencies] = useState<Currency[]>([]);
@@ -187,18 +188,22 @@ export default function AdminSettingsPage() {
     }));
   };
 
-  const saveSettings = async () => {
+  const persistSettings = async (
+    nextSettings: Partial<ClinicSettingsType>,
+    successMessage = 'تم حفظ الإعدادات'
+  ) => {
     setSettingsSaving(true);
     try {
       const res = await fetch('/api/admin/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
+        body: JSON.stringify(nextSettings),
       });
       const data = await res.json();
       if (res.ok && data.data) {
         setSettings(data.data);
-        toast.success('تم حفظ الإعدادات');
+        toast.success(successMessage);
+        return true;
       } else {
         toast.error(data.error || 'فشل الحفظ');
       }
@@ -207,6 +212,66 @@ export default function AdminSettingsPage() {
     } finally {
       setSettingsSaving(false);
     }
+    return false;
+  };
+
+  const saveSettings = async () => {
+    await persistSettings(settings);
+  };
+
+  const handleImageUpload = async (
+    key: keyof MobileAppImages,
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImageKey(String(key));
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('field', String(key));
+
+      const uploadRes = await fetch('/api/admin/settings/upload-image', {
+        method: 'POST',
+        body: formData,
+      });
+      const uploadData = await uploadRes.json();
+
+      if (!uploadRes.ok || !uploadData.data?.publicUrl) {
+        toast.error(uploadData.error || 'فشل رفع الصورة');
+        return;
+      }
+
+      const nextSettings: Partial<ClinicSettingsType> = {
+        ...settings,
+        mobile_images: {
+          ...((settings.mobile_images || {}) as MobileAppImages),
+          [key]: uploadData.data.publicUrl,
+        },
+      };
+
+      setSettings(nextSettings);
+      await persistSettings(nextSettings, 'تم رفع الصورة وحفظها');
+    } catch {
+      toast.error('فشل رفع الصورة');
+    } finally {
+      setUploadingImageKey(null);
+      event.target.value = '';
+    }
+  };
+
+  const clearMobileImage = async (key: keyof MobileAppImages) => {
+    const nextSettings: Partial<ClinicSettingsType> = {
+      ...settings,
+      mobile_images: {
+        ...((settings.mobile_images || {}) as MobileAppImages),
+        [key]: '',
+      },
+    };
+
+    setSettings(nextSettings);
+    await persistSettings(nextSettings, 'تم حذف الصورة من الإعدادات');
   };
 
   const enablePush = async () => {
@@ -436,6 +501,26 @@ export default function AdminSettingsPage() {
                       placeholder="https://..."
                       dir="ltr"
                     />
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <label className="inline-flex items-center justify-center px-3 py-2 rounded-xl bg-primary-600 text-white text-sm font-medium cursor-pointer hover:bg-primary-700 transition-colors">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleImageUpload(field.key, e)}
+                          disabled={settingsSaving || uploadingImageKey === field.key}
+                        />
+                        {uploadingImageKey === field.key ? 'جاري الرفع...' : 'رفع من الجهاز'}
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => clearMobileImage(field.key)}
+                        disabled={!value || settingsSaving || uploadingImageKey === field.key}
+                        className="inline-flex items-center justify-center px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                      >
+                        حذف الصورة
+                      </button>
+                    </div>
                     <div className="mt-3 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 h-28 flex items-center justify-center">
                       {value ? (
                         <img

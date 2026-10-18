@@ -44,7 +44,7 @@ linear-gradient(145deg,#f8f0e5,#efe1d0);border:1px solid rgba(255,255,255,.82);b
 radial-gradient(circle at top left,rgba(255,255,255,.25),transparent 34%),
 linear-gradient(180deg,rgba(71,46,28,.04),rgba(71,46,28,.38)),
 linear-gradient(135deg,#ccb199,#8d684a);box-shadow:var(--shadow-soft);position:relative;overflow:hidden}
-.hero-media::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(180deg,transparent,rgba(58,41,27,.55))}
+.hero-media::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(180deg,transparent,rgba(58,41,27,.55));z-index:1}
 .brand-monogram{position:absolute;left:14px;bottom:18px;color:#fff;opacity:.95}
 .brand-monogram .mark{font-size:40px;font-weight:200;line-height:1;font-family:"Times New Roman",serif}
 .brand-monogram .sub{font-size:11px;letter-spacing:.22em;margin-top:8px;text-transform:uppercase}
@@ -72,8 +72,8 @@ linear-gradient(135deg,#ccb199,#8d684a);box-shadow:var(--shadow-soft);position:r
 
 .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .quick-card{position:relative;min-height:168px;border-radius:24px;overflow:hidden;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.95);background-color:#ddd}
-.quick-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(44,28,13,.56))}
-.quick-card > *{position:relative;z-index:1}
+.quick-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(44,28,13,.56));z-index:1}
+.quick-card > *{position:relative;z-index:2}
 .quick-card .q-label{font-size:12px;color:rgba(255,255,255,.86);font-weight:700}
 .quick-card .q-title{font-size:18px;color:#fff;font-weight:900;margin-top:2px}
 .quick-card .q-desc{font-size:12px;color:rgba(255,255,255,.85);margin-top:3px}
@@ -122,7 +122,7 @@ linear-gradient(145deg,rgba(255,255,255,.92),rgba(244,232,216,.92));border-radiu
 .feature-strip{display:flex;gap:12px;overflow:auto;padding-bottom:4px;scrollbar-width:none}
 .feature-strip::-webkit-scrollbar{display:none}
 .feature-card{flex:0 0 180px;border-radius:24px;overflow:hidden;background:#fff;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.95)}
-.feature-card .media{height:118px;background-size:cover;background-position:center}
+.feature-card .media{height:118px;background-size:cover;background-position:center;position:relative;overflow:hidden}
 .feature-card .body{padding:14px}
 .feature-card h4{font-size:15px;font-weight:900;line-height:1.45}
 .feature-card p{font-size:12px;color:var(--text-2);margin-top:5px}
@@ -153,8 +153,8 @@ linear-gradient(145deg,rgba(255,255,255,.92),rgba(244,232,216,.92));border-radiu
 .editorial-banner{position:relative;border-radius:30px;overflow:hidden;min-height:174px;padding:18px;background:
 radial-gradient(circle at top left,rgba(255,255,255,.35),transparent 30%),
 linear-gradient(135deg,#d7c0a6,#8a6547);border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow)}
-.editorial-banner::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(47,32,19,.44))}
-.editorial-banner .banner-content{position:relative;z-index:1;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.editorial-banner::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(47,32,19,.44));z-index:1}
+.editorial-banner .banner-content{position:relative;z-index:2;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
 .editorial-banner h3{font-size:22px;font-weight:900;line-height:1.35}
 .editorial-banner p{font-size:13px;color:rgba(255,255,255,.88);margin-top:4px;max-width:78%}
 
@@ -187,6 +187,9 @@ linear-gradient(135deg,#d7c0a6,#8a6547);border:1px solid rgba(255,255,255,.95);b
 .profile-card{padding:22px;background:
 radial-gradient(circle at top right,rgba(255,255,255,.5),transparent 34%),
 linear-gradient(145deg,rgba(255,255,255,.88),rgba(244,230,214,.92))}
+.hero-media > *,.profile-card > *{position:relative;z-index:2}
+.media-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:none;pointer-events:none;z-index:0}
+.has-media-image .media-layer{display:block}
 .profile-head{display:flex;align-items:center;gap:14px}
 .profile-head .avatar{width:72px;height:72px;border-radius:24px;font-size:28px}
 .profile-head .name{font-size:22px;font-weight:900}
@@ -1067,6 +1070,48 @@ linear-gradient(145deg,#b59172,#6c4a31);display:flex;align-items:flex-end;justif
     return String(url || '').replace(/"/g, '\\"');
   }
 
+  function ensureMediaLayer(el) {
+    if (!el) return null;
+    var layer = el.querySelector('.media-layer');
+    if (!layer) {
+      layer = document.createElement('img');
+      layer.className = 'media-layer';
+      layer.alt = '';
+      layer.setAttribute('aria-hidden', 'true');
+      layer.decoding = 'async';
+      layer.loading = 'eager';
+      el.insertBefore(layer, el.firstChild);
+    }
+    return layer;
+  }
+
+  function setLayeredImage(selector, imageUrl, fallbackValue) {
+    var el = typeof selector === 'string' ? document.querySelector(selector) : selector;
+    if (!el) return;
+
+    el.style.background = fallbackValue || '';
+
+    var layer = ensureMediaLayer(el);
+    if (!layer) return;
+
+    if (!imageUrl) {
+      layer.removeAttribute('src');
+      layer.style.display = 'none';
+      el.classList.remove('has-media-image');
+      return;
+    }
+
+    layer.onload = function() {
+      layer.style.display = 'block';
+      el.classList.add('has-media-image');
+    };
+    layer.onerror = function() {
+      layer.style.display = 'none';
+      el.classList.remove('has-media-image');
+    };
+    layer.src = imageUrl;
+  }
+
   function setBackgroundImage(selector, imageUrl, gradientValue) {
     var el = typeof selector === 'string' ? document.querySelector(selector) : selector;
     if (!el) return;
@@ -1111,67 +1156,67 @@ linear-gradient(145deg,#b59172,#6c4a31);display:flex;align-items:flex-end;justif
       images.login_background_image_url,
       'radial-gradient(circle at top right,rgba(255,255,255,.12),transparent 20%),linear-gradient(140deg,rgba(69,45,27,.8),rgba(69,45,27,.32)),linear-gradient(145deg,#b59172,#6c4a31)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#heroMedia',
       images.home_hero_image_url,
       'radial-gradient(circle at top left,rgba(255,255,255,.25),transparent 34%),linear-gradient(180deg,rgba(71,46,28,.04),rgba(71,46,28,.38)),linear-gradient(135deg,#ccb199,#8d684a)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#profileCard',
       images.profile_background_image_url,
       'radial-gradient(circle at top right,rgba(255,255,255,.5),transparent 34%),linear-gradient(145deg,rgba(255,255,255,.88),rgba(244,230,214,.92))'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#homeServiceDentalCard',
       images.home_service_dental_image_url,
       'linear-gradient(145deg,#d6bea7,#8c6548)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#homeServiceBeautyCard',
       images.home_service_beauty_image_url,
       'linear-gradient(145deg,#ccb39a,#7e5a41)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#appointmentsBanner',
       images.appointments_banner_image_url,
       'radial-gradient(circle at top left,rgba(255,255,255,.35),transparent 30%),linear-gradient(135deg,#d7c0a6,#8a6547)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#postsBanner',
       images.posts_banner_image_url,
       'radial-gradient(circle at top left,rgba(255,255,255,.35),transparent 30%),linear-gradient(135deg,#d7c0a6,#8a6547)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#treatmentBanner',
       images.treatment_banner_image_url,
       'radial-gradient(circle at top left,rgba(255,255,255,.35),transparent 30%),linear-gradient(135deg,#d7c0a6,#8a6547)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#homeFeatureWhiteningMedia',
       images.home_feature_whitening_image_url,
       'linear-gradient(145deg,#d8c4af,#a37c58)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#homeFeatureSkincareMedia',
       images.home_feature_skincare_image_url,
       'linear-gradient(145deg,#eadaca,#bb9473)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#homeFeatureImplantsMedia',
       images.home_feature_implants_image_url,
       'linear-gradient(145deg,#e2d1bf,#9b724e)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#treatmentFeatureCleaningMedia',
       images.treatment_feature_cleaning_image_url,
       'linear-gradient(145deg,#ddc9b5,#8d6445)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#treatmentFeatureAlignersMedia',
       images.treatment_feature_aligners_image_url,
       'linear-gradient(145deg,#d7c0a8,#a77d58)'
     );
-    setBackgroundImage(
+    setLayeredImage(
       '#treatmentFeatureVeneersMedia',
       images.treatment_feature_veneers_image_url,
       'linear-gradient(145deg,#e4d7c9,#94694b)'
