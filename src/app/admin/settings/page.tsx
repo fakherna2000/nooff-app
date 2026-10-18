@@ -17,6 +17,7 @@ import {
   Pencil,
   X,
   Check,
+  ImageIcon,
 } from 'lucide-react';
 import { useOfflineSync } from '@/hooks/useOfflineSync';
 import { useAppointments } from '@/hooks/useData';
@@ -30,7 +31,89 @@ import {
   subscribeUser,
 } from '@/lib/push-notifications';
 import { useAuth } from '@/hooks/useAuth';
-import type { ClinicSettings as ClinicSettingsType, Currency } from '@/lib/database.types';
+import type {
+  ClinicSettings as ClinicSettingsType,
+  Currency,
+  MobileAppImages,
+} from '@/lib/database.types';
+
+const MOBILE_IMAGE_FIELDS: Array<{ key: keyof MobileAppImages; label: string; hint: string }> = [
+  {
+    key: 'login_background_image_url',
+    label: 'خلفية شاشة الدخول',
+    hint: 'الصورة الرئيسية قبل تسجيل الدخول',
+  },
+  {
+    key: 'home_hero_image_url',
+    label: 'صورة هيرو الصفحة الرئيسية',
+    hint: 'البطاقة الكبيرة أعلى الصفحة الرئيسية',
+  },
+  {
+    key: 'appointments_banner_image_url',
+    label: 'بانر صفحة الحجوزات',
+    hint: 'البانر أعلى صفحة حجوزاتي',
+  },
+  {
+    key: 'posts_banner_image_url',
+    label: 'بانر صفحة العروض',
+    hint: 'البانر أعلى صفحة العروض والمنشورات',
+  },
+  {
+    key: 'treatment_banner_image_url',
+    label: 'بانر صفحة الخدمات',
+    hint: 'البانر أعلى صفحة الخدمات ورحلة العلاج',
+  },
+  {
+    key: 'profile_background_image_url',
+    label: 'خلفية بطاقة الملف الشخصي',
+    hint: 'البطاقة الرئيسية في صفحة الملف الشخصي',
+  },
+  {
+    key: 'home_service_dental_image_url',
+    label: 'صورة خدمة طب الأسنان',
+    hint: 'كرت الخدمة الأول في الصفحة الرئيسية',
+  },
+  {
+    key: 'home_service_beauty_image_url',
+    label: 'صورة خدمة التجميل',
+    hint: 'كرت الخدمة الثاني في الصفحة الرئيسية',
+  },
+  {
+    key: 'home_feature_whitening_image_url',
+    label: 'صورة خدمة التبييض',
+    hint: 'كرت الخدمات المميزة الأول',
+  },
+  {
+    key: 'home_feature_skincare_image_url',
+    label: 'صورة العناية بالبشرة',
+    hint: 'كرت الخدمات المميزة الثاني',
+  },
+  {
+    key: 'home_feature_implants_image_url',
+    label: 'صورة زراعة الأسنان',
+    hint: 'كرت الخدمات المميزة الثالث',
+  },
+  {
+    key: 'treatment_feature_cleaning_image_url',
+    label: 'صورة التبييض والتنظيف',
+    hint: 'أول كرت في صفحة الخدمات',
+  },
+  {
+    key: 'treatment_feature_aligners_image_url',
+    label: 'صورة التقويم الشفاف',
+    hint: 'ثاني كرت في صفحة الخدمات',
+  },
+  {
+    key: 'treatment_feature_veneers_image_url',
+    label: 'صورة التركيبات التجميلية',
+    hint: 'ثالث كرت في صفحة الخدمات',
+  },
+  {
+    key: 'posts_fallback_image_url',
+    label: 'صورة افتراضية للمنشورات',
+    hint: 'تظهر عندما لا يوجد صورة للمنشور',
+  },
+];
 
 export default function AdminSettingsPage() {
   const { online, lastSync, triggerSync, syncing } = useOfflineSync();
@@ -90,6 +173,18 @@ export default function AdminSettingsPage() {
     } catch {
       toast.error('فشل تحميل العملات');
     }
+  };
+
+  const mobileImages = (settings.mobile_images || {}) as MobileAppImages;
+
+  const updateMobileImage = (key: keyof MobileAppImages, value: string) => {
+    setSettings((prev) => ({
+      ...prev,
+      mobile_images: {
+        ...((prev.mobile_images || {}) as MobileAppImages),
+        [key]: value,
+      },
+    }));
   };
 
   const saveSettings = async () => {
@@ -311,6 +406,61 @@ export default function AdminSettingsPage() {
               </button>
             </div>
           </div>
+        )}
+      </div>
+
+      <div className="card">
+        <h2 className="font-bold text-gray-900 dark:text-gray-100 text-lg mb-5 flex items-center gap-2">
+          <ImageIcon className="w-5 h-5 text-primary-600" />
+          صور تطبيق المريض
+        </h2>
+        {settingsLoading ? (
+          <div className="text-center py-8 text-gray-500">جاري التحميل...</div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {MOBILE_IMAGE_FIELDS.map((field) => {
+                const value = mobileImages[field.key] || '';
+
+                return (
+                  <div
+                    key={field.key}
+                    className="rounded-2xl border border-gray-100 dark:border-gray-700 p-4 bg-gray-50/70 dark:bg-gray-800/40"
+                  >
+                    <label className="label">{field.label}</label>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{field.hint}</p>
+                    <input
+                      className="input"
+                      value={value}
+                      onChange={(e) => updateMobileImage(field.key, e.target.value)}
+                      placeholder="https://..."
+                      dir="ltr"
+                    />
+                    <div className="mt-3 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 h-28 flex items-center justify-center">
+                      {value ? (
+                        <img
+                          src={value}
+                          alt={field.label}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div className="text-xs text-gray-400 dark:text-gray-500">لا توجد صورة</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex justify-end mt-5">
+              <button onClick={saveSettings} disabled={settingsSaving} className="btn-primary">
+                <Save className="w-4 h-4" />
+                {settingsSaving ? 'جاري الحفظ...' : 'حفظ صور التطبيق'}
+              </button>
+            </div>
+          </>
         )}
       </div>
 

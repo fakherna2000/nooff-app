@@ -64,6 +64,7 @@ export async function PUT(request: Request) {
       email: body.email,
       logo_url: body.logo_url,
       currency_id: body.currency_id,
+      mobile_images: body.mobile_images || {},
       updated_at: new Date().toISOString(),
     })
     .not('id', 'is', null)

@@ -12,202 +12,289 @@
 <link rel="manifest" href="/manifest.json" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--gold-50:#fdfaf1;--gold-100:#f4e7bb;--gold-500:#d4af37;--gold-600:#a17f24;--brand:#c19b2e;--brand-dark:#8f6f1d;--text:#3a2f18;--text-2:#7a6a4a;--text-3:#a89a7d;--bg:#faf6ec;--white:#ffffff;--line:#ece2cd;--radius:18px;--radius2:14px;--shadow-sm:0 1px 2px rgba(120,95,30,.06);--shadow:0 4px 18px -8px rgba(120,95,30,.15),0 2px 6px rgba(120,95,30,.05);--green:#10b981;--amber:#f59e0b;--rose:#ef4444;--pink-50:#fff1f2;--pink:#ec4899;--sky-50:#faf6ec;--violet:#8b5cf6}
+:root{--brand:#9b7653;--brand-2:#6b4a2e;--brand-3:#d5c0a8;--cream:#fbf5ed;--cream-2:#f3e8da;--paper:#fffdf9;--sand:#ebe1d1;--line:#e8dccb;--text:#3f2e1f;--text-2:#7d6854;--text-3:#b29d86;--white:#fff;--shadow:0 18px 40px rgba(103,73,44,.10);--shadow-soft:0 8px 18px rgba(103,73,44,.07);--radius:28px;--radius-2:22px;--radius-3:18px;--green:#16a34a;--rose:#be123c;--amber:#b98129}
 html,body{min-height:100%}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans Arabic","Noto Sans",sans-serif;background:linear-gradient(180deg,#faf6ec 0%,#f8f4ea 45%,#f8f4ea 100%);color:var(--text);font-size:15px;line-height:1.55;min-height:100dvh;padding-bottom:120px;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans Arabic","Noto Sans",sans-serif;background:
+radial-gradient(circle at top right,rgba(197,173,148,.28),transparent 26%),
+radial-gradient(circle at bottom left,rgba(177,145,112,.16),transparent 18%),
+linear-gradient(180deg,#f7efe5 0%,#f9f2e8 38%,#f6eee4 100%);color:var(--text);font-size:15px;line-height:1.55;min-height:100dvh;padding:18px 0 120px;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .container{max-width:560px;margin:0 auto;padding:0 18px}
+.page{display:none;animation:fade .28s ease both}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* Header */
-.header{background:linear-gradient(135deg,#a17f24 0%,#c19b2e 55%,#d4af37 100%);color:#fff;border-bottom-left-radius:28px;border-bottom-right-radius:28px;box-shadow:0 10px 30px -14px rgba(161,127,36,.55);position:relative;overflow:hidden;padding:58px 0 36px}
-.header::before,.header::after{content:"";position:absolute;border-radius:50%;filter:blur(2px);opacity:.18}
-.header::before{width:220px;height:220px;background:#fff;top:-110px;right:-60px}
-.header::after{width:160px;height:160px;background:#f4e7bb;bottom:-80px;left:-40px}
-.header-row{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
-.avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fff,#f4e7bb);color:var(--brand-dark);font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,255,255,.28)}
-.welcome-line{font-size:13px;opacity:.92}
-.patient-name{font-size:22px;font-weight:800;letter-spacing:.1px}
-.patient-meta{display:inline-flex;align-items:center;gap:6px;margin-top:4px;font-size:12.5px;opacity:.92}
-.badge-greet{display:inline-flex;align-items:center;gap:4px;font-size:12px;background:rgba(255,255,255,.22);padding:4px 10px;border-radius:999px;margin-bottom:6px}
-.logout-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;backdrop-filter:blur(4px);transition:background .2s}
-.logout-btn:active{background:rgba(255,255,255,.35)}
+.header{padding:6px 0 0}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.topbar-btn,.logout-btn{appearance:none;border:0;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.topbar-btn{width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.65);backdrop-filter:blur(18px);box-shadow:var(--shadow-soft);color:var(--text)}
+.hero-shell{position:relative;border-radius:36px;overflow:hidden;padding:18px;background:
+radial-gradient(circle at top right,rgba(255,255,255,.92),rgba(255,255,255,.38) 45%,transparent 70%),
+linear-gradient(145deg,#f8f0e5,#efe1d0);border:1px solid rgba(255,255,255,.82);box-shadow:var(--shadow)}
+.hero-shell::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.36),rgba(255,249,241,.08));pointer-events:none}
+.hero-stack{position:relative;z-index:1}
+.badge-greet{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.72);backdrop-filter:blur(14px);font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:14px;border:1px solid rgba(255,255,255,.9)}
+.header-row{display:grid;grid-template-columns:1fr 124px;gap:14px;align-items:stretch}
+.hero-copy{display:flex;flex-direction:column;justify-content:space-between}
+.welcome-line{font-size:13px;color:var(--text-2)}
+.patient-name{font-size:27px;font-weight:900;line-height:1.2;margin-top:2px}
+.patient-meta{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:12.5px;color:var(--text-2);font-weight:700}
+.hero-note{margin-top:12px;font-size:13.5px;line-height:1.75;color:var(--text-2);max-width:95%}
+.hero-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:18px}
+.hero-media{border-radius:28px;min-height:220px;background:
+radial-gradient(circle at top left,rgba(255,255,255,.25),transparent 34%),
+linear-gradient(180deg,rgba(71,46,28,.04),rgba(71,46,28,.38)),
+linear-gradient(135deg,#ccb199,#8d684a);box-shadow:var(--shadow-soft);position:relative;overflow:hidden}
+.hero-media::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(180deg,transparent,rgba(58,41,27,.55))}
+.brand-monogram{position:absolute;left:14px;bottom:18px;color:#fff;opacity:.95}
+.brand-monogram .mark{font-size:40px;font-weight:200;line-height:1;font-family:"Times New Roman",serif}
+.brand-monogram .sub{font-size:11px;letter-spacing:.22em;margin-top:8px;text-transform:uppercase}
+.avatar{width:58px;height:58px;border-radius:20px;background:linear-gradient(135deg,#fff,#ead8c4);display:flex;align-items:center;justify-content:center;color:var(--brand-2);font-size:25px;font-weight:900;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.95)}
+.logout-btn{padding:0 14px;border-radius:15px;background:rgba(82,55,31,.72);color:#fff;font-size:13px;font-weight:700;height:44px;box-shadow:var(--shadow-soft)}
 
-/* Utility */
-.section-title{font-size:15px;font-weight:800;color:var(--text);margin:26px 2px 10px;display:flex;align-items:center;justify-content:space-between}
-.section-title .link{font-size:12.5px;color:var(--brand);font-weight:600}
-.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid #f1f5f9}
+.section-title{font-size:18px;font-weight:900;color:var(--text);margin:26px 4px 14px;display:flex;align-items:center;justify-content:space-between}
+.section-title small{display:block;font-size:12px;color:var(--text-3);font-weight:700;margin-top:2px}
+.section-title .link{font-size:13px;color:var(--brand);font-weight:800}
+.card{background:rgba(255,253,249,.84);backdrop-filter:blur(18px);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid rgba(255,255,255,.88)}
 .card + .card{margin-top:14px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
-.metric{background:var(--white);border:1px solid #f1f5f9;border-radius:var(--radius);padding:16px 10px;text-align:center;box-shadow:var(--shadow-sm)}
-.metric .num{font-size:26px;font-weight:800;color:var(--text)}
-.metric .num.blue{color:var(--brand)}
-.metric .num.green{color:#047857}
-.metric .lbl{font-size:12.5px;color:var(--text-2);margin-top:4px}
-.chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}
-.chip.cream{background:#fffbeb;color:#b45309}
-.chip.green{background:#ecfdf5;color:#047857}
-.chip.blue{background:#fdfaf1;color:#a17f24}
-.chip.rose{background:#fff1f2;color:#be123c}
-.chip.violet{background:#f5f3ff;color:#6d28d9}
-
-/* Appointments card */
-.appt-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.appt-title{font-size:13px;color:var(--text-2);font-weight:600}
-.appt-big{font-size:20px;font-weight:800;margin-top:6px;color:var(--text)}
-.appt-sub{font-size:13.5px;color:var(--text-2);margin-top:6px}
-.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-.btn{appearance:none;border:0;cursor:pointer;border-radius:14px;font-weight:700;font-size:14.5px;padding:12px 14px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:transform .08s ease, box-shadow .15s ease, background .15s ease}
+.soft-card{background:linear-gradient(180deg,#fffdf9,#f9f2e9)}
+.glass-card{background:rgba(255,255,255,.56);backdrop-filter:blur(18px)}
+.btn{appearance:none;border:0;cursor:pointer;border-radius:16px;font-weight:800;font-size:14.5px;padding:13px 14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s ease, box-shadow .18s ease, background .18s ease;color:inherit;font-family:inherit}
 .btn:active{transform:scale(.98)}
-.btn.primary{background:var(--brand);color:#fff;box-shadow:0 8px 20px -10px rgba(161,127,36,.55)}
-.btn.primary:hover{background:var(--brand-dark)}
-.btn.ghost-rose{background:#fff1f2;color:#be123c}
-.btn.ghost-rose:active{background:#ffe4e6}
-.btn.ghost{background:#f8fafc;color:var(--text);border:1px solid var(--line)}
+.btn.primary{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff;box-shadow:0 14px 28px rgba(103,73,44,.22)}
+.btn.ghost{background:rgba(255,255,255,.72);border:1px solid var(--line);color:var(--text)}
+.btn.ghost-rose{background:#fff1f2;color:var(--rose)}
+.chip{display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800}
+.chip.cream{background:#f6ecdf;color:var(--brand-2)}
+.chip.green{background:#ecfdf3;color:#166534}
+.chip.blue{background:#f3e7d7;color:var(--brand-2)}
+.chip.rose{background:#fff1f2;color:var(--rose)}
+.chip.violet{background:#f6f1ea;color:var(--brand)}
 
-/* Progress */
+.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.quick-card{position:relative;min-height:168px;border-radius:24px;overflow:hidden;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.95);background-color:#ddd}
+.quick-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(44,28,13,.56))}
+.quick-card > *{position:relative;z-index:1}
+.quick-card .q-label{font-size:12px;color:rgba(255,255,255,.86);font-weight:700}
+.quick-card .q-title{font-size:18px;color:#fff;font-weight:900;margin-top:2px}
+.quick-card .q-desc{font-size:12px;color:rgba(255,255,255,.85);margin-top:3px}
+.quick-card .q-arrow{margin-top:10px;width:34px;height:34px;border-radius:12px;background:rgba(255,255,255,.18);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;color:#fff}
+
+.appointment-card{padding:18px;background:
+radial-gradient(circle at top right,rgba(255,255,255,.9),transparent 42%),
+linear-gradient(145deg,rgba(255,255,255,.92),rgba(244,232,216,.92));border-radius:30px}
+.appt-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.appt-title{font-size:13px;color:var(--text-2);font-weight:800}
+.appt-big{font-size:26px;font-weight:900;line-height:1.25;color:var(--text)}
+.appt-sub{font-size:14px;color:var(--text-2);margin-top:7px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+
+.grid-3,.grid-2{display:grid;gap:12px;margin-top:14px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.metric{background:rgba(255,255,255,.76);border-radius:22px;padding:16px 10px;text-align:center;border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow-soft)}
+.metric .num{font-size:28px;font-weight:900;color:var(--text)}
+.metric .num.blue{color:var(--brand)}
+.metric .num.green{color:var(--green)}
+.metric .lbl{font-size:12px;color:var(--text-2);margin-top:6px;font-weight:700;line-height:1.45}
+
+.progress-card{background:linear-gradient(180deg,#fffdf9,#f5ede2)}
 .progress-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.progress-head .title{font-size:13px;color:var(--text-2);font-weight:600}
-.progress-head .dates{font-size:12.5px;color:var(--text-3);display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:8px}
 .progress-row{position:relative}
-.bar{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden}
-.bar-fill{height:100%;width:60%;background:linear-gradient(90deg,#a17f24 0%,#d4af37 60%,#e2c86b 100%);border-radius:999px}
+.bar{height:12px;background:#eadfce;border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;width:60%;background:linear-gradient(90deg,#7a5738 0%,#a47c58 55%,#d3b699 100%);border-radius:999px}
 
-/* Next step card */
 .step-row{display:flex;gap:14px;align-items:center}
-.step-icon{width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex:0 0 54px;background:linear-gradient(135deg,#fdfaf1,#f4e7bb);color:var(--brand-dark)}
+.step-icon{width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;flex:0 0 62px;background:linear-gradient(135deg,#f8efe4,#e8d5be);color:var(--brand-2)}
 .step-icon svg{width:30px;height:30px}
 .step-body{flex:1;min-width:0}
-.step-body .lbl{font-size:13px;color:var(--text-2);font-weight:600;margin-bottom:4px}
-.step-body .t{font-size:18px;font-weight:800;color:var(--text)}
-.step-body .d{font-size:13px;color:var(--text-2);margin-top:4px}
+.step-body .lbl{font-size:13px;color:var(--text-3);font-weight:800;margin-bottom:5px}
+.step-body .t{font-size:19px;font-weight:900;color:var(--text);line-height:1.45}
+.step-body .d{font-size:13px;color:var(--text-2);margin-top:6px}
 
-/* Diagnosis box */
-.diagnosis-box{background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);border:1px solid #fde68a;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.diagnosis-box{background:linear-gradient(180deg,#fffaf2,#f6ead8);border:1px solid #ead8c2;border-radius:30px;padding:18px;box-shadow:var(--shadow)}
 .diagnosis-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.diagnosis-head .ico{width:42px;height:42px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;color:#b45309;flex:0 0 42px}
-.diagnosis-head .t{font-size:17px;font-weight:800;color:#92400e}
-.diagnosis-head .s{font-size:12px;color:#b45309;font-weight:600}
-.diagnosis-text{font-size:14.5px;color:#78350f;line-height:1.7;font-weight:500;white-space:pre-wrap}
-.diagnosis-note{margin-top:14px;padding-top:12px;border-top:1px dashed #fcd34d;font-size:12.5px;color:#92400e;font-weight:600;display:flex;align-items:center;gap:6px}
+.diagnosis-head .ico{width:44px;height:44px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--brand-2);flex:0 0 44px}
+.diagnosis-head .t{font-size:17px;font-weight:900;color:var(--text)}
+.diagnosis-head .s{font-size:12px;color:var(--text-2);font-weight:700}
+.diagnosis-text{font-size:14.5px;color:var(--text);line-height:1.8;font-weight:600;white-space:pre-wrap}
+.diagnosis-note{margin-top:14px;padding-top:12px;border-top:1px dashed #d6c0a3;font-size:12.5px;color:var(--text-2);font-weight:700;display:flex;align-items:center;gap:6px}
 
-/* Tabs pages */
-.page{display:none;animation:fade .25s ease both}
-.page.active{display:block}
-@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.feature-strip{display:flex;gap:12px;overflow:auto;padding-bottom:4px;scrollbar-width:none}
+.feature-strip::-webkit-scrollbar{display:none}
+.feature-card{flex:0 0 180px;border-radius:24px;overflow:hidden;background:#fff;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.95)}
+.feature-card .media{height:118px;background-size:cover;background-position:center}
+.feature-card .body{padding:14px}
+.feature-card h4{font-size:15px;font-weight:900;line-height:1.45}
+.feature-card p{font-size:12px;color:var(--text-2);margin-top:5px}
 
-.list-item{display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px dashed #e2e8f0}
+.list-card{padding:8px 16px}
+.list-item{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(232,220,203,.75)}
 .list-item:last-child{border-bottom:0}
-.list-date{flex:0 0 54px;width:54px;height:54px;background:#fdfaf1;color:#a17f24;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800}
-.list-date .dm{font-size:17px;line-height:1}
-.list-date .mn{font-size:10.5px;margin-top:2px;font-weight:700;opacity:.9}
+.list-date{flex:0 0 60px;width:60px;height:60px;background:linear-gradient(180deg,#f7eee3,#ead9c4);color:var(--brand-2);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900}
+.list-date .dm{font-size:18px;line-height:1}
+.list-date .mn{font-size:10px;margin-top:3px;font-weight:800;opacity:.9}
 .list-body{flex:1;min-width:0}
-.list-body .t{font-weight:800;font-size:15px}
+.list-body .t{font-weight:900;font-size:15px}
 .list-body .d{font-size:12.5px;color:var(--text-2);margin-top:4px}
-.list-status{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}
-.list-status.coming{background:#ecfdf5;color:#047857}
-.list-status.done{background:#f1f5f9;color:#475569}
-.list-status.cancel{background:#fff1f2;color:#be123c}
-.list-right{text-align:left;font-weight:800;color:var(--text);font-size:15px}
-.list-right .sub{font-size:11.5px;color:var(--text-3);font-weight:600;text-align:left}
+.list-status{font-size:11px;font-weight:800;padding:5px 11px;border-radius:999px}
+.list-status.coming{background:#ecfdf3;color:#166534}
+.list-status.done{background:#f3f4f6;color:#4b5563}
+.list-status.blue{background:#f5ebe0;color:var(--brand-2)}
+.list-status.cancel{background:#fff1f2;color:var(--rose)}
+.list-right{text-align:left;font-weight:900;color:var(--text);font-size:14px}
+.list-right .sub{font-size:11.5px;color:var(--text-3);font-weight:700;text-align:left;margin-top:4px}
+.empty{background:rgba(255,255,255,.7);border:1px dashed var(--line);border-radius:28px;padding:30px 20px;text-align:center;color:var(--text-3);font-size:13.5px;font-weight:700}
 
-.empty{background:var(--white);border:1px dashed #e2e8f0;border-radius:var(--radius);padding:30px 20px;text-align:center;color:var(--text-3);font-size:13.5px;font-weight:600}
+.filter-row{display:flex;gap:10px;overflow:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+.filter-chip{appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.64);padding:10px 14px;border-radius:999px;font-size:13px;font-weight:800;color:var(--text-2);cursor:pointer;font-family:inherit;white-space:nowrap}
+.filter-chip.active{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff;border-color:transparent}
 
-/* Profile */
-.profile-head{display:flex;align-items:center;gap:14px}
-.profile-head .avatar{width:72px;height:72px;font-size:28px}
-.profile-head .name{font-size:22px;font-weight:800}
-.profile-head .meta{font-size:13px;color:var(--text-2);margin-top:4px}
-.info-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px dashed #e2e8f0;font-size:14px}
-.info-row:last-child{border-bottom:0}
-.info-row .k{color:var(--text-2);font-weight:600}
-.info-row .v{color:var(--text);font-weight:700}
+.editorial-banner{position:relative;border-radius:30px;overflow:hidden;min-height:174px;padding:18px;background:
+radial-gradient(circle at top left,rgba(255,255,255,.35),transparent 30%),
+linear-gradient(135deg,#d7c0a6,#8a6547);border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow)}
+.editorial-banner::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(47,32,19,.44))}
+.editorial-banner .banner-content{position:relative;z-index:1;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.editorial-banner h3{font-size:22px;font-weight:900;line-height:1.35}
+.editorial-banner p{font-size:13px;color:rgba(255,255,255,.88);margin-top:4px;max-width:78%}
 
-/* Posts carousel */
-.posts-wrap{margin-top:18px}
+.posts-wrap{margin-top:14px}
 .posts-scroll{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;padding:4px 2px 10px;scrollbar-width:none}
 .posts-scroll::-webkit-scrollbar{display:none}
-.post-card{flex:0 0 88%;scroll-snap-align:center;background:var(--white);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);border:1px solid #f1f5f9}
+.post-card{flex:0 0 88%;scroll-snap-align:center;background:var(--white);border-radius:28px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.95)}
 .post-card .img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#e2e8f0}
 .post-card .body{padding:16px}
-.post-card .ptype{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px;margin-bottom:10px}
-.post-card .ptype.offer{background:#ecfdf5;color:#047857}
-.post-card .ptype.ad{background:#fdfaf1;color:#a17f24}
-.post-card .ptype.tip{background:#fffbeb;color:#b45309}
-.post-card .ptype.general{background:#f5f3ff;color:#6d28d9}
-.post-card .ptitle{font-size:17px;font-weight:800;color:var(--text);line-height:1.4}
-.post-card .pbody{font-size:13.5px;color:var(--text-2);margin-top:8px;line-height:1.65}
-.post-card .pdate{font-size:11.5px;color:var(--text-3);margin-top:12px;font-weight:600}
-.dots{display:flex;justify-content:center;gap:7px;margin-top:14px}
-.dot{width:8px;height:8px;border-radius:50%;background:#cbd5e1;transition:all .25s ease;cursor:pointer;border:0;padding:0}
-.dot.active{background:var(--brand);width:22px;border-radius:999px}
-
-/* Posts list (below carousel) */
+.post-card .ptype{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:900;padding:5px 11px;border-radius:999px;margin-bottom:10px}
+.post-card .ptype.offer{background:#ecfdf3;color:#166534}
+.post-card .ptype.ad{background:#f5ebe0;color:var(--brand-2)}
+.post-card .ptype.tip{background:#fff7e6;color:#a16207}
+.post-card .ptype.general{background:#f5f1ea;color:var(--brand)}
+.post-card .ptitle{font-size:17px;font-weight:900;color:var(--text);line-height:1.45}
+.post-card .pbody{font-size:13.5px;color:var(--text-2);margin-top:8px;line-height:1.75}
+.post-card .pdate{font-size:11.5px;color:var(--text-3);margin-top:12px;font-weight:700}
+.dots{display:flex;justify-content:center;gap:7px;margin-top:12px}
+.dot{width:8px;height:8px;border-radius:50%;background:#d6cabb;transition:all .25s ease;cursor:pointer;border:0;padding:0}
+.dot.active{background:var(--brand);width:24px;border-radius:999px}
 .posts-list{margin-top:8px}
-.post-mini{display:flex;gap:12px;padding:14px 0;border-bottom:1px dashed #e2e8f0}
+.post-mini{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid rgba(232,220,203,.8)}
 .post-mini:last-child{border-bottom:0}
-.post-mini .thumb{width:72px;height:72px;border-radius:14px;object-fit:cover;flex:0 0 72px;background:#e2e8f0}
+.post-mini .thumb{width:78px;height:78px;border-radius:18px;object-fit:cover;flex:0 0 78px;background:#e2e8f0}
 .post-mini .m-body{flex:1;min-width:0}
-.post-mini .m-title{font-size:14.5px;font-weight:800;color:var(--text);line-height:1.4}
-.post-mini .m-desc{font-size:12.5px;color:var(--text-2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.post-mini .m-date{font-size:11px;color:var(--text-3);margin-top:4px;font-weight:600}
+.post-mini .m-title{font-size:14.5px;font-weight:900;color:var(--text);line-height:1.45}
+.post-mini .m-desc{font-size:12.5px;color:var(--text-2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.6}
+.post-mini .m-date{font-size:11px;color:var(--text-3);margin-top:6px;font-weight:700}
 
-/* Bottom nav */
-.nav{position:fixed;inset:auto 0 0 0;z-index:50;padding:0 10px env(safe-area-inset-bottom) 10px;background:rgba(255,255,255,.92);backdrop-filter:saturate(160%) blur(14px);-webkit-backdrop-filter:saturate(160%) blur(14px);border-top:1px solid #e2e8f0;box-shadow:0 -10px 30px -14px rgba(15,23,42,.18)}
-.nav-inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
-.tab{appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 4px 8px;color:#64748b;font-weight:700;font-size:11.5px;border-radius:14px;transition:color .1s ease, background .15s ease, transform .08s ease}
-.tab svg{width:24px;height:24px}
-.tab.active{color:var(--brand);background:linear-gradient(180deg,rgba(193,155,46,.12),rgba(193,155,46,0));transform:translateY(-2px)}
+.profile-card{padding:22px;background:
+radial-gradient(circle at top right,rgba(255,255,255,.5),transparent 34%),
+linear-gradient(145deg,rgba(255,255,255,.88),rgba(244,230,214,.92))}
+.profile-head{display:flex;align-items:center;gap:14px}
+.profile-head .avatar{width:72px;height:72px;border-radius:24px;font-size:28px}
+.profile-head .name{font-size:22px;font-weight:900}
+.profile-head .meta{font-size:13px;color:var(--text-2);margin-top:4px;font-weight:700}
+.profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.info-grid{display:grid;gap:10px}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(232,220,203,.8);font-size:14px;gap:12px}
+.info-row:last-child{border-bottom:0}
+.info-row .k{color:var(--text-2);font-weight:700}
+.info-row .v{color:var(--text);font-weight:900;text-align:left}
+.menu-list{display:grid;gap:10px}
+.menu-item{appearance:none;width:100%;border:0;display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-radius:22px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow-soft);cursor:pointer;color:var(--text);font-family:inherit;text-align:inherit}
+.menu-item .left{display:flex;align-items:center;gap:12px}
+.menu-item .ico{width:42px;height:42px;border-radius:14px;background:#f4eadf;display:flex;align-items:center;justify-content:center;color:var(--brand-2);font-weight:900}
+.menu-item .txt{font-size:14px;font-weight:800}
+
+.nav{position:fixed;inset:auto 0 0 0;z-index:50;padding:0 12px calc(env(safe-area-inset-bottom) + 10px);background:linear-gradient(180deg,rgba(255,249,244,.28),rgba(255,249,244,.78) 24%,rgba(255,255,255,.94));backdrop-filter:saturate(160%) blur(22px);-webkit-backdrop-filter:saturate(160%) blur(22px)}
+.nav-inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:10px;border-radius:26px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.78);box-shadow:0 -10px 30px rgba(104,73,45,.10)}
+.tab{appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:9px 4px 8px;color:#8b7b68;font-weight:800;font-size:10.8px;border-radius:16px;transition:color .12s ease, background .15s ease, transform .08s ease;font-family:inherit}
+.tab svg{width:22px;height:22px}
+.tab.active{color:var(--brand-2);background:linear-gradient(180deg,rgba(213,192,168,.4),rgba(213,192,168,.12));transform:translateY(-2px)}
 .tab:active{transform:scale(.98)}
-.tab.active svg{color:var(--brand)}
 
-/* Toast */
-.toast{position:fixed;left:50%;bottom:120px;transform:translate(-50%,18px);background:#0f172a;color:#fff;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:all .22s ease;z-index:80;box-shadow:0 10px 30px -10px rgba(15,23,42,.45)}
+.toast{position:fixed;left:50%;bottom:120px;transform:translate(-50%,18px);background:#2d2218;color:#fff;padding:11px 15px;border-radius:14px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:all .22s ease;z-index:80;box-shadow:0 16px 40px rgba(0,0,0,.24)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
-/* Login Screen */
-.login-screen{position:fixed;inset:0;z-index:200;background:linear-gradient(160deg,#a17f24 0%,#c19b2e 55%,#d4af37 100%);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-screen{position:fixed;inset:0;z-index:200;background:
+radial-gradient(circle at top right,rgba(255,255,255,.12),transparent 20%),
+linear-gradient(140deg,rgba(69,45,27,.8),rgba(69,45,27,.32)),
+linear-gradient(145deg,#b59172,#6c4a31);display:flex;align-items:flex-end;justify-content:center;padding:20px}
 .login-screen.hidden{display:none}
-.login-card{width:100%;max-width:380px;background:#fff;border-radius:24px;padding:28px 22px;box-shadow:0 30px 80px -20px rgba(15,23,42,.4)}
-.login-logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#a17f24,#d4af37);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:#fff;font-size:28px;font-weight:900;box-shadow:0 10px 24px -8px rgba(161,127,36,.5)}
-.login-title{text-align:center;font-size:20px;font-weight:800;color:#0f172a;margin-bottom:4px}
-.login-sub{text-align:center;font-size:13px;color:#64748b;margin-bottom:22px}
+.login-card{width:100%;max-width:390px;background:rgba(255,250,244,.92);backdrop-filter:blur(18px);border-radius:34px;padding:28px 22px 24px;box-shadow:0 30px 80px rgba(15,23,42,.28);border:1px solid rgba(255,255,255,.9)}
+.login-logo{width:70px;height:70px;border-radius:24px;background:linear-gradient(135deg,var(--brand-2),var(--brand));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#fff;font-size:30px;font-weight:900;box-shadow:0 16px 30px rgba(103,73,44,.28)}
+.login-title{text-align:center;font-size:22px;font-weight:900;color:var(--text);margin-bottom:4px}
+.login-sub{text-align:center;font-size:13px;color:var(--text-2);margin-bottom:22px}
 .login-field{margin-bottom:14px}
-.login-field label{display:block;font-size:12.5px;font-weight:700;color:#475569;margin-bottom:6px}
-.login-field input{width:100%;padding:13px 14px;border:1.5px solid #e2e8f0;border-radius:14px;font-size:15px;background:#f8fafc;color:#0f172a;outline:none;transition:border .15s ease,background .15s ease;direction:ltr;text-align:right;font-family:inherit}
-.login-field input:focus{border-color:#c19b2e;background:#fff}
-.login-btn{width:100%;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,#a17f24,#d4af37);color:#fff;font-size:15.5px;font-weight:800;cursor:pointer;transition:transform .08s ease,box-shadow .15s ease;box-shadow:0 10px 22px -8px rgba(161,127,36,.55);margin-top:6px;font-family:inherit}
+.login-field label{display:block;font-size:12.5px;font-weight:800;color:var(--text-2);margin-bottom:7px}
+.login-field input{width:100%;padding:14px 14px;border:1.5px solid #e7d9c8;border-radius:16px;font-size:15px;background:#fffcf8;color:var(--text);outline:none;transition:border .15s ease,background .15s ease;direction:ltr;text-align:right;font-family:inherit}
+.login-field input:focus{border-color:var(--brand);background:#fff}
+.login-btn{width:100%;padding:15px;border:0;border-radius:16px;background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff;font-size:15.5px;font-weight:900;cursor:pointer;transition:transform .08s ease,box-shadow .15s ease;box-shadow:0 16px 28px rgba(103,73,44,.24);margin-top:6px;font-family:inherit}
 .login-btn:active{transform:scale(.98)}
 .login-btn:disabled{opacity:.6;cursor:not-allowed}
-.login-error{background:#fef2f2;color:#b91c1c;font-size:13px;padding:10px 12px;border-radius:10px;margin-bottom:14px;display:none}
+.login-error{background:#fef2f2;color:#b91c1c;font-size:13px;padding:10px 12px;border-radius:12px;margin-bottom:14px;display:none}
 .login-error.show{display:block}
-.login-hint{text-align:center;font-size:11.5px;color:#94a3b8;margin-top:16px;line-height:1.6}
+.login-hint{text-align:center;font-size:11.5px;color:var(--text-3);margin-top:16px;line-height:1.7}
 
-/* Appointment Modal */
-.modal-overlay{position:fixed;inset:0;z-index:150;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;padding:0}
+.modal-overlay{position:fixed;inset:0;z-index:150;background:rgba(25,18,12,.42);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;padding:0}
 .modal-overlay.hidden{display:none}
-.modal{width:100%;max-width:420px;background:#fff;border-radius:24px 24px 0 0;padding:22px 18px 24px;box-shadow:0 -10px 40px -10px rgba(15,23,42,.3);animation:slideUp .25s ease;max-height:88vh;overflow-y:auto}
+.modal{width:100%;max-width:430px;background:#fffdf9;border-radius:34px 34px 0 0;padding:22px 18px 28px;box-shadow:0 -10px 40px rgba(15,23,42,.24);animation:slideUp .25s ease;max-height:92vh;overflow-y:auto}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.modal-title{font-size:18px;font-weight:800;color:#0f172a}
-.modal-close{width:34px;height:34px;border-radius:10px;border:0;background:#f1f5f9;color:#64748b;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-title{font-size:20px;font-weight:900;color:var(--text)}
+.modal-close{width:36px;height:36px;border-radius:12px;border:0;background:#f3ebe1;color:var(--text-2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.booking-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.booking-step{padding:10px 6px;border-radius:16px;background:#f6eee4;text-align:center;font-size:11px;font-weight:800;color:var(--text-2)}
+.booking-step.active{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff}
 .modal-field{margin-bottom:14px}
-.modal-field label{display:block;font-size:12.5px;font-weight:700;color:#475569;margin-bottom:6px}
-.modal-field input, .modal-field select, .modal-field textarea{width:100%;padding:12px 13px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:14px;background:#f8fafc;color:#0f172a;outline:none;transition:border .15s ease;font-family:inherit}
-.modal-field input:focus, .modal-field select:focus, .modal-field textarea:focus{border-color:#c19b2e;background:#fff}
-.type-chips{display:flex;flex-wrap:wrap;gap:8px}
-.type-chip{padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#475569;transition:all .15s ease}
-.type-chip.active{border-color:#c19b2e;background:#fdfaf1;color:#a17f24}
-.modal-btn{width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,#a17f24,#d4af37);color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px;font-family:inherit}
+.modal-field label{display:block;font-size:12.5px;font-weight:800;color:var(--text-2);margin-bottom:8px}
+.modal-field input,.modal-field select,.modal-field textarea{width:100%;padding:13px 14px;border:1.5px solid #e7d9c8;border-radius:15px;font-size:14px;background:#fffaf4;color:var(--text);outline:none;transition:border .15s ease;font-family:inherit}
+.modal-field input:focus,.modal-field select:focus,.modal-field textarea:focus{border-color:var(--brand);background:#fff}
+.type-chips{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.type-chip{padding:14px 12px;border:1.5px solid #eadccc;border-radius:18px;font-size:13px;font-weight:800;cursor:pointer;background:#fff;color:var(--text-2);transition:all .15s ease;font-family:inherit}
+.type-chip.active{border-color:var(--brand);background:#f7ede0;color:var(--brand-2);box-shadow:var(--shadow-soft)}
+.time-slots,.date-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.date-chip,.time-chip{appearance:none;border:1px solid #eadccc;background:#fff;padding:11px 6px;border-radius:16px;cursor:pointer;font-size:12px;font-weight:800;color:var(--text-2);font-family:inherit}
+.date-chip strong,.time-chip strong{display:block;color:var(--text);font-size:13px}
+.date-chip.active,.time-chip.active{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff;border-color:transparent}
+.date-chip.active strong,.time-chip.active strong{color:#fff}
+.modal-btn{width:100%;padding:14px;border:0;border-radius:16px;background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff;font-size:15px;font-weight:900;cursor:pointer;margin-top:8px;font-family:inherit;box-shadow:0 16px 28px rgba(103,73,44,.22)}
 .modal-btn:active{transform:scale(.98)}
 .modal-btn:disabled{opacity:.6}
+.hidden-native{position:absolute!important;opacity:0!important;pointer-events:none!important;height:0!important;width:0!important}
+
+@media (max-width:430px){
+  body{padding-top:14px}
+  .container{padding:0 14px}
+  .header-row{grid-template-columns:1fr;gap:16px}
+  .hero-media{min-height:228px;order:-1}
+  .hero-copy{gap:8px}
+  .patient-name{font-size:22px}
+  .hero-note{font-size:13px;max-width:100%}
+  .hero-actions{grid-template-columns:1fr 1fr}
+  .section-title{align-items:flex-start;gap:10px;flex-direction:column}
+  .section-title .btn{width:auto}
+  .quick-grid{grid-template-columns:1fr 1fr}
+  .quick-card{min-height:144px;padding:12px}
+  .quick-card .q-title{font-size:16px}
+  .editorial-banner{min-height:156px}
+  .editorial-banner h3{font-size:20px}
+  .editorial-banner p{max-width:100%}
+  .grid-3{grid-template-columns:repeat(3,1fr);gap:8px}
+  .metric{padding:14px 8px}
+  .metric .num{font-size:23px}
+  .step-row{align-items:flex-start}
+  .profile-actions{grid-template-columns:1fr}
+  .info-row{flex-direction:column;align-items:flex-start}
+  .info-row .v{text-align:right}
+  .menu-item{padding:14px 16px}
+  .time-slots,.date-slots{grid-template-columns:repeat(3,1fr)}
+}
 </style>
 </head>
 <body>
 
 <div class="login-screen" id="loginScreen">
   <div class="login-card">
-    <div class="login-logo">ن</div>
-    <div class="login-title">مركز نوف لطب الأسنان</div>
+    <div class="login-logo" id="loginLogo">ن</div>
+    <div class="login-title" id="loginTitle">مركز نوف لطب الأسنان</div>
     <div class="login-sub">البوابة الإلكترونية للمرضى</div>
     <div class="login-error" id="loginError"></div>
     <div class="login-field">
@@ -225,24 +312,50 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
 <header class="header">
   <div class="container">
-    <div class="badge-greet">
-      <span>🌙</span>
-      <span>مساء الخير، أهلاً بكِ</span>
+    <div class="topbar">
+      <button class="topbar-btn" type="button" aria-label="الإشعارات">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5"/><path d="M9 17a3 3 0 0 0 6 0"/></svg>
+      </button>
+      <button class="topbar-btn" type="button" aria-label="القائمة">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="7" y1="17" x2="20" y2="17"/></svg>
+      </button>
     </div>
-    <div class="header-row">
-      <div class="avatar">س</div>
-      <div style="flex:1;min-width:0">
-        <div class="welcome-line">مرحباً بكِ في مركز نوف</div>
-        <div class="patient-name">سارة أحمد محمود</div>
-        <div class="patient-meta">
-          <span>رقم المريض:</span>
-          <span style="font-weight:800">#NF-0001</span>
+    <div class="hero-shell">
+      <div class="hero-stack">
+        <div class="badge-greet">
+          <span>✦</span>
+          <span>تجربة عناية فاخرة بابتسامتك</span>
+        </div>
+        <div class="header-row">
+          <div class="hero-copy">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="avatar">س</div>
+              <div style="min-width:0">
+                <div class="welcome-line">مرحباً بكِ من جديد</div>
+                <div class="patient-name">سارة أحمد محمود</div>
+                <div class="patient-meta">
+                  <span>رقم الملف</span>
+                  <span style="font-weight:900">#NF-0001</span>
+                </div>
+              </div>
+            </div>
+            <p class="hero-note">لنمنح ابتسامتك عناية متكاملة مع متابعة المواعيد والخطة والعروض المميزة من مكان واحد.</p>
+            <div class="hero-actions">
+              <button class="btn primary" data-action="new-appt">احجز الآن</button>
+              <button class="logout-btn" data-action="logout" title="تسجيل الخروج">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                خروج
+              </button>
+            </div>
+          </div>
+          <div class="hero-media" id="heroMedia">
+            <div class="brand-monogram">
+              <div class="mark">N</div>
+              <div class="sub">Dental & Aesthetic</div>
+            </div>
+          </div>
         </div>
       </div>
-      <button class="logout-btn" data-action="logout" title="تسجيل الخروج">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        خروج
-      </button>
     </div>
   </div>
 </header>
@@ -251,13 +364,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
   <!-- ================== الصفحة الرئيسية ================== -->
   <section class="page active" data-page="home">
-    <div class="card" style="margin-top:20px">
+    <div class="section-title" style="margin-top:24px">
+      <div>خدماتنا المفضلة<small>اختاري الخدمة المناسبة لك</small></div>
+      <button class="btn ghost" data-action="new-appt" style="padding:10px 14px;font-size:12px">حجز سريع</button>
+    </div>
+
+    <div class="quick-grid">
+      <button class="quick-card" id="homeServiceDentalCard" type="button" data-prefill-type="فحص" style="background:linear-gradient(145deg,#d6bea7,#8c6548);">
+        <div class="q-label">خدمات الأسنان</div>
+        <div class="q-title">طب الأسنان</div>
+        <div class="q-desc">ابتسامة أكثر صحة وجمالاً</div>
+        <div class="q-arrow">←</div>
+      </button>
+      <button class="quick-card" id="homeServiceBeautyCard" type="button" data-prefill-type="تنظيف" style="background:linear-gradient(145deg,#ccb39a,#7e5a41);">
+        <div class="q-label">خدمات التجميل</div>
+        <div class="q-title">التجميل</div>
+        <div class="q-desc">عناية عصرية ولمسات ناعمة</div>
+        <div class="q-arrow">←</div>
+      </button>
+    </div>
+
+    <div class="card appointment-card" style="margin-top:18px">
       <div class="appt-head">
-        <span class="appt-title">الموعد القادم</span>
+        <span class="appt-title">موعدك القادم</span>
         <span class="chip cream">قادم</span>
       </div>
       <div class="appt-big">الأحد 12 تشرين الأول</div>
-      <div class="appt-sub">الساعة 5:30 مساءً — الدكتور خالد العلي</div>
+      <div class="appt-sub">الساعة 5:30 مساءً — متابعة وتقويم</div>
       <div class="btn-row">
         <button class="btn ghost-rose" data-action="reschedule">إعادة جدولة</button>
         <button class="btn primary" data-action="confirm">تأكيد الحضور</button>
@@ -294,8 +427,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
     <!-- للمريض التقويم: خطة العلاج -->
     <div data-ortho-only>
-      <div class="section-title">خطة التقويم الشفاف</div>
-      <div class="card">
+      <div class="section-title">
+        <div>رحلة العلاج<small>مراحل الخطة الحالية</small></div>
+      </div>
+      <div class="card progress-card">
         <div class="progress-head">
           <span class="progress-row" style="width:100%">
             <span style="display:flex;justify-content:space-between;align-items:center;width:100%">
@@ -313,7 +448,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         </div>
       </div>
 
-      <div class="section-title">الخطوة القادمة من العلاج</div>
+      <div class="section-title">
+        <div>خطوتك القادمة<small>المتابعة الموصى بها</small></div>
+      </div>
       <div class="card">
         <div class="step-row">
           <div class="step-icon" aria-hidden="true">
@@ -333,7 +470,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
     <!-- للمرضى العامين: تشخيص الطبيب -->
     <div data-general-only style="display:none">
-      <div class="section-title">تشخيص الطبيب</div>
+      <div class="section-title">
+        <div>تشخيص الطبيب<small>ملخص الحالة الحالية</small></div>
+      </div>
       <div class="diagnosis-box">
         <div class="diagnosis-head">
           <div class="ico">
@@ -351,12 +490,58 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         </div>
       </div>
     </div>
+
+    <div class="section-title">
+      <div>خدماتنا المميزة<small>الأكثر طلباً داخل المركز</small></div>
+    </div>
+    <div class="feature-strip">
+      <div class="feature-card">
+        <div class="media" id="homeFeatureWhiteningMedia" style="background:linear-gradient(145deg,#d8c4af,#a37c58)"></div>
+        <div class="body">
+          <h4>تبييض الأسنان</h4>
+          <p>جلسات آمنة ولمعان طبيعي بابتسامة أوضح.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="media" id="homeFeatureSkincareMedia" style="background:linear-gradient(145deg,#eadaca,#bb9473)"></div>
+        <div class="body">
+          <h4>العناية بالبشرة</h4>
+          <p>حلول تجميلية ناعمة بإشراف متخصص.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="media" id="homeFeatureImplantsMedia" style="background:linear-gradient(145deg,#e2d1bf,#9b724e)"></div>
+        <div class="body">
+          <h4>زراعة الأسنان</h4>
+          <p>نتائج ثابتة بمظهر متوازن وطبيعي.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ================== المواعيد ================== -->
   <section class="page" data-page="appointments">
-    <div class="section-title">جميع المواعيد</div>
-    <div class="card">
+    <div class="section-title">
+      <div>حجوزاتي<small>القادمة والسابقة</small></div>
+      <button class="btn primary" data-action="new-appt" style="padding:10px 16px;font-size:12px">+ حجز</button>
+    </div>
+
+    <div class="editorial-banner" id="appointmentsBanner">
+      <div class="banner-content">
+        <span class="chip cream" style="width:max-content">تنسيق موعدك</span>
+        <h3>اختاري الخدمة والوقت المناسب لك</h3>
+        <p>يمكنك طلب موعد جديد أو إرسال طلب إعادة جدولة بسهولة.</p>
+      </div>
+    </div>
+
+    <div class="filter-row" id="appointmentsFilter" style="margin-top:16px">
+      <button class="filter-chip active" data-filter="all">الكل</button>
+      <button class="filter-chip" data-filter="upcoming">القادمة</button>
+      <button class="filter-chip" data-filter="past">السابقة</button>
+      <button class="filter-chip" data-filter="requested">قيد التأكيد</button>
+    </div>
+
+    <div class="card list-card" id="appointmentsList">
       <div class="list-item">
         <div class="list-date"><div class="dm">12</div><div class="mn">تشرين</div></div>
         <div class="list-body">
@@ -365,39 +550,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         </div>
         <div class="list-right"><div>قادم</div><div class="sub"><span class="list-status coming">مؤكد</span></div></div>
       </div>
-      <div class="list-item">
-        <div class="list-date"><div class="dm">27</div><div class="mn">تشرين</div></div>
-        <div class="list-body">
-          <div class="t">تغيير قالب التقويم</div>
-          <div class="d">الاثنين 6:00 مساءً — الدكتور خالد العلي</div>
-        </div>
-        <div class="list-right"><div>قادم</div><div class="sub"><span class="list-status coming">قيد التأكيد</span></div></div>
-      </div>
-      <div class="list-item">
-        <div class="list-date"><div class="dm">10</div><div class="mn">تشرين</div></div>
-        <div class="list-body">
-          <div class="t">تنظيف أسنان</div>
-          <div class="d">الخميس 4:00 عصراً — الدكتورة رنا الحسن</div>
-        </div>
-        <div class="list-right"><div>تم</div><div class="sub"><span class="list-status done">انتهى</span></div></div>
-      </div>
-      <div class="list-item">
-        <div class="list-date"><div class="dm">03</div><div class="mn">أيلول</div></div>
-        <div class="list-body">
-          <div class="t">حجز ملغى بواسطة المريضة</div>
-          <div class="d">الأحد 5:00 مساءً — الدكتور خالد العلي</div>
-        </div>
-        <div class="list-right"><div>ملغي</div><div class="sub"><span class="list-status cancel">ملغي</span></div></div>
-      </div>
-    </div>
-    <div style="margin-top:16px">
-      <button class="btn primary" data-action="new-appt" style="width:100%">+ طلب موعد جديد</button>
     </div>
   </section>
 
   <!-- ================== المنشورات ================== -->
   <section class="page" data-page="posts">
-    <div class="section-title">منشورات المركز</div>
+    <div class="section-title">
+      <div>العروض والخدمات المميزة<small>جديد المركز</small></div>
+    </div>
+
+    <div class="editorial-banner" id="postsBanner">
+      <div class="banner-content">
+        <span class="chip cream" style="width:max-content">عرض خاص</span>
+        <h3>عروض موسمية وخدمات مختارة</h3>
+        <p>تابعي أحدث العروض والنصائح والخدمات المضافة داخل المركز.</p>
+      </div>
+    </div>
 
     <div class="posts-wrap">
       <div class="posts-scroll" id="postsScroll">
@@ -407,7 +575,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     </div>
 
     <div class="section-title">كل المنشورات</div>
-    <div class="card">
+    <div class="card" id="profileInfoCard">
       <div class="posts-list" id="postsList">
         <!-- تُملأ بالجافاسكربت -->
       </div>
@@ -416,11 +584,47 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
   <!-- ================== الخطة / التشخيص ================== -->
   <section class="page" data-page="treatment">
+    <div class="section-title">
+      <div>خدماتنا ورحلتك العلاجية<small>تفاصيل العناية والمتابعة</small></div>
+    </div>
+    <div class="editorial-banner" id="treatmentBanner">
+      <div class="banner-content">
+        <span class="chip cream" style="width:max-content">خدمات الأسنان</span>
+        <h3>ابتسامة أكثر صحة وجمالاً</h3>
+        <p>متابعة مراحل العلاج مع نظرة سريعة على أبرز الخدمات داخل المركز.</p>
+      </div>
+    </div>
+
+    <div class="feature-strip" style="margin-top:16px">
+      <div class="feature-card">
+        <div class="media" id="treatmentFeatureCleaningMedia" style="background:linear-gradient(145deg,#ddc9b5,#8d6445)"></div>
+        <div class="body">
+          <h4>تبييض وتنظيف</h4>
+          <p>جلسات دورية للحفاظ على إشراقة الابتسامة.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="media" id="treatmentFeatureAlignersMedia" style="background:linear-gradient(145deg,#d7c0a8,#a77d58)"></div>
+        <div class="body">
+          <h4>التقويم الشفاف</h4>
+          <p>خطة تدريجية مع متابعة دقيقة لكل مرحلة.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="media" id="treatmentFeatureVeneersMedia" style="background:linear-gradient(145deg,#e4d7c9,#94694b)"></div>
+        <div class="body">
+          <h4>التركيبات التجميلية</h4>
+          <p>حلول متوازنة لابتسامة طبيعية وأنيقة.</p>
+        </div>
+      </div>
+    </div>
 
     <!-- للمريض التقويم: خطة العلاج بالمراحل -->
     <div data-ortho-only>
-      <div class="section-title">خطة التقويم الشفاف</div>
-      <div class="card">
+      <div class="section-title">
+        <div>خطة التقويم الشفاف<small>التقدّم الحالي</small></div>
+      </div>
+      <div class="card progress-card">
         <div class="progress-head" style="margin-bottom:14px">
           <span class="progress-row" style="width:100%">
             <span style="display:flex;justify-content:space-between;align-items:center;width:100%">
@@ -438,8 +642,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         </div>
       </div>
 
-      <div class="section-title">القوالب</div>
-      <div class="card">
+      <div class="section-title">
+        <div>المراحل والقوالب<small>سجل الخطة</small></div>
+      </div>
+      <div class="card list-card" id="treatmentStages">
         <div class="list-item">
           <div class="list-date" style="background:#ecfdf5;color:#047857"><div class="dm">01</div><div class="mn">آب</div></div>
           <div class="list-body">
@@ -485,7 +691,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
     <!-- للمرضى العامين: تشخيص الطبيب -->
     <div data-general-only style="display:none">
-      <div class="section-title">تشخيص الطبيب</div>
+      <div class="section-title">
+        <div>تشخيص الطبيب<small>تفاصيل الحالة الحالية</small></div>
+      </div>
       <div class="diagnosis-box">
         <div class="diagnosis-head">
           <div class="ico">
@@ -507,7 +715,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
   <!-- ================== الملف الشخصي ================== -->
   <section class="page" data-page="profile">
-    <div style="margin-top:22px" class="card">
+    <div style="margin-top:22px" class="card profile-card" id="profileCard">
       <div class="profile-head">
         <div class="avatar" id="profile-avatar">س</div>
         <div>
@@ -515,9 +723,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
           <div class="meta" id="profile-meta">#NF-0001 · عضوة منذ: 15 تموز 2026</div>
         </div>
       </div>
+      <div class="profile-actions">
+        <button class="btn ghost" data-action="call-clinic">اتصل بنا</button>
+        <button class="btn primary" data-action="new-appt">حجز موعد</button>
+      </div>
     </div>
 
-    <div class="section-title">البيانات الشخصيّة</div>
+    <div class="section-title">
+      <div>البيانات الشخصيّة<small>معلوماتك الأساسية</small></div>
+    </div>
     <div class="card">
       <div class="info-row"><span class="k">الاسم الكامل:</span><span class="v" id="info-fullname">سارة أحمد محمود الحسن</span></div>
       <div class="info-row"><span class="k">تاريخ الميلاد:</span><span class="v" id="info-dob">10 شباط 1999 (27 سنة)</span></div>
@@ -529,11 +743,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
       <div class="info-row"><span class="k">حساسيات معروفة:</span><span class="v" id="info-allergies">لا توجد</span></div>
     </div>
 
-    <div class="section-title">الإعدادات</div>
-    <div class="card">
-      <div class="info-row"><span class="k">تنبيهات المواعيد:</span><span class="v" style="color:#047857">مفعّلة ✓</span></div>
-      <div class="info-row" data-ortho-only><span class="k">تذكير الارتداء:</span><span class="v" style="color:#047857">مفعّل (22 ساعة يومياً) ✓</span></div>
-      <div class="info-row"><span class="k">اللغة:</span><span class="v">العربية</span></div>
+    <div class="section-title">
+      <div>خيارات سريعة<small>إعدادات وحساب</small></div>
+    </div>
+    <div class="menu-list">
+      <button class="menu-item" type="button" data-nav="profile-details">
+        <div class="left"><div class="ico">👤</div><div class="txt">معلوماتي الشخصية</div></div>
+        <div>‹</div>
+      </button>
+      <button class="menu-item" type="button" data-nav="appointments">
+        <div class="left"><div class="ico">📅</div><div class="txt">سجل المواعيد</div></div>
+        <div>‹</div>
+      </button>
+      <button class="menu-item" type="button" data-nav="posts">
+        <div class="left"><div class="ico">🎁</div><div class="txt">العروض والخصومات</div></div>
+        <div>‹</div>
+      </button>
+      <button class="menu-item" type="button" data-action="call-clinic">
+        <div class="left"><div class="ico">☎️</div><div class="txt">التواصل معنا</div></div>
+        <div>‹</div>
+      </button>
+      <button class="menu-item" type="button" data-action="settings">
+        <div class="left"><div class="ico">⚙️</div><div class="txt">الإعدادات</div></div>
+        <div>‹</div>
+      </button>
     </div>
 
     <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -556,13 +789,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
         <circle cx="12" cy="7" r="4"/>
       </svg>
-      <span>الملف</span>
+      <span>ملفي</span>
     </button>
     <button class="tab" data-tab="treatment" title="العلاج">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>
       </svg>
-      <span>العلاج</span>
+      <span>خدماتنا</span>
     </button>
     <button class="tab" data-tab="posts" title="المنشورات">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -570,7 +803,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         <line x1="3" y1="9" x2="21" y2="9"/>
         <line x1="9" y1="21" x2="9" y2="9"/>
       </svg>
-      <span>المنشورات</span>
+      <span>العروض</span>
     </button>
     <button class="tab" data-tab="appointments" title="المواعيد">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -579,7 +812,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
         <line x1="8" y1="2" x2="8" y2="6"/>
         <line x1="3" y1="10" x2="21" y2="10"/>
       </svg>
-      <span>المواعيد</span>
+      <span>حجوزاتي</span>
     </button>
     <button class="tab active" data-tab="home" title="الرئيسية">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -599,30 +832,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
       <div class="modal-title" id="apptModalTitle">طلب موعد جديد</div>
       <button class="modal-close" id="modalClose">✕</button>
     </div>
+    <div class="booking-steps">
+      <div class="booking-step active">الخدمة</div>
+      <div class="booking-step active">التاريخ</div>
+      <div class="booking-step active">الوقت</div>
+      <div class="booking-step">التأكيد</div>
+    </div>
     <div class="modal-field">
-      <label>نوع الزيارة</label>
+      <label>اختري الخدمة</label>
       <div class="type-chips" id="typeChips">
-        <button class="type-chip" data-type="فحص">فحص</button>
-        <button class="type-chip" data-type="تنظيف">تنظيف</button>
-        <button class="type-chip" data-type="حشو">حشو</button>
-        <button class="type-chip" data-type="خلع">خلع</button>
+        <button class="type-chip" data-type="فحص">فحص شامل</button>
+        <button class="type-chip" data-type="تنظيف">تنظيف الأسنان</button>
+        <button class="type-chip" data-type="حشو">حشوات تجميلية</button>
+        <button class="type-chip" data-type="خلع">خلع وعلاج</button>
         <button class="type-chip" data-type="تقويم">تقويم</button>
-        <button class="type-chip" data-type="زراعة">زراعة</button>
-        <button class="type-chip" data-type="تركيب">تركيب</button>
+        <button class="type-chip" data-type="زراعة">زراعة الأسنان</button>
+        <button class="type-chip" data-type="تركيب">تركيبات</button>
         <button class="type-chip" data-type="متابعة">متابعة</button>
       </div>
     </div>
     <div class="modal-field">
-      <label>التاريخ المفضل</label>
-      <input type="date" id="apptDate" />
+      <label>اختري التاريخ</label>
+      <div class="date-slots" id="dateQuickChips"></div>
+      <input class="hidden-native" type="date" id="apptDate" />
     </div>
     <div class="modal-field">
-      <label>الوقت المفضل</label>
-      <input type="time" id="apptTime" value="17:00" />
+      <label>اختري الوقت</label>
+      <div class="time-slots" id="timeQuickChips"></div>
+      <input class="hidden-native" type="time" id="apptTime" value="17:00" />
     </div>
     <div class="modal-field">
-      <label>ملاحظات (اختياري)</label>
-      <textarea id="apptNotes" rows="2" placeholder="أي معلومة تريد إخبار الطبيب بها..."></textarea>
+      <label>ملاحظات إضافية</label>
+      <textarea id="apptNotes" rows="3" placeholder="اذكري أي ملاحظة مهمة للطبيب أو للفريق..."></textarea>
     </div>
     <button class="modal-btn" id="submitAppt">إرسال الطلب</button>
   </div>
@@ -652,6 +893,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   var STAGES = [];
   var APPOINTMENTS = [];
   var POSTS = [];
+  var APP_SETTINGS = null;
+  var DEFAULT_POST_IMAGE = '/icon-512.png';
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -814,6 +1057,141 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     return { dm: String(d.getDate()).padStart(2,'0'), mn: MONTHS_AR[d.getMonth()] };
   }
 
+  function getMobileImages() {
+    var images = APP_SETTINGS && APP_SETTINGS.mobile_images;
+    if (!images || typeof images !== 'object' || Array.isArray(images)) return {};
+    return images;
+  }
+
+  function escapeCssUrl(url) {
+    return String(url || '').replace(/"/g, '\\"');
+  }
+
+  function setBackgroundImage(selector, imageUrl, gradientValue) {
+    var el = typeof selector === 'string' ? document.querySelector(selector) : selector;
+    if (!el) return;
+    if (imageUrl) {
+      el.style.backgroundImage = gradientValue + ', url("' + escapeCssUrl(imageUrl) + '")';
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+      el.style.backgroundRepeat = 'no-repeat';
+    } else {
+      el.style.backgroundImage = gradientValue;
+    }
+  }
+
+  function applyClinicSettings() {
+    if (!APP_SETTINGS) return;
+
+    var clinicName = APP_SETTINGS.clinic_name || 'مركز نوف لطب الأسنان';
+    var logoUrl = APP_SETTINGS.logo_url || '';
+    var images = getMobileImages();
+
+    document.title = clinicName + ' | البوابة الإلكترونية للمرضى';
+
+    var appNameMeta = document.querySelector('meta[name="application-name"]');
+    if (appNameMeta) appNameMeta.setAttribute('content', clinicName);
+
+    var loginTitle = document.getElementById('loginTitle');
+    if (loginTitle) loginTitle.textContent = clinicName;
+
+    if (logoUrl) {
+      var loginLogo = document.getElementById('loginLogo');
+      if (loginLogo) {
+        loginLogo.textContent = '';
+        loginLogo.style.backgroundImage = 'url("' + escapeCssUrl(logoUrl) + '")';
+        loginLogo.style.backgroundSize = 'cover';
+        loginLogo.style.backgroundPosition = 'center';
+        loginLogo.style.backgroundRepeat = 'no-repeat';
+      }
+    }
+
+    setBackgroundImage(
+      '#loginScreen',
+      images.login_background_image_url,
+      'radial-gradient(circle at top right,rgba(255,255,255,.12),transparent 20%),linear-gradient(140deg,rgba(69,45,27,.8),rgba(69,45,27,.32)),linear-gradient(145deg,#b59172,#6c4a31)'
+    );
+    setBackgroundImage(
+      '#heroMedia',
+      images.home_hero_image_url,
+      'radial-gradient(circle at top left,rgba(255,255,255,.25),transparent 34%),linear-gradient(180deg,rgba(71,46,28,.04),rgba(71,46,28,.38)),linear-gradient(135deg,#ccb199,#8d684a)'
+    );
+    setBackgroundImage(
+      '#profileCard',
+      images.profile_background_image_url,
+      'radial-gradient(circle at top right,rgba(255,255,255,.5),transparent 34%),linear-gradient(145deg,rgba(255,255,255,.88),rgba(244,230,214,.92))'
+    );
+    setBackgroundImage(
+      '#homeServiceDentalCard',
+      images.home_service_dental_image_url,
+      'linear-gradient(145deg,#d6bea7,#8c6548)'
+    );
+    setBackgroundImage(
+      '#homeServiceBeautyCard',
+      images.home_service_beauty_image_url,
+      'linear-gradient(145deg,#ccb39a,#7e5a41)'
+    );
+    setBackgroundImage(
+      '#appointmentsBanner',
+      images.appointments_banner_image_url,
+      'radial-gradient(circle at top left,rgba(255,255,255,.35),transparent 30%),linear-gradient(135deg,#d7c0a6,#8a6547)'
+    );
+    setBackgroundImage(
+      '#postsBanner',
+      images.posts_banner_image_url,
+      'radial-gradient(circle at top left,rgba(255,255,255,.35),transparent 30%),linear-gradient(135deg,#d7c0a6,#8a6547)'
+    );
+    setBackgroundImage(
+      '#treatmentBanner',
+      images.treatment_banner_image_url,
+      'radial-gradient(circle at top left,rgba(255,255,255,.35),transparent 30%),linear-gradient(135deg,#d7c0a6,#8a6547)'
+    );
+    setBackgroundImage(
+      '#homeFeatureWhiteningMedia',
+      images.home_feature_whitening_image_url,
+      'linear-gradient(145deg,#d8c4af,#a37c58)'
+    );
+    setBackgroundImage(
+      '#homeFeatureSkincareMedia',
+      images.home_feature_skincare_image_url,
+      'linear-gradient(145deg,#eadaca,#bb9473)'
+    );
+    setBackgroundImage(
+      '#homeFeatureImplantsMedia',
+      images.home_feature_implants_image_url,
+      'linear-gradient(145deg,#e2d1bf,#9b724e)'
+    );
+    setBackgroundImage(
+      '#treatmentFeatureCleaningMedia',
+      images.treatment_feature_cleaning_image_url,
+      'linear-gradient(145deg,#ddc9b5,#8d6445)'
+    );
+    setBackgroundImage(
+      '#treatmentFeatureAlignersMedia',
+      images.treatment_feature_aligners_image_url,
+      'linear-gradient(145deg,#d7c0a8,#a77d58)'
+    );
+    setBackgroundImage(
+      '#treatmentFeatureVeneersMedia',
+      images.treatment_feature_veneers_image_url,
+      'linear-gradient(145deg,#e4d7c9,#94694b)'
+    );
+  }
+
+  function loadClinicSettings() {
+    return sbFetch('/rest/v1/clinic_settings?select=clinic_name,logo_url,mobile_images&limit=1')
+      .then(function(rows) {
+        APP_SETTINGS = rows && rows[0] ? rows[0] : null;
+        var images = getMobileImages();
+        DEFAULT_POST_IMAGE = images.posts_fallback_image_url || APP_SETTINGS && APP_SETTINGS.logo_url || '/icon-512.png';
+        applyClinicSettings();
+      })
+      .catch(function() {
+        APP_SETTINGS = null;
+        DEFAULT_POST_IMAGE = '/icon-512.png';
+      });
+  }
+
   function sbFetch(path, opts) {
     opts = opts || {};
     opts.headers = opts.headers || {};
@@ -865,7 +1243,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
           id: p.id,
           title: p.title,
           body: p.body || '',
-          image: p.image_url || 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=modern%20dental%20clinic%20smile%20teeth%20care%20professional&image_size=landscape_16_9',
+          image: p.image_url || DEFAULT_POST_IMAGE,
           type: p.type || 'general',
           date: formatDateFull(p.created_at)
         };
@@ -897,6 +1275,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   function clearSession() {
     localStorage.removeItem(STORAGE_KEY);
   }
+
+  var currentAppointmentsFilter = 'all';
+  var preferredType = 'فحص';
+  var QUICK_TIME_SLOTS = ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00', '19:30'];
 
   function urlBase64ToUint8Array(base64String) {
     var padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -956,8 +1338,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     if (!PATIENT) return;
     var nameEl = document.querySelector('.patient-name');
     if (nameEl) nameEl.textContent = PATIENT.full_name || '';
-    var avatarEl = document.querySelector('.avatar');
-    if (avatarEl) avatarEl.textContent = (PATIENT.full_name || '?').charAt(0);
+    document.querySelectorAll('.avatar').forEach(function(avatarEl){
+      avatarEl.textContent = (PATIENT.full_name || '?').charAt(0);
+    });
 
     var pAvatar = document.getElementById('profile-avatar');
     if (pAvatar) pAvatar.textContent = (PATIENT.full_name || '?').charAt(0);
@@ -986,7 +1369,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     generalEls.forEach(function(el){ el.style.display = isOrtho ? 'none' : ''; });
 
     var treatTab = document.querySelector('[data-tab="treatment"] span');
-    if (treatTab) treatTab.textContent = isOrtho ? 'الخطة' : 'التشخيص';
+    if (treatTab) treatTab.textContent = isOrtho ? 'رحلتي' : 'خدماتنا';
 
     var d1 = document.getElementById('home-diagnosis-text');
     var d2 = document.getElementById('treatment-diagnosis-text');
@@ -1048,30 +1431,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   }
 
   function renderAppointmentsList() {
-    var list = document.querySelector('[data-page="appointments"] .card');
+    var list = document.getElementById('appointmentsList');
     if (!list) return;
+    var rows = APPOINTMENTS.slice();
+    var now = new Date(); now.setHours(0,0,0,0);
+    rows = rows.filter(function(a) {
+      var d = new Date(a.appointment_date); d.setHours(0,0,0,0);
+      if (currentAppointmentsFilter === 'upcoming') {
+        return d >= now && a.status !== 'completed' && a.status !== 'cancelled';
+      }
+      if (currentAppointmentsFilter === 'past') {
+        return a.status === 'completed' || d < now;
+      }
+      if (currentAppointmentsFilter === 'requested') {
+        return a.status === 'requested';
+      }
+      return true;
+    });
     var html = '';
-    APPOINTMENTS.forEach(function(a) {
+    rows.forEach(function(a) {
       var dm = dayMonth(a.appointment_date);
       var statusClass = 'coming', statusLabel = 'مؤكد';
       var rightLabel = 'قادم';
-      var now = new Date(); now.setHours(0,0,0,0);
       var d = new Date(a.appointment_date); d.setHours(0,0,0,0);
       if (a.status === 'completed') { statusClass = 'done'; statusLabel = 'انتهى'; rightLabel = 'تم'; }
       else if (a.status === 'cancelled') { statusClass = 'cancel'; statusLabel = 'ملغي'; rightLabel = 'ملغي'; }
-      else if (a.status === 'requested') { statusClass = ''; statusLabel = 'قيد التأكيد'; rightLabel = 'مطلوب'; }
-      else if (d < now) { statusClass = 'cancel'; statusLabel = 'انتهى'; rightLabel = 'تم'; }
+      else if (a.status === 'requested') { statusClass = 'blue'; statusLabel = 'قيد التأكيد'; rightLabel = 'مطلوب'; }
+      else if (d < now) { statusClass = 'done'; statusLabel = 'منتهي'; rightLabel = 'تم'; }
       html += '<div class="list-item">' +
         '<div class="list-date"><div class="dm">' + dm.dm + '</div><div class="mn">' + dm.mn + '</div></div>' +
         '<div class="list-body">' +
           '<div class="t">' + (a.type || 'فحص') + '</div>' +
-          '<div class="d">' + formatDate(a.appointment_date) + ' ' + formatTime(a.appointment_time) + '</div>' +
+          '<div class="d">' + formatDate(a.appointment_date) + ' · ' + formatTime(a.appointment_time) + '</div>' +
         '</div>' +
         '<div class="list-right"><div>' + rightLabel + '</div><div class="sub"><span class="list-status ' + statusClass + '">' + statusLabel + '</span></div></div>' +
       '</div>';
     });
-    if (APPOINTMENTS.length === 0) {
-      html = '<div style="text-align:center;padding:20px;color:#94a3b8">لا توجد مواعيد بعد</div>';
+    if (rows.length === 0) {
+      html = '<div class="empty">لا توجد مواعيد ضمن هذا التصنيف حالياً</div>';
     }
     list.innerHTML = html;
   }
@@ -1091,20 +1488,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     var fills = document.querySelectorAll('[data-ortho-only] .bar-fill');
     fills.forEach(function(f){ f.style.width = pct + '%'; });
 
-    var stagesContainer = document.querySelector('[data-page="treatment"] [data-ortho-only] .card .list-item');
-    if (stagesContainer && stagesContainer.parentNode) {
-      var parent = stagesContainer.parentNode;
+    var parent = document.getElementById('treatmentStages');
+    if (parent) {
       parent.innerHTML = '';
       stages.forEach(function(s) {
-        var statusCls = s.status === 'completed' ? 'done' : (s.status === 'in_progress' ? 'coming' : '');
-        var statusLbl = s.status === 'completed' ? 'انتهى' : (s.status === 'in_progress' ? 'حالي' : 'قادم');
-        var bg = s.status === 'completed' ? 'background:#ecfdf5;color:#047857' : '';
-        var dm = s.completed_at ? dayMonth(s.completed_at) : {dm:'--', mn:''};
+        var statusCls = s.status === 'completed' ? 'done' : (s.status === 'in_progress' ? 'coming' : 'blue');
+        var statusLbl = s.status === 'completed' ? 'مكتمل' : (s.status === 'in_progress' ? 'حالي' : 'قادم');
+        var bg = s.status === 'completed' ? 'background:#ecfdf5;color:#047857' : (s.status === 'in_progress' ? '' : 'background:#f7ede0;color:#7a5738');
+        var dm = s.completed_at ? dayMonth(s.completed_at) : dayMonth(plan.start_date || new Date().toISOString());
         parent.innerHTML += '<div class="list-item">' +
           '<div class="list-date" style="' + bg + '"><div class="dm">' + dm.dm + '</div><div class="mn">' + dm.mn + '</div></div>' +
           '<div class="list-body">' +
             '<div class="t">' + s.name + '</div>' +
-            '<div class="d">' + (s.description || '') + '</div>' +
+            '<div class="d">' + (s.description || 'مرحلة ضمن خطة العلاج الحالية') + '</div>' +
           '</div>' +
           '<div class="list-right"><div class="list-status ' + statusCls + '">' + statusLbl + '</div></div>' +
         '</div>';
@@ -1189,6 +1585,52 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     list.innerHTML = html;
   }
 
+  function formatWeekDayShort(dateObj) {
+    return DAYS_AR[dateObj.getDay()].replace('ال', '').slice(0, 5);
+  }
+
+  function renderDateSlots(baseDate) {
+    var wrap = document.getElementById('dateQuickChips');
+    if (!wrap) return;
+    var start = new Date(baseDate || new Date());
+    if (start < new Date()) {
+      start = new Date();
+    }
+    wrap.innerHTML = '';
+    for (var i = 0; i < 6; i++) {
+      var d = new Date(start);
+      d.setDate(d.getDate() + i);
+      var iso = d.toISOString().split('T')[0];
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'date-chip' + (apptDateInput.value === iso ? ' active' : '');
+      btn.dataset.value = iso;
+      btn.innerHTML = '<strong>' + String(d.getDate()).padStart(2, '0') + '</strong><span>' + formatWeekDayShort(d) + '</span>';
+      wrap.appendChild(btn);
+    }
+  }
+
+  function renderTimeSlots() {
+    var wrap = document.getElementById('timeQuickChips');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    QUICK_TIME_SLOTS.forEach(function(time) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'time-chip' + (apptTimeInput.value === time ? ' active' : '');
+      btn.dataset.value = time;
+      btn.innerHTML = '<strong>' + time + '</strong><span>' + formatTime(time) + '</span>';
+      wrap.appendChild(btn);
+    });
+  }
+
+  function setSelectedType(typeValue) {
+    selectedType = typeValue;
+    typeChipsWrap.querySelectorAll('.type-chip').forEach(function(c){
+      c.classList.toggle('active', c.dataset.type === selectedType);
+    });
+  }
+
   var pages = document.querySelectorAll('.page');
   var tabs  = document.querySelectorAll('.tab');
   var toast = document.getElementById('toast');
@@ -1205,6 +1647,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   };
   tabs.forEach(function(t){ t.addEventListener('click', function(){ switchTab(t.dataset.tab); }); });
 
+  var apptFilterWrap = document.getElementById('appointmentsFilter');
+  if (apptFilterWrap) {
+    apptFilterWrap.addEventListener('click', function(e){
+      var chip = e.target.closest('.filter-chip');
+      if (!chip) return;
+      currentAppointmentsFilter = chip.dataset.filter || 'all';
+      apptFilterWrap.querySelectorAll('.filter-chip').forEach(function(c){ c.classList.toggle('active', c === chip); });
+      renderAppointmentsList();
+    });
+  }
+
   document.addEventListener('click', function(e){
     var btn = e.target.closest('[data-action]');
     if (!btn) return;
@@ -1213,7 +1666,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     else if (a === 'reschedule') openApptModal(true);
     else if (a === 'new-appt') openApptModal();
     else if (a === 'call-clinic') showToast('📞 يتم فتح الاتصال بالعيادة...');
+    else if (a === 'settings') showToast('⚙️ صفحة الإعدادات ستكون متاحة قريباً');
     else if (a === 'logout') { clearSession(); location.reload(); }
+  });
+
+  document.querySelectorAll('[data-prefill-type]').forEach(function(card){
+    card.addEventListener('click', function(){
+      preferredType = card.dataset.prefillType || 'فحص';
+      openApptModal(false, preferredType);
+    });
+  });
+
+  document.querySelectorAll('[data-nav]').forEach(function(item){
+    item.addEventListener('click', function(){
+      var target = item.dataset.nav;
+      if (target === 'appointments') {
+        switchTab('appointments');
+        return;
+      }
+      if (target === 'posts') {
+        switchTab('posts');
+        return;
+      }
+      if (target === 'profile-details') {
+        switchTab('profile');
+        setTimeout(function(){
+          var infoCard = document.getElementById('profileInfoCard');
+          if (infoCard && infoCard.scrollIntoView) {
+            infoCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 120);
+      }
+    });
   });
 
   var lastTouch = 0;
@@ -1270,10 +1754,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   var submitApptBtn = document.getElementById('submitAppt');
   var modalCloseBtn = document.getElementById('modalClose');
   var typeChipsWrap = document.getElementById('typeChips');
+  var dateQuickChipsWrap = document.getElementById('dateQuickChips');
+  var timeQuickChipsWrap = document.getElementById('timeQuickChips');
   var selectedType = 'فحص';
   var isReschedule = false;
 
-  function openApptModal(reschedule) {
+  function openApptModal(reschedule, initialType) {
     if (!PATIENT || !PATIENT.id) { showToast('⚠️ يجب تسجيل الدخول أولاً'); return; }
     isReschedule = !!reschedule;
     var titleEl = document.getElementById('apptModalTitle');
@@ -1281,12 +1767,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     var tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
     apptDateInput.value = tomorrow.toISOString().split('T')[0];
     apptDateInput.min = new Date().toISOString().split('T')[0];
-    apptTimeInput.value = '17:00';
+    apptTimeInput.value = '18:00';
     apptNotesInput.value = '';
-    selectedType = 'فحص';
-    typeChipsWrap.querySelectorAll('.type-chip').forEach(function(c){
-      c.classList.toggle('active', c.dataset.type === selectedType);
-    });
+    setSelectedType(initialType || preferredType || 'فحص');
+    renderDateSlots(tomorrow);
+    renderTimeSlots();
     apptModal.classList.remove('hidden');
   }
 
@@ -1298,10 +1783,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
   typeChipsWrap.addEventListener('click', function(e){
     var chip = e.target.closest('.type-chip');
     if (!chip) return;
-    selectedType = chip.dataset.type;
-    typeChipsWrap.querySelectorAll('.type-chip').forEach(function(c){ c.classList.remove('active'); });
-    chip.classList.add('active');
+    setSelectedType(chip.dataset.type);
   });
+
+  if (dateQuickChipsWrap) {
+    dateQuickChipsWrap.addEventListener('click', function(e){
+      var chip = e.target.closest('.date-chip');
+      if (!chip) return;
+      apptDateInput.value = chip.dataset.value;
+      dateQuickChipsWrap.querySelectorAll('.date-chip').forEach(function(c){ c.classList.toggle('active', c === chip); });
+    });
+  }
+
+  if (timeQuickChipsWrap) {
+    timeQuickChipsWrap.addEventListener('click', function(e){
+      var chip = e.target.closest('.time-chip');
+      if (!chip) return;
+      apptTimeInput.value = chip.dataset.value;
+      timeQuickChipsWrap.querySelectorAll('.time-chip').forEach(function(c){ c.classList.toggle('active', c === chip); });
+    });
+  }
 
   submitApptBtn.addEventListener('click', function(){
     var dateVal = apptDateInput.value;
@@ -1353,31 +1854,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
     });
   });
 
-  var session = getSession();
-  if (session) {
-    fetch(SUPABASE_URL + '/auth/v1/user', {
-      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + session.token }
-    }).then(function(r) {
-      if (!r.ok) throw new Error('session expired');
-      return r.json();
-    }).then(function(user) {
-      return loadPatientData({ access_token: session.token, user: user });
-    }).then(function() {
-      hideLogin();
-      renderPatient();
-      buildPostsCarousel();
-      buildPostsList();
-      initPushNotifications();
-      initFCM();
-    }).catch(function() {
-      clearSession();
+  loadClinicSettings().finally(function() {
+    var session = getSession();
+    if (session) {
+      fetch(SUPABASE_URL + '/auth/v1/user', {
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + session.token }
+      }).then(function(r) {
+        if (!r.ok) throw new Error('session expired');
+        return r.json();
+      }).then(function(user) {
+        return loadPatientData({ access_token: session.token, user: user });
+      }).then(function() {
+        hideLogin();
+        renderPatient();
+        buildPostsCarousel();
+        buildPostsList();
+        initPushNotifications();
+        initFCM();
+      }).catch(function() {
+        clearSession();
+        showLogin();
+      });
+    } else {
       showLogin();
-    });
-  } else {
-    showLogin();
-  }
+    }
+  });
 })();
 </script>
 </body>
 </html>
-

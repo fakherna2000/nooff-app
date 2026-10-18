@@ -1,5 +1,23 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
+export interface MobileAppImages {
+  login_background_image_url?: string | null;
+  home_hero_image_url?: string | null;
+  appointments_banner_image_url?: string | null;
+  posts_banner_image_url?: string | null;
+  treatment_banner_image_url?: string | null;
+  profile_background_image_url?: string | null;
+  home_service_dental_image_url?: string | null;
+  home_service_beauty_image_url?: string | null;
+  home_feature_whitening_image_url?: string | null;
+  home_feature_skincare_image_url?: string | null;
+  home_feature_implants_image_url?: string | null;
+  treatment_feature_cleaning_image_url?: string | null;
+  treatment_feature_aligners_image_url?: string | null;
+  treatment_feature_veneers_image_url?: string | null;
+  posts_fallback_image_url?: string | null;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -309,6 +327,7 @@ export interface Database {
           email: string | null;
           logo_url: string | null;
           currency_id: string | null;
+          mobile_images: MobileAppImages | null;
           updated_at: string;
         };
         Insert: {
@@ -319,6 +338,7 @@ export interface Database {
           email?: string | null;
           logo_url?: string | null;
           currency_id?: string | null;
+          mobile_images?: MobileAppImages | null;
           updated_at?: string;
         };
         Update: {
@@ -329,6 +349,7 @@ export interface Database {
           email?: string | null;
           logo_url?: string | null;
           currency_id?: string | null;
+          mobile_images?: MobileAppImages | null;
           updated_at?: string;
         };
       };
