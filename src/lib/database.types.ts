@@ -353,6 +353,128 @@ export interface Database {
           updated_at?: string;
         };
       };
+      loyalty_rewards: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          points_cost: number;
+          image_url: string | null;
+          is_active: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          points_cost: number;
+          image_url?: string | null;
+          is_active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string | null;
+          points_cost?: number;
+          image_url?: string | null;
+          is_active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      loyalty_wallets: {
+        Row: {
+          id: string;
+          patient_id: string;
+          points_balance: number;
+          lifetime_points: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          patient_id: string;
+          points_balance?: number;
+          lifetime_points?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          patient_id?: string;
+          points_balance?: number;
+          lifetime_points?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      loyalty_transactions: {
+        Row: {
+          id: string;
+          patient_id: string;
+          points: number;
+          type: string;
+          reason: string | null;
+          appointment_id: string | null;
+          reward_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          patient_id: string;
+          points: number;
+          type: string;
+          reason?: string | null;
+          appointment_id?: string | null;
+          reward_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          patient_id?: string;
+          points?: number;
+          type?: string;
+          reason?: string | null;
+          appointment_id?: string | null;
+          reward_id?: string | null;
+          created_at?: string;
+        };
+      };
+      loyalty_redemptions: {
+        Row: {
+          id: string;
+          patient_id: string;
+          reward_id: string | null;
+          reward_title: string | null;
+          points_spent: number;
+          status: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          patient_id: string;
+          reward_id?: string | null;
+          reward_title?: string | null;
+          points_spent: number;
+          status?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          patient_id?: string;
+          reward_id?: string | null;
+          reward_title?: string | null;
+          points_spent?: number;
+          status?: string;
+          created_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
@@ -377,6 +499,10 @@ export type Appointment = Database['public']['Tables']['appointments']['Row'];
 export type Post = Database['public']['Tables']['posts']['Row'];
 export type Currency = Database['public']['Tables']['currencies']['Row'];
 export type ClinicSettings = Database['public']['Tables']['clinic_settings']['Row'];
+export type LoyaltyReward = Database['public']['Tables']['loyalty_rewards']['Row'];
+export type LoyaltyWallet = Database['public']['Tables']['loyalty_wallets']['Row'];
+export type LoyaltyTransaction = Database['public']['Tables']['loyalty_transactions']['Row'];
+export type LoyaltyRedemption = Database['public']['Tables']['loyalty_redemptions']['Row'];
 
 export type PatientWithDetails = Patient & {
   treatment_plans: (TreatmentPlan & {

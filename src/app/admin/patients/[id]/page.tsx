@@ -24,6 +24,7 @@ import {
   StickyNote,
   X,
   Send,
+  Gift,
 } from 'lucide-react';
 import { usePatients, useTreatmentPlans, useTreatmentStages, usePayments, useAppointments } from '@/hooks/useData';
 import { useClinicSettings } from '@/hooks/useClinicSettings';
@@ -44,8 +45,9 @@ import {
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { sendPushNotification } from '@/lib/push-notifications';
+import { LOYALTY_TX_LABELS } from '@/lib/loyalty';
 
-type TabKey = 'overview' | 'plans' | 'payments' | 'appointments' | 'edit';
+type TabKey = 'overview' | 'plans' | 'payments' | 'appointments' | 'loyalty' | 'edit';
 
 let _currencySymbol = 'ر.س';
 const fc = (amount: number) => formatCurrency(amount, _currencySymbol);
@@ -206,6 +208,7 @@ export default function PatientDetailPage() {
             ['plans', 'خطط العلاج', FileText],
             ['payments', 'الدفعات', CreditCard],
             ['appointments', 'المواعيد', Calendar],
+            ['loyalty', 'النقاط', Gift],
             ['edit', 'تعديل البيانات', Edit],
           ] as [TabKey, string, any][]
         ).map(([key, label, Icon]) => (
@@ -304,6 +307,7 @@ export default function PatientDetailPage() {
             }}
           />
         )}
+        {tab === 'loyalty' && <LoyaltyTab patientId={patient.id} />}
         {tab === 'edit' && (
           <EditPatientTab
             patient={patient}
@@ -890,6 +894,176 @@ function AppointmentsTab({
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+type LoyaltyTx = {
+  id: string;
+  points: number;
+  type: string;
+  reason: string | null;
+  created_at: string;
+};
+
+function LoyaltyTab({ patientId }: { patientId: string }) {
+  const [balance, setBalance] = useState(0);
+  const [lifetime, setLifetime] = useState(0);
+  const [transactions, setTransactions] = useState<LoyaltyTx[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [pointsInput, setPointsInput] = useState('');
+  const [reasonInput, setReasonInput] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/loyalty/patient/${patientId}`);
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'فشل جلب بيانات النقاط');
+      setBalance(json.data.points_balance);
+      setLifetime(json.data.lifetime_points);
+      setTransactions(json.data.transactions || []);
+    } catch (e: any) {
+      toast.error(e.message || 'فشل جلب بيانات النقاط');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patientId]);
+
+  const adjust = async (sign: 1 | -1) => {
+    const value = Number(pointsInput);
+    if (!Number.isFinite(value) || value === 0) {
+      toast.error('أدخل عدد نقاط صحيح');
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch('/api/admin/loyalty/adjust', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          patient_id: patientId,
+          points: sign * Math.abs(Math.trunc(value)),
+          reason: reasonInput || (sign === 1 ? 'إضافة نقاط يدوياً' : 'خصم نقاط يدوياً'),
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'فشل تعديل النقاط');
+      toast.success(sign === 1 ? 'تمت إضافة النقاط' : 'تم خصم النقاط');
+      setPointsInput('');
+      setReasonInput('');
+      await load();
+    } catch (e: any) {
+      toast.error(e.message || 'فشل تعديل النقاط');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <div className="animate-spin w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="card">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <Gift className="w-5 h-5" />
+            </div>
+            <p className="text-gray-500 text-sm">الرصيد الحالي</p>
+          </div>
+          <p className="text-3xl font-bold text-amber-700">{balance}</p>
+          <p className="text-xs text-gray-400 mt-1">نقطة متاحة للاستبدال</p>
+        </div>
+        <div className="card">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <p className="text-gray-500 text-sm">إجمالي النقاط المكتسبة</p>
+          </div>
+          <p className="text-3xl font-bold text-gray-900">{lifetime}</p>
+          <p className="text-xs text-gray-400 mt-1">منذ بداية الحساب</p>
+        </div>
+      </div>
+
+      <div className="card">
+        <h3 className="font-bold text-gray-900 text-lg mb-5">تعديل الرصيد يدوياً</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="label">عدد النقاط</label>
+            <input
+              type="number"
+              className="input"
+              dir="ltr"
+              placeholder="مثال: 20"
+              value={pointsInput}
+              onChange={(e) => setPointsInput(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="label">السبب (اختياري)</label>
+            <input
+              className="input"
+              placeholder="مثال: تعويض عن خطأ موعد"
+              value={reasonInput}
+              onChange={(e) => setReasonInput(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-3 mt-5">
+          <button onClick={() => adjust(1)} disabled={saving} className="btn-primary">
+            <Plus className="w-4 h-4" /> إضافة نقاط
+          </button>
+          <button onClick={() => adjust(-1)} disabled={saving} className="btn-danger">
+            <Trash2 className="w-4 h-4" /> خصم نقاط
+          </button>
+        </div>
+      </div>
+
+      <div className="card">
+        <h3 className="font-bold text-gray-900 text-lg mb-5">سجل حركات النقاط</h3>
+        {transactions.length === 0 ? (
+          <EmptyState icon={Gift} title="لا توجد حركات" desc="لم يكتسب المريض أي نقاط بعد" />
+        ) : (
+          <div className="space-y-3">
+            {transactions.map((tx) => (
+              <div
+                key={tx.id}
+                className="flex items-center justify-between gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50/50"
+              >
+                <div className="min-w-0">
+                  <p className="font-semibold text-gray-900">
+                    {LOYALTY_TX_LABELS[tx.type] || 'حركة نقاط'}
+                  </p>
+                  {tx.reason && <p className="text-xs text-gray-500 mt-0.5">{tx.reason}</p>}
+                  <p className="text-xs text-gray-400 mt-0.5">{formatDate(tx.created_at)}</p>
+                </div>
+                <span
+                  className={cn(
+                    'font-bold text-lg whitespace-nowrap',
+                    tx.points >= 0 ? 'text-green-600' : 'text-red-500'
+                  )}
+                >
+                  {tx.points >= 0 ? `+${tx.points}` : tx.points}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

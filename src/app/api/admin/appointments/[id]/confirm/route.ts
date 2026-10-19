@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { sendFcmToTokens } from '@/lib/fcm-helper';
+import { POINTS_PER_BOOKING } from '@/lib/loyalty';
 
 export async function POST(
   request: Request,
@@ -26,11 +27,12 @@ export async function POST(
   // جلب بيانات الموعد قبل التحديث لاستخدامها في الإشعار
   const { data: apptData } = await admin
     .from('appointments')
-    .select('id, patient_id, appointment_date, appointment_time, type')
+    .select('id, patient_id, appointment_date, appointment_time, type, status')
     .eq('id', params.id)
     .single();
 
   const appt = apptData as any;
+  const wasAlreadyScheduled = appt?.status === 'scheduled';
 
   const { error } = await admin
     .from('appointments')
@@ -40,6 +42,21 @@ export async function POST(
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // احتساب نقاط الولاء عند تأكيد الموعد (مرة واحدة فقط لكل موعد)
+  if (appt?.patient_id && !wasAlreadyScheduled) {
+    try {
+      await (admin as any).rpc('loyalty_adjust_points', {
+        p_patient_id: appt.patient_id,
+        p_points: POINTS_PER_BOOKING,
+        p_type: 'earn',
+        p_reason: 'نقاط تأكيد موعد',
+        p_appointment_id: appt.id,
+      });
+    } catch (e) {
+      console.error('Failed to award loyalty points:', e);
+    }
   }
 
   // إرسال إشعار تلقائي للمريض عند تأكيد موعده
