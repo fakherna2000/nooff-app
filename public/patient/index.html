@@ -1776,19 +1776,36 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     notifBtnBound = true;
   }
 
+  function iosVersion() {
+    var m = (navigator.userAgent || '').match(/OS (\d+)_(\d+)/);
+    if (!m) return 0;
+    return parseFloat(m[1] + '.' + m[2]);
+  }
+
   function updateNotifUI() {
     var card = document.getElementById('notifCard');
     if (!card) return;
     bindNotifButton();
 
-    if (!pushSupported()) {
-      card.style.display = 'none';
-      return;
-    }
     card.style.display = '';
 
     var statusEl = document.getElementById('notifStatus');
     var btn = document.getElementById('notifEnableBtn');
+
+    if (!pushSupported()) {
+      if (btn) btn.style.display = 'none';
+      if (statusEl) {
+        if (isIOSDevice() && iosVersion() && iosVersion() < 16.4) {
+          statusEl.textContent = 'إشعارات الآيفون تحتاج iOS 16.4 أو أحدث. جهازك حالياً ' + iosVersion();
+        } else if (isIOSDevice()) {
+          statusEl.textContent = 'افتح الرابط من تطبيق Safari نفسه (مش من داخل واتساب أو انستغرام)، ثم أضفه إلى الشاشة الرئيسية';
+        } else {
+          statusEl.textContent = 'متصفحك لا يدعم الإشعارات. جرّب من Safari على الآيفون أو من Chrome على الأندرويد';
+        }
+      }
+      return;
+    }
+
     var perm = Notification.permission;
 
     if (perm === 'granted') {
@@ -1796,6 +1813,17 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       if (btn) {
         btn.textContent = 'الإشعارات مفعّلة';
         btn.disabled = true;
+        btn.style.display = '';
+      }
+      return;
+    }
+
+    if (perm === 'denied') {
+      if (btn) btn.style.display = 'none';
+      if (statusEl) {
+        statusEl.textContent = isIOSDevice()
+          ? 'الإشعارات محظورة. افتح: الإعدادات ← الإشعارات ← مركز نوف ← اسمح'
+          : 'الإشعارات محظورة من إعدادات المتصفح، فعّلها ثم أعد المحاولة';
       }
       return;
     }
@@ -1803,23 +1831,12 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     if (btn) {
       btn.textContent = 'تفعيل الإشعارات';
       btn.disabled = false;
+      btn.style.display = '';
     }
-
-    if (perm === 'denied') {
-      if (btn) btn.style.display = 'none';
-      if (statusEl) {
-        statusEl.textContent = isIOSDevice()
-          ? 'الإشعارات محظورة. من: الإعدادات ← الإشعارات ← مركز نوف ← اسمح'
-          : 'الإشعارات محظورة من إعدادات المتصفح، فعّلها ثم أعد المحاولة';
-      }
-      return;
-    }
-
-    if (btn) btn.style.display = '';
 
     if (statusEl) {
       statusEl.textContent = (isIOSDevice() && !isStandaloneApp())
-        ? 'على الآيفون: أضف التطبيق إلى الشاشة الرئيسية أولاً، ثم افتحه من الأيقونة وفعّل الإشعارات'
+        ? 'على الآيفون: ١) أضف التطبيق إلى الشاشة الرئيسية ٢) افتحه من الأيقونة (مش من Safari) ٣) ارجع لهنا واضغط الزر'
         : 'فعّل الإشعارات ليصلك تأكيد موعدك فوراً';
     }
   }
