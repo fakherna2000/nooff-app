@@ -353,6 +353,41 @@ export interface Database {
           updated_at?: string;
         };
       };
+      clinic_services: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          category: 'dental' | 'beauty';
+          image_url: string | null;
+          is_active: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          category?: 'dental' | 'beauty';
+          image_url?: string | null;
+          is_active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string | null;
+          category?: 'dental' | 'beauty';
+          image_url?: string | null;
+          is_active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
       loyalty_rewards: {
         Row: {
           id: string;
@@ -499,6 +534,7 @@ export type Appointment = Database['public']['Tables']['appointments']['Row'];
 export type Post = Database['public']['Tables']['posts']['Row'];
 export type Currency = Database['public']['Tables']['currencies']['Row'];
 export type ClinicSettings = Database['public']['Tables']['clinic_settings']['Row'];
+export type ClinicService = Database['public']['Tables']['clinic_services']['Row'];
 export type LoyaltyReward = Database['public']['Tables']['loyalty_rewards']['Row'];
 export type LoyaltyWallet = Database['public']['Tables']['loyalty_wallets']['Row'];
 export type LoyaltyTransaction = Database['public']['Tables']['loyalty_transactions']['Row'];

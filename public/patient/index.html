@@ -763,7 +763,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     </div>
     <div class="service-hero" id="treatmentBanner"></div>
 
-    <div class="service-list-card">
+    <div class="service-list-card" id="servicesListCard">
       <div class="service-item">
         <div class="service-item-arrow">‹</div>
         <div class="service-item-body">
@@ -771,38 +771,6 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
           <div class="service-item-desc">ابتسامة أكثر إشراقاً</div>
         </div>
         <div class="service-item-thumb" id="treatmentFeatureCleaningMedia"></div>
-      </div>
-      <div class="service-item">
-        <div class="service-item-arrow">‹</div>
-        <div class="service-item-body">
-          <div class="service-item-title">زراعة الأسنان</div>
-          <div class="service-item-desc">حل دائم آمن للأسنان المفقودة</div>
-        </div>
-        <div class="service-item-thumb" style="background:linear-gradient(145deg,#e8dbc9,#bea07e)"></div>
-      </div>
-      <div class="service-item">
-        <div class="service-item-arrow">‹</div>
-        <div class="service-item-body">
-          <div class="service-item-title">تقويم الأسنان</div>
-          <div class="service-item-desc">تصحيح الأسنان لتحسين المظهر الوظيفي</div>
-        </div>
-        <div class="service-item-thumb" id="treatmentFeatureAlignersMedia"></div>
-      </div>
-      <div class="service-item">
-        <div class="service-item-arrow">‹</div>
-        <div class="service-item-body">
-          <div class="service-item-title">حشوات تجميلية</div>
-          <div class="service-item-desc">مظهر طبيعي وجميل</div>
-        </div>
-        <div class="service-item-thumb" id="treatmentFeatureVeneersMedia"></div>
-      </div>
-      <div class="service-item">
-        <div class="service-item-arrow">‹</div>
-        <div class="service-item-body">
-          <div class="service-item-title">تنظيف الأسنان</div>
-          <div class="service-item-desc">لمعان أكثر ألقاً</div>
-        </div>
-        <div class="service-item-thumb" style="background:linear-gradient(145deg,#e6d4c0,#c99c7c)"></div>
       </div>
     </div>
 
@@ -1507,6 +1475,64 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     if (type === 'adjust') return 'تعديل إداري';
     if (type === 'reversal') return 'إلغاء نقاط';
     return 'حركة نقاط';
+  }
+
+  // ================== الخدمات الديناميكية ==================
+  var SERVICES = [];
+  var SERVICE_CATEGORY_ORDER = { dental: 0, beauty: 1 };
+
+  function loadServices() {
+    return sbFetchSafe('/rest/v1/clinic_services?is_active=eq.true&select=*&order=sort_order.asc')
+      .then(function(rows) {
+        SERVICES = Array.isArray(rows) ? rows : [];
+        applyServices();
+      })
+      .catch(function() {
+        SERVICES = [];
+      });
+  }
+
+  function applyServices() {
+    if (!SERVICES.length) return;
+    if (typeof BOOKING_SERVICE_SETS === 'object' && BOOKING_SERVICE_SETS) {
+      var sets = { dental: [], beauty: [] };
+      SERVICES.forEach(function(s) {
+        var bucket = s.category === 'beauty' ? sets.beauty : sets.dental;
+        bucket.push({ value: s.title, desc: s.description || '' });
+      });
+      if (sets.dental.length) BOOKING_SERVICE_SETS.dental = sets.dental;
+      if (sets.beauty.length) BOOKING_SERVICE_SETS.beauty = sets.beauty;
+      if (typeof renderServiceOptions === 'function') renderServiceOptions();
+    }
+    renderServicesList();
+  }
+
+  function renderServicesList() {
+    var container = document.getElementById('servicesListCard');
+    if (!container || !SERVICES.length) return;
+    var list = SERVICES.slice().sort(function(a, b) {
+      var ca = SERVICE_CATEGORY_ORDER[a.category];
+      var cb = SERVICE_CATEGORY_ORDER[b.category];
+      if (ca === undefined) ca = 0;
+      if (cb === undefined) cb = 0;
+      if (ca !== cb) return ca - cb;
+      return (a.sort_order || 0) - (b.sort_order || 0);
+    });
+    var html = '';
+    list.forEach(function(s) {
+      var thumbStyle = s.image_url
+        ? 'background-image:url(' + s.image_url + ');background-size:cover;background-position:center;'
+        : 'background:linear-gradient(145deg,#e8dbc9,#bea07e)';
+      html += '<div class="service-item">' +
+        '<div class="service-item-arrow">‹</div>' +
+        '<div class="service-item-body">' +
+          '<div class="service-item-title">' + escapeHtml(s.title) + '</div>' +
+          '<div class="service-item-desc">' + escapeHtml(s.description || '') + '</div>' +
+        '</div>' +
+        '<div class="service-item-thumb" style="' + thumbStyle + '"></div>' +
+      '</div>';
+    });
+    container.innerHTML = html;
   }
 
   function loadLoyalty() {
@@ -2375,7 +2401,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     });
   });
 
-  loadClinicSettings().finally(function() {
+  Promise.all([loadClinicSettings(), loadServices()]).finally(function() {
     var session = getSession();
     if (session) {
       fetch(SUPABASE_URL + '/auth/v1/user', {
