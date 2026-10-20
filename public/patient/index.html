@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
 <meta name="theme-color" content="#c19b2e" />
 <meta name="application-name" content="مركز نوف لطب الأسنان" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="مركز نوف" />
 <title>مركز نوف لطب الأسنان | البوابة الإلكترونية للمرضى</title>
 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <link rel="shortcut icon" href="/icon-192.png" />
@@ -280,6 +283,16 @@ linear-gradient(145deg,rgba(255,255,255,.9),rgba(241,228,214,.95));text-align:ce
 .menu-item .txt{font-size:14px;font-weight:800}
 .profile-hidden-wallet{display:none}
 .profile-footer-actions{display:none}
+
+.notif-card{border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:14px;border:1px solid rgba(232,220,203,.9);background:
+radial-gradient(circle at top left,rgba(255,255,255,.9),transparent 46%),
+linear-gradient(150deg,#fffaf4,#f6ecdf)}
+.notif-head{display:flex;align-items:center;gap:12px}
+.notif-ico{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,#f3e5d3,#e2c9a8);display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 44px}
+.notif-title{font-size:14.5px;font-weight:900;color:var(--text)}
+.notif-desc{font-size:12.5px;font-weight:700;color:var(--text-2);line-height:1.7;margin-top:3px}
+.notif-btn{appearance:none;border:0;width:100%;border-radius:16px;padding:14px;font-family:inherit;font-size:14px;font-weight:900;color:#fff;cursor:pointer;background:linear-gradient(135deg,#a37f60,#6f5138);box-shadow:0 12px 26px rgba(111,81,56,.22)}
+.notif-btn:disabled{opacity:.68;cursor:default}
 
 .wallet-card{position:relative;overflow:hidden;border-radius:30px;padding:22px;color:#fff;background:
 radial-gradient(circle at top left,rgba(255,255,255,.26),transparent 44%),
@@ -886,6 +899,17 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       <div class="profile-hidden-wallet" id="profileWalletCard">
         <span id="profileWalletBalance">0</span>
         <span id="profileWalletLifetime">0</span>
+      </div>
+
+      <div class="notif-card" id="notifCard" style="display:none">
+        <div class="notif-head">
+          <div class="notif-ico">🔔</div>
+          <div>
+            <div class="notif-title">إشعارات المواعيد</div>
+            <div class="notif-desc" id="notifStatus">فعّل الإشعارات ليصلك تأكيد موعدك فوراً</div>
+          </div>
+        </div>
+        <button class="notif-btn" type="button" id="notifEnableBtn">تفعيل الإشعارات</button>
       </div>
 
       <div class="card profile-info-card" id="profileInfoCard" style="display:none">
@@ -1726,19 +1750,123 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     return outputArray;
   }
 
-  function initPushNotifications() {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return;
-    if (!VAPID_PUBLIC_KEY) return;
+  function isIOSDevice() {
+    var ua = navigator.userAgent || '';
+    return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
 
-    navigator.serviceWorker.ready.then(function(registration) {
-      if (Notification.permission !== 'granted') {
-        Notification.requestPermission().then(function(perm) {
-          if (perm === 'granted') subscribeToPush(registration);
-        });
-      } else {
-        subscribeToPush(registration);
+  function isStandaloneApp() {
+    try {
+      if (window.navigator.standalone === true) return true;
+      return !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+    } catch (e) { return false; }
+  }
+
+  function pushSupported() {
+    return ('serviceWorker' in navigator) && ('PushManager' in window) && ('Notification' in window);
+  }
+
+  var notifBtnBound = false;
+
+  function bindNotifButton() {
+    if (notifBtnBound) return;
+    var btn = document.getElementById('notifEnableBtn');
+    if (!btn) return;
+    btn.addEventListener('click', enableNotifications);
+    notifBtnBound = true;
+  }
+
+  function updateNotifUI() {
+    var card = document.getElementById('notifCard');
+    if (!card) return;
+    bindNotifButton();
+
+    if (!pushSupported()) {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = '';
+
+    var statusEl = document.getElementById('notifStatus');
+    var btn = document.getElementById('notifEnableBtn');
+    var perm = Notification.permission;
+
+    if (perm === 'granted') {
+      if (statusEl) statusEl.textContent = 'الإشعارات مفعّلة ✓ سيصلك تأكيد موعدك أول بأول';
+      if (btn) {
+        btn.textContent = 'الإشعارات مفعّلة';
+        btn.disabled = true;
       }
-    }).catch(function() {});
+      return;
+    }
+
+    if (btn) {
+      btn.textContent = 'تفعيل الإشعارات';
+      btn.disabled = false;
+    }
+
+    if (perm === 'denied') {
+      if (btn) btn.style.display = 'none';
+      if (statusEl) {
+        statusEl.textContent = isIOSDevice()
+          ? 'الإشعارات محظورة. من: الإعدادات ← الإشعارات ← مركز نوف ← اسمح'
+          : 'الإشعارات محظورة من إعدادات المتصفح، فعّلها ثم أعد المحاولة';
+      }
+      return;
+    }
+
+    if (btn) btn.style.display = '';
+
+    if (statusEl) {
+      statusEl.textContent = (isIOSDevice() && !isStandaloneApp())
+        ? 'على الآيفون: أضف التطبيق إلى الشاشة الرئيسية أولاً، ثم افتحه من الأيقونة وفعّل الإشعارات'
+        : 'فعّل الإشعارات ليصلك تأكيد موعدك فوراً';
+    }
+  }
+
+  function enableNotifications() {
+    var btn = document.getElementById('notifEnableBtn');
+    var statusEl = document.getElementById('notifStatus');
+
+    if (!pushSupported()) {
+      showToast('هذا الجهاز لا يدعم الإشعارات');
+      return;
+    }
+
+    if (isIOSDevice() && !isStandaloneApp()) {
+      showToast('أضف التطبيق للشاشة الرئيسية أولاً ثم افتحه من الأيقونة');
+      return;
+    }
+
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'جاري التفعيل...';
+    }
+
+    Notification.requestPermission().then(function(perm) {
+      if (perm !== 'granted') throw new Error('permission-not-granted');
+      return navigator.serviceWorker.ready;
+    }).then(function(registration) {
+      return subscribeToPush(registration);
+    }).then(function() {
+      showToast('🎉 تم تفعيل الإشعارات بنجاح');
+      updateNotifUI();
+    }).catch(function() {
+      if (statusEl && Notification.permission === 'denied') {
+        statusEl.textContent = isIOSDevice()
+          ? 'الإشعارات محظورة. من: الإعدادات ← الإشعارات ← مركز نوف ← اسمح'
+          : 'الإشعارات محظورة من إعدادات المتصفح';
+      } else if (Notification.permission !== 'granted') {
+        showToast('تعذّر تفعيل الإشعارات، حاول مرة أخرى');
+      }
+      updateNotifUI();
+    }).finally(function() {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'تفعيل الإشعارات';
+      }
+      updateNotifUI();
+    });
   }
 
   function subscribeToPush(registration) {
@@ -1746,8 +1874,11 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
     };
-    registration.pushManager.subscribe(subscribeOptions).then(function(subscription) {
-      return fetch('/api/push/subscribe', {
+    return registration.pushManager.getSubscription().then(function(existing) {
+      if (existing) return existing;
+      return registration.pushManager.subscribe(subscribeOptions);
+    }).then(function(subscription) {
+      return fetch(API_BASE_URL + '/api/push/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1758,8 +1889,26 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
         })
       });
     }).then(function(res) {
-      if (!res.ok) throw new Error('Failed to save subscription');
-    }).catch(function() {});
+      if (!res || !res.ok) throw new Error('subscribe-failed');
+      return true;
+    });
+  }
+
+  function initPushNotifications() {
+    if (!pushSupported() || !VAPID_PUBLIC_KEY || !PATIENT) {
+      updateNotifUI();
+      return;
+    }
+    updateNotifUI();
+
+    // على الآيفون طلب الصلاحية لازم يصير من ضغطة المستخدم على الزر
+    if (isIOSDevice()) return;
+
+    if (Notification.permission === 'granted') {
+      navigator.serviceWorker.ready.then(function(registration) {
+        return subscribeToPush(registration);
+      }).catch(function() {});
+    }
   }
 
   function showLogin() {
@@ -1817,6 +1966,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     renderAppointmentsList();
     renderMetrics();
     renderLoyalty();
+    updateNotifUI();
     if (isOrtho) renderTreatmentPlan();
   }
 

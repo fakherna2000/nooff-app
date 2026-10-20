@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { sendFcmToTokens } from '@/lib/fcm-helper';
 import { POINTS_PER_BOOKING } from '@/lib/loyalty';
+import webpush from 'web-push';
 
 export async function POST(
   request: Request,
@@ -59,35 +60,79 @@ export async function POST(
     }
   }
 
-  // إرسال إشعار تلقائي للمريض عند تأكيد موعده
+  // إرسال إشعار تلقائي للمريض عند تأكيد موعده (FCM للأندرويد + Web Push للآيفون والمتصفح)
   if (appt?.patient_id) {
     try {
+      const dateStr = appt.appointment_date;
+      const formattedDate = dateStr
+        ? new Date(dateStr).toLocaleDateString('ar-SA', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })
+        : '';
+      const notifTitle = 'تم تأكيد موعدك';
+      const notifBody = `موعدك بتاريخ ${formattedDate} الساعة ${appt.appointment_time} (${appt.type || 'فحص'}) تم تأكيده`;
+      const notifData = { appointment_id: appt.id, appointment_date: appt.appointment_date };
+
+      // Web Push (للآيفون PWA والمتصفح)
+      const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+      const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+      if (vapidPrivateKey && vapidPublicKey) {
+        webpush.setVapidDetails(
+          process.env.VAPID_SUBJECT || 'mailto:admin@noof-clinic.com',
+          vapidPublicKey,
+          vapidPrivateKey,
+        );
+
+        const { data: subs } = await admin
+          .from('push_subscriptions')
+          .select('id, endpoint, keys_p256dh, keys_auth')
+          .eq('patient_id', appt.patient_id);
+
+        const payload = JSON.stringify({
+          title: notifTitle,
+          body: notifBody,
+          icon: '/icon-192.png',
+          badge: '/icon-192.png',
+          data: { ...notifData, patient_id: appt.patient_id },
+        });
+
+        for (const sub of (subs || []) as any[]) {
+          try {
+            await webpush.sendNotification(
+              {
+                endpoint: sub.endpoint,
+                keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth },
+              } as any,
+              payload,
+            );
+          } catch (e: any) {
+            if (e?.statusCode === 410 || e?.statusCode === 404) {
+              await admin.from('push_subscriptions').delete().eq('id', sub.id);
+            }
+            console.error('Failed to send appointment confirmation Web Push:', e?.message || e);
+          }
+        }
+      }
+
+      // FCM (لتطبيق الأندرويد)
       const { data: tokens } = await admin
         .from('fcm_tokens')
         .select('id, token')
         .eq('patient_id', appt.patient_id);
 
       if (tokens && tokens.length > 0) {
-        const dateStr = appt.appointment_date;
-        const formattedDate = dateStr
-          ? new Date(dateStr).toLocaleDateString('ar-SA', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })
-          : '';
-        const body = `موعدك بتاريخ ${formattedDate} الساعة ${appt.appointment_time} (${appt.type || 'فحص'}) تم تأكيده`;
-
         await sendFcmToTokens(
           tokens as { id: string; token: string }[],
-          'تم تأكيد موعدك',
-          body,
-          { appointment_id: appt.id, appointment_date: appt.appointment_date },
+          notifTitle,
+          notifBody,
+          notifData,
           appt.patient_id,
         );
       }
     } catch (e) {
-      console.error('Failed to send appointment confirmation FCM:', e);
+      console.error('Failed to send appointment confirmation notification:', e);
     }
   }
 
