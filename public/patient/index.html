@@ -34,31 +34,38 @@ radial-gradient(circle at 40% 40%,rgba(255,255,255,.44),rgba(255,255,255,0) 62%)
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .topbar-btn,.logout-btn{appearance:none;border:0;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
 .topbar-btn{width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.65);backdrop-filter:blur(18px);box-shadow:var(--shadow-soft);color:var(--text)}
-.hero-shell{position:relative;border-radius:36px;overflow:hidden;padding:18px;background:
+.hero-shell{position:relative;border-radius:36px;overflow:hidden;padding:20px 18px 18px;background:
 radial-gradient(circle at top right,rgba(255,255,255,.96),rgba(255,255,255,.46) 42%,transparent 68%),
 radial-gradient(circle at 15% 20%,rgba(255,255,255,.56),transparent 24%),
 linear-gradient(145deg,#fbf5ee,#efe1d3 56%,#ead8c5 100%);border:1px solid rgba(255,255,255,.86);box-shadow:var(--shadow)}
 .hero-shell::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.36),rgba(255,249,241,.08));pointer-events:none}
 .hero-shell::after{content:"";position:absolute;inset:-32% auto auto -10%;width:72%;height:72%;background:linear-gradient(135deg,rgba(255,255,255,.56),rgba(255,255,255,0) 62%);border-radius:48% 52% 56% 44% / 44% 52% 48% 56%;transform:rotate(14deg);pointer-events:none;opacity:.75}
 .hero-stack{position:relative;z-index:1}
+.hero-ribbon{position:absolute;top:18px;left:-24px;width:170px;height:110px;border-radius:0 0 90px 90px;background:
+linear-gradient(135deg,rgba(198,176,152,.18),rgba(255,255,255,.04)),
+linear-gradient(180deg,rgba(255,255,255,.22),rgba(234,220,203,.02));filter:blur(.2px);opacity:.9;transform:rotate(-8deg);pointer-events:none}
+.hero-ribbon::before,.hero-ribbon::after{content:"";position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(190,166,141,.18)}
+.hero-ribbon::after{inset:14px 18px auto auto;width:126px;height:82px;opacity:.5;transform:rotate(7deg)}
 .badge-greet{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.72);backdrop-filter:blur(14px);font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:14px;border:1px solid rgba(255,255,255,.9)}
-.header-row{display:grid;grid-template-columns:1fr 124px;gap:14px;align-items:stretch}
-.hero-copy{display:flex;flex-direction:column;justify-content:space-between}
-.welcome-line{font-size:13px;color:var(--text-2)}
-.patient-name{font-size:27px;font-weight:900;line-height:1.2;margin-top:2px}
-.patient-meta{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:12.5px;color:var(--text-2);font-weight:700}
-.hero-note{margin-top:12px;font-size:13.5px;line-height:1.75;color:var(--text-2);max-width:95%}
-.hero-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:18px}
-.hero-media{border-radius:28px;min-height:220px;background:
+.header-row{display:grid;grid-template-columns:1fr 118px;gap:16px;align-items:start}
+.hero-copy{display:flex;flex-direction:column;justify-content:space-between;padding-top:6px}
+.welcome-line{font-size:14px;color:var(--text);font-weight:900}
+.hero-clinic{font-size:13px;color:var(--text-2);margin-top:2px}
+.patient-name{font-size:18px;font-weight:900;line-height:1.3;margin-top:10px}
+.patient-meta{display:inline-flex;align-items:center;gap:6px;margin-top:4px;font-size:12px;color:var(--text-3);font-weight:800}
+.hero-note{margin-top:8px;font-size:13.5px;line-height:1.75;color:var(--text-2);max-width:95%}
+.hero-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:14px}
+.hero-media{border-radius:24px;min-height:156px;background:
 radial-gradient(circle at top left,rgba(255,255,255,.3),transparent 34%),
 linear-gradient(180deg,rgba(63,42,28,.04),rgba(63,42,28,.44)),
 linear-gradient(135deg,#ceb49a,#876144);box-shadow:0 18px 36px rgba(84,58,37,.18);position:relative;overflow:hidden}
 .hero-media::after{content:"";position:absolute;inset:auto 0 0 0;height:38%;background:linear-gradient(180deg,transparent,rgba(58,41,27,.55));z-index:1}
-.brand-monogram{position:absolute;left:14px;bottom:18px;color:#fff;opacity:.95}
-.brand-monogram .mark{font-size:40px;font-weight:200;line-height:1;font-family:"Times New Roman",serif}
-.brand-monogram .sub{font-size:11px;letter-spacing:.22em;margin-top:8px;text-transform:uppercase}
+.brand-monogram{position:absolute;left:14px;bottom:16px;color:#fff;opacity:.9}
+.brand-monogram .mark{font-size:26px;font-weight:300;line-height:1;font-family:"Times New Roman",serif}
+.brand-monogram .sub{font-size:9px;letter-spacing:.18em;margin-top:6px;text-transform:uppercase}
 .avatar{width:58px;height:58px;border-radius:20px;background:linear-gradient(135deg,#fff,#ead8c4);display:flex;align-items:center;justify-content:center;color:var(--brand-2);font-size:25px;font-weight:900;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.95)}
-.logout-btn{padding:0 14px;border-radius:15px;background:rgba(82,55,31,.72);color:#fff;font-size:13px;font-weight:700;height:44px;box-shadow:var(--shadow-soft)}
+.hero-copy .avatar{width:42px;height:42px;border-radius:14px;font-size:17px}
+.logout-btn{padding:0 12px;border-radius:14px;background:rgba(82,55,31,.72);color:#fff;font-size:12px;font-weight:700;height:40px;box-shadow:var(--shadow-soft)}
 
 .section-title{font-size:18px;font-weight:900;color:var(--text);margin:26px 4px 14px;display:flex;align-items:center;justify-content:space-between}
 .section-title small{display:block;font-size:12px;color:var(--text-3);font-weight:700;margin-top:2px}
@@ -80,14 +87,19 @@ linear-gradient(135deg,#ceb49a,#876144);box-shadow:0 18px 36px rgba(84,58,37,.18
 .chip.violet{background:#f6f1ea;color:var(--brand)}
 
 .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.quick-card{position:relative;min-height:168px;border-radius:24px;overflow:hidden;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.95);background-color:#ddd}
-.quick-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(42,28,16,.58));z-index:1}
-.quick-card::after{content:"";position:absolute;inset:auto -12% -24% auto;width:62%;height:62%;background:radial-gradient(circle,rgba(255,255,255,.18),rgba(255,255,255,0) 70%);pointer-events:none;z-index:1}
-.quick-card > *{position:relative;z-index:2}
-.quick-card .q-label{font-size:12px;color:rgba(255,255,255,.86);font-weight:700}
-.quick-card .q-title{font-size:18px;color:#fff;font-weight:900;margin-top:2px}
-.quick-card .q-desc{font-size:12px;color:rgba(255,255,255,.85);margin-top:3px}
-.quick-card .q-arrow{margin-top:10px;width:34px;height:34px;border-radius:12px;background:rgba(255,255,255,.18);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;color:#fff}
+.quick-card{appearance:none;border:0;position:relative;border-radius:24px;overflow:hidden;padding:10px;background:rgba(255,252,247,.9);display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.96);cursor:pointer;text-align:right;color:inherit;font-family:inherit}
+.quick-card-media{height:122px;border-radius:18px;position:relative;overflow:hidden;background:
+radial-gradient(circle at top left,rgba(255,255,255,.28),transparent 34%),
+linear-gradient(180deg,rgba(58,39,26,.05),rgba(58,39,26,.24)),
+linear-gradient(135deg,#d8c0a6,#8b6547)}
+.quick-card-media::after{content:"";position:absolute;inset:auto 8px 8px auto;width:34px;height:34px;border-radius:12px;background:rgba(255,255,255,.76);display:flex;align-items:center;justify-content:center;color:var(--brand-2);box-shadow:var(--shadow-soft)}
+.quick-card-body{padding:2px 2px 4px}
+.quick-card .q-title{font-size:20px;color:var(--text);font-weight:900;line-height:1.3}
+.quick-card .q-desc{font-size:12.5px;color:var(--text-2);margin-top:4px;line-height:1.6}
+.home-shortcuts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.shortcut-btn{appearance:none;border:0;border-radius:18px;background:rgba(255,251,247,.9);border:1px solid rgba(255,255,255,.96);box-shadow:var(--shadow-soft);padding:12px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-family:inherit;color:var(--text);cursor:pointer}
+.shortcut-btn .ico{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,#f6ede2,#ead8c4);display:flex;align-items:center;justify-content:center;color:var(--brand-2)}
+.shortcut-btn .txt{font-size:11.5px;font-weight:800;color:var(--text-2);line-height:1.3;text-align:center}
 
 .appointment-card{padding:18px;background:
 radial-gradient(circle at top right,rgba(255,255,255,.92),transparent 42%),
@@ -130,13 +142,34 @@ linear-gradient(145deg,rgba(255,255,255,.95),rgba(242,230,215,.95));border-radiu
 .diagnosis-text{font-size:14.5px;color:var(--text);line-height:1.8;font-weight:600;white-space:pre-wrap}
 .diagnosis-note{margin-top:14px;padding-top:12px;border-top:1px dashed #d6c0a3;font-size:12.5px;color:var(--text-2);font-weight:700;display:flex;align-items:center;gap:6px}
 
-.feature-strip{display:flex;gap:12px;overflow:auto;padding-bottom:4px;scrollbar-width:none}
+.feature-strip{display:flex;gap:10px;overflow:auto;padding-bottom:4px;scrollbar-width:none}
 .feature-strip::-webkit-scrollbar{display:none}
-.feature-card{flex:0 0 180px;border-radius:24px;overflow:hidden;background:#fff;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.95)}
-.feature-card .media{height:118px;background-size:cover;background-position:center;position:relative;overflow:hidden}
-.feature-card .body{padding:14px}
-.feature-card h4{font-size:15px;font-weight:900;line-height:1.45}
-.feature-card p{font-size:12px;color:var(--text-2);margin-top:5px}
+.home-featured-grid .feature-card{flex:0 0 100%;display:flex;align-items:center;gap:12px;border-radius:22px;overflow:hidden;background:#fff;box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.95);padding:10px}
+.home-featured-grid .feature-card .media{width:92px;height:70px;flex:0 0 92px;border-radius:16px;background-size:cover;background-position:center;position:relative;overflow:hidden}
+.home-featured-grid .feature-card .body{padding:0;flex:1;min-width:0}
+.home-featured-grid .feature-card h4{font-size:14px;font-weight:900;line-height:1.45}
+.home-featured-grid .feature-card p{font-size:11.5px;color:var(--text-2);margin-top:4px}
+.home-featured-grid .feature-arrow{width:28px;height:28px;border-radius:10px;background:#f4eadf;color:var(--brand-2);display:flex;align-items:center;justify-content:center;flex:0 0 28px}
+.service-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin:4px 2px 14px}
+.service-page-title{font-size:28px;font-weight:900;line-height:1.2;color:var(--text)}
+.service-page-sub{font-size:13px;color:var(--text-2);margin-top:4px;font-weight:700}
+.service-hero{position:relative;border-radius:26px;overflow:hidden;height:126px;background:
+radial-gradient(circle at top left,rgba(255,255,255,.28),transparent 32%),
+linear-gradient(180deg,rgba(58,39,26,.06),rgba(58,39,26,.35)),
+linear-gradient(135deg,#d7c1ab,#8c6546);box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.96)}
+.service-hero::after{content:"";position:absolute;inset:auto 0 0 0;height:42%;background:linear-gradient(180deg,transparent,rgba(46,30,18,.35))}
+.service-list-card{margin-top:12px;padding:0 14px;background:rgba(255,251,247,.92);border-radius:26px;border:1px solid rgba(255,255,255,.96);box-shadow:var(--shadow)}
+.service-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(232,220,203,.78)}
+.service-item:last-child{border-bottom:0}
+.service-item-arrow{width:20px;flex:0 0 20px;color:var(--text-3);font-size:18px;display:flex;align-items:center;justify-content:center}
+.service-item-body{flex:1;min-width:0}
+.service-item-title{font-size:16px;font-weight:900;color:var(--text);line-height:1.35}
+.service-item-desc{font-size:12px;color:var(--text-2);margin-top:4px;line-height:1.6}
+.service-item-thumb{width:64px;height:64px;flex:0 0 64px;border-radius:18px;overflow:hidden;background:
+radial-gradient(circle at top left,rgba(255,255,255,.28),transparent 34%),
+linear-gradient(180deg,rgba(58,39,26,.04),rgba(58,39,26,.24)),
+linear-gradient(135deg,#d8c0a6,#8b6547);box-shadow:var(--shadow-soft);position:relative}
+.service-item-thumb::after{content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.22);border-radius:inherit}
 
 .list-card{padding:8px 16px}
 .list-item{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(232,220,203,.75)}
@@ -155,6 +188,32 @@ linear-gradient(145deg,rgba(255,255,255,.95),rgba(242,230,215,.95));border-radiu
 .list-right{text-align:left;font-weight:900;color:var(--text);font-size:14px}
 .list-right .sub{font-size:11.5px;color:var(--text-3);font-weight:700;text-align:left;margin-top:4px}
 .empty{background:rgba(255,255,255,.7);border:1px dashed var(--line);border-radius:28px;padding:30px 20px;text-align:center;color:var(--text-3);font-size:13.5px;font-weight:700}
+.appointments-shell{padding-top:8px}
+.appointments-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.appointments-title{font-size:26px;font-weight:900;line-height:1.2;color:var(--text)}
+.appointments-sub{font-size:13px;color:var(--text-2);margin-top:4px;font-weight:700}
+.appointments-toggle{display:inline-flex;align-items:center;gap:6px;background:rgba(255,250,245,.9);padding:6px;border-radius:999px;border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow-soft)}
+.appointments-toggle .filter-chip{margin:0;border:0;background:transparent;padding:9px 18px;font-size:12px}
+.appointments-toggle .filter-chip.active{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff}
+.appointments-list-modern{display:grid;gap:12px}
+.appt-card-modern{position:relative;padding:18px;border-radius:24px;background:rgba(255,251,247,.92);border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow);overflow:hidden}
+.appt-card-modern::before{content:"";position:absolute;inset:auto auto -28px -18px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(233,219,204,.85),rgba(233,219,204,0) 72%);pointer-events:none}
+.appt-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.appt-card-date{font-size:14px;font-weight:900;color:var(--text);line-height:1.5}
+.appt-card-time{font-size:12.5px;color:var(--text-2);margin-top:4px;font-weight:700}
+.appt-card-icon{width:44px;height:44px;border-radius:16px;background:linear-gradient(135deg,#f6ede2,#ead8c4);display:flex;align-items:center;justify-content:center;color:var(--brand-2);font-size:20px;flex:0 0 44px}
+.appt-card-service{font-size:15px;font-weight:900;color:var(--text);margin-top:12px;position:relative;z-index:1}
+.appt-card-doctor{font-size:12.5px;color:var(--text-2);margin-top:4px;position:relative;z-index:1}
+.appt-card-badge{display:inline-flex;align-items:center;gap:5px;margin-top:12px;padding:6px 12px;border-radius:999px;font-size:11px;font-weight:900;position:relative;z-index:1}
+.appt-card-badge.coming{background:#f3e9dd;color:var(--brand-2)}
+.appt-card-badge.done{background:#f3f4f6;color:#4b5563}
+.appt-card-badge.requested{background:#f5ebe0;color:var(--brand-2)}
+.appt-card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1}
+.appt-mini-btn{appearance:none;border:0;cursor:pointer;border-radius:12px;padding:8px 12px;font-size:11.5px;font-weight:800;font-family:inherit}
+.appt-mini-btn.primary{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff}
+.appt-mini-btn.ghost{background:rgba(255,255,255,.78);border:1px solid var(--line);color:var(--text)}
+.appointments-add-wrap{margin-top:14px}
+.appointments-add-btn{width:100%}
 
 .filter-row{display:flex;gap:10px;overflow:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
 .filter-row::-webkit-scrollbar{display:none}
@@ -169,54 +228,58 @@ linear-gradient(135deg,#d8c0a7,#845e42);border:1px solid rgba(255,255,255,.95);b
 .editorial-banner h3{font-size:22px;font-weight:900;line-height:1.35}
 .editorial-banner p{font-size:13px;color:rgba(255,255,255,.88);margin-top:4px;max-width:78%}
 
-.posts-wrap{margin-top:14px}
-.posts-scroll{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;padding:4px 2px 10px;scrollbar-width:none}
-.posts-scroll::-webkit-scrollbar{display:none}
-.post-card{flex:0 0 88%;scroll-snap-align:center;background:var(--white);border-radius:28px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.95)}
-.post-card .img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#e2e8f0}
-.post-card .body{padding:16px}
-.post-card .ptype{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:900;padding:5px 11px;border-radius:999px;margin-bottom:10px}
-.post-card .ptype.offer{background:#ecfdf3;color:#166534}
-.post-card .ptype.ad{background:#f5ebe0;color:var(--brand-2)}
-.post-card .ptype.tip{background:#fff7e6;color:#a16207}
-.post-card .ptype.general{background:#f5f1ea;color:var(--brand)}
-.post-card .ptitle{font-size:17px;font-weight:900;color:var(--text);line-height:1.45}
-.post-card .pbody{font-size:13.5px;color:var(--text-2);margin-top:8px;line-height:1.75}
-.post-card .pdate{font-size:11.5px;color:var(--text-3);margin-top:12px;font-weight:700}
-.dots{display:flex;justify-content:center;gap:7px;margin-top:12px}
-.dot{width:8px;height:8px;border-radius:50%;background:#d6cabb;transition:all .25s ease;cursor:pointer;border:0;padding:0}
-.dot.active{background:var(--brand);width:24px;border-radius:999px}
-.posts-list{margin-top:8px}
-.post-mini{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid rgba(232,220,203,.8)}
+.posts-shell{padding-top:6px}
+.offers-hero{position:relative;border-radius:26px;overflow:hidden;min-height:146px;background:
+radial-gradient(circle at top left,rgba(255,255,255,.24),transparent 34%),
+linear-gradient(180deg,rgba(58,39,26,.05),rgba(58,39,26,.35)),
+linear-gradient(135deg,#d8c0a7,#855f43);box-shadow:0 18px 38px rgba(92,63,38,.2);border:1px solid rgba(255,255,255,.95);padding:18px;display:flex;align-items:flex-end}
+.offers-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(47,32,19,.38));z-index:1}
+.offers-hero-body{position:relative;z-index:2;color:#fff;max-width:66%}
+.offers-kicker{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);font-size:11px;font-weight:800;margin-bottom:10px}
+.offers-hero-title{font-size:22px;font-weight:900;line-height:1.4}
+.offers-hero-desc{font-size:12.5px;color:rgba(255,255,255,.9);margin-top:6px;line-height:1.65}
+.offers-hero-btn{margin-top:12px;display:inline-flex;align-items:center;justify-content:center;min-width:98px;padding:10px 18px;border-radius:999px;background:rgba(88,55,28,.72);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:12px;font-weight:900}
+.posts-list-card{margin-top:14px;padding:0 14px;background:rgba(255,251,247,.92);border-radius:26px;border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow)}
+.posts-list{margin-top:0}
+.post-mini{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(232,220,203,.8)}
 .post-mini:last-child{border-bottom:0}
-.post-mini .thumb{width:78px;height:78px;border-radius:18px;object-fit:cover;flex:0 0 78px;background:#e2e8f0}
+.post-mini-arrow{width:18px;flex:0 0 18px;color:var(--text-3);font-size:18px;display:flex;align-items:center;justify-content:center}
 .post-mini .m-body{flex:1;min-width:0}
 .post-mini .m-title{font-size:14.5px;font-weight:900;color:var(--text);line-height:1.45}
-.post-mini .m-desc{font-size:12.5px;color:var(--text-2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.6}
-.post-mini .m-date{font-size:11px;color:var(--text-3);margin-top:6px;font-weight:700}
+.post-mini .m-desc{font-size:12px;color:var(--text-2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5}
+.post-mini .m-discount{font-size:21px;font-weight:900;color:#9b714d;line-height:1;margin-top:8px}
+.post-mini .m-discount small{font-size:12px;font-weight:800;color:var(--text-2);margin-right:4px}
+.post-mini .thumb{width:78px;height:78px;border-radius:18px;object-fit:cover;flex:0 0 78px;background:#e2e8f0}
+.posts-empty{padding:26px 10px;text-align:center;color:#94a3b8;font-weight:700}
 
-.profile-card{padding:22px;background:
+.profile-shell{padding-top:6px}
+.profile-page-title{font-size:26px;font-weight:900;color:var(--text);text-align:center;margin-top:6px}
+.profile-card{padding:26px 20px 18px;background:
 radial-gradient(circle at top right,rgba(255,255,255,.52),transparent 34%),
 radial-gradient(circle at 15% 18%,rgba(255,255,255,.34),transparent 24%),
-linear-gradient(145deg,rgba(255,255,255,.9),rgba(241,228,214,.95))}
+linear-gradient(145deg,rgba(255,255,255,.9),rgba(241,228,214,.95));text-align:center}
 .hero-media > *,.profile-card > *{position:relative;z-index:2}
 .media-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:none;pointer-events:none;z-index:0}
 .has-media-image .media-layer{display:block}
-.profile-head{display:flex;align-items:center;gap:14px}
-.profile-head .avatar{width:72px;height:72px;border-radius:24px;font-size:28px}
-.profile-head .name{font-size:22px;font-weight:900}
-.profile-head .meta{font-size:13px;color:var(--text-2);margin-top:4px;font-weight:700}
-.profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.profile-head{display:flex;flex-direction:column;align-items:center;gap:12px}
+.profile-head .avatar{width:88px;height:88px;border-radius:999px;font-size:34px;background:linear-gradient(135deg,#efe3d4,#dcc8b2);border:1px solid rgba(255,255,255,.95)}
+.profile-head .name{font-size:24px;font-weight:900}
+.profile-head .meta{font-size:13px;color:var(--text-2);margin-top:2px;font-weight:700}
+.profile-actions{display:none}
 .info-grid{display:grid;gap:10px}
 .info-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(232,220,203,.8);font-size:14px;gap:12px}
 .info-row:last-child{border-bottom:0}
 .info-row .k{color:var(--text-2);font-weight:700}
 .info-row .v{color:var(--text);font-weight:900;text-align:left}
-.menu-list{display:grid;gap:10px}
-.menu-item{appearance:none;width:100%;border:0;display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-radius:22px;background:rgba(255,255,255,.76);border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow-soft);cursor:pointer;color:var(--text);font-family:inherit;text-align:inherit}
+.profile-info-card{margin-top:14px}
+.menu-list{display:grid;gap:0;margin-top:14px;background:rgba(255,251,247,.92);border-radius:26px;border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow);overflow:hidden}
+.menu-item{appearance:none;width:100%;border:0;display:flex;align-items:center;justify-content:space-between;padding:18px 18px;background:transparent;border-bottom:1px solid rgba(232,220,203,.72);cursor:pointer;color:var(--text);font-family:inherit;text-align:inherit}
+.menu-item:last-child{border-bottom:0}
 .menu-item .left{display:flex;align-items:center;gap:12px}
-.menu-item .ico{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#f5ebdf,#ead8c3);display:flex;align-items:center;justify-content:center;color:var(--brand-2);font-weight:900}
+.menu-item .ico{width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg,#f5ebdf,#ead8c3);display:flex;align-items:center;justify-content:center;color:var(--brand-2);font-weight:900;font-size:15px;flex:0 0 30px}
 .menu-item .txt{font-size:14px;font-weight:800}
+.profile-hidden-wallet{display:none}
+.profile-footer-actions{display:none}
 
 .wallet-card{position:relative;overflow:hidden;border-radius:30px;padding:22px;color:#fff;background:
 radial-gradient(circle at top left,rgba(255,255,255,.26),transparent 44%),
@@ -285,53 +348,83 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
 
 .modal-overlay{position:fixed;inset:0;z-index:150;background:rgba(25,18,12,.42);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;padding:0}
 .modal-overlay.hidden{display:none}
-.modal{width:100%;max-width:430px;background:#fffdf9;border-radius:34px 34px 0 0;padding:22px 18px 28px;box-shadow:0 -10px 40px rgba(15,23,42,.24);animation:slideUp .25s ease;max-height:92vh;overflow-y:auto}
+.modal{width:100%;max-width:430px;background:#fffdf9;border-radius:34px 34px 0 0;padding:22px 18px 24px;box-shadow:0 -10px 40px rgba(15,23,42,.24);animation:slideUp .25s ease;max-height:92vh;overflow-y:auto}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .modal-title{font-size:20px;font-weight:900;color:var(--text)}
 .modal-close{width:36px;height:36px;border-radius:12px;border:0;background:#f3ebe1;color:var(--text-2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .booking-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
-.booking-step{padding:10px 6px;border-radius:16px;background:#f6eee4;text-align:center;font-size:11px;font-weight:800;color:var(--text-2)}
-.booking-step.active{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff}
+.booking-step{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:10.5px;font-weight:800;color:var(--text-3)}
+.booking-step-num{width:28px;height:28px;border-radius:999px;background:#f1e6d9;color:var(--text-2);display:flex;align-items:center;justify-content:center;font-size:11px}
+.booking-step.active{color:var(--brand-2)}
+.booking-step.active .booking-step-num,.booking-step.done .booking-step-num{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff}
 .modal-field{margin-bottom:14px}
 .modal-field label{display:block;font-size:12.5px;font-weight:800;color:var(--text-2);margin-bottom:8px}
 .modal-field input,.modal-field select,.modal-field textarea{width:100%;padding:13px 14px;border:1.5px solid #e7d9c8;border-radius:15px;font-size:14px;background:#fffaf4;color:var(--text);outline:none;transition:border .15s ease;font-family:inherit}
 .modal-field input:focus,.modal-field select:focus,.modal-field textarea:focus{border-color:var(--brand);background:#fff}
-.type-chips{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.type-chip{padding:14px 12px;border:1.5px solid #eadccc;border-radius:18px;font-size:13px;font-weight:800;cursor:pointer;background:#fff;color:var(--text-2);transition:all .15s ease;font-family:inherit}
-.type-chip.active{border-color:var(--brand);background:#f7ede0;color:var(--brand-2);box-shadow:var(--shadow-soft)}
-.time-slots,.date-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.date-chip,.time-chip{appearance:none;border:1px solid #eadccc;background:#fff;padding:11px 6px;border-radius:16px;cursor:pointer;font-size:12px;font-weight:800;color:var(--text-2);font-family:inherit}
+.booking-pane.hidden{display:none}
+.booking-category-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.booking-category-tab{appearance:none;border:1px solid #eadccc;background:#fff;padding:12px 10px;border-radius:16px;cursor:pointer;font-size:13px;font-weight:900;color:var(--text-2);font-family:inherit}
+.booking-category-tab.active{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff;border-color:transparent}
+.service-options{display:grid;gap:10px}
+.service-option{appearance:none;border:1px solid #eadccc;background:#fff;padding:14px 14px;border-radius:18px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:inherit;text-align:right}
+.service-option.active{border-color:var(--brand);background:#f7ede0;box-shadow:var(--shadow-soft)}
+.service-option-body{flex:1;min-width:0}
+.service-option-title{font-size:14px;font-weight:900;color:var(--text)}
+.service-option-desc{font-size:11.5px;color:var(--text-2);margin-top:4px}
+.service-option-radio{width:18px;height:18px;border-radius:999px;border:2px solid #d8c4af;display:flex;align-items:center;justify-content:center;flex:0 0 18px}
+.service-option.active .service-option-radio{border-color:var(--brand-2)}
+.service-option.active .service-option-radio::after{content:"";width:8px;height:8px;border-radius:999px;background:var(--brand-2)}
+.time-slots,.date-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.date-chip,.time-chip{appearance:none;border:1px solid #eadccc;background:#fff;padding:12px 6px;border-radius:16px;cursor:pointer;font-size:12px;font-weight:800;color:var(--text-2);font-family:inherit}
 .date-chip strong,.time-chip strong{display:block;color:var(--text);font-size:13px}
 .date-chip.active,.time-chip.active{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff;border-color:transparent}
 .date-chip.active strong,.time-chip.active strong{color:#fff}
-.modal-btn{width:100%;padding:14px;border:0;border-radius:16px;background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff;font-size:15px;font-weight:900;cursor:pointer;margin-top:8px;font-family:inherit;box-shadow:0 16px 28px rgba(103,73,44,.22)}
+.booking-actions{display:grid;grid-template-columns:110px 1fr;gap:10px;margin-top:18px}
+.modal-btn,.modal-btn-secondary{width:100%;padding:14px;border:0;border-radius:16px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit}
+.modal-btn{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#fff;box-shadow:0 16px 28px rgba(103,73,44,.22)}
+.modal-btn-secondary{background:#f4ebdf;color:var(--text-2)}
 .modal-btn:active{transform:scale(.98)}
-.modal-btn:disabled{opacity:.6}
+.modal-btn:disabled,.modal-btn-secondary:disabled{opacity:.6}
 .hidden-native{position:absolute!important;opacity:0!important;pointer-events:none!important;height:0!important;width:0!important}
 
 @media (max-width:430px){
   body{padding-top:14px}
   .container{padding:0 14px}
-  .header-row{grid-template-columns:1fr;gap:16px}
-  .hero-media{min-height:228px;order:-1}
-  .hero-copy{gap:8px}
+  .header-row{grid-template-columns:1fr 100px;gap:12px}
+  .hero-media{min-height:136px}
+  .hero-copy{gap:4px}
   .patient-name{font-size:22px}
   .hero-note{font-size:13px;max-width:100%}
   .hero-actions{grid-template-columns:1fr 1fr}
   .section-title{align-items:flex-start;gap:10px;flex-direction:column}
   .section-title .btn{width:auto}
   .quick-grid{grid-template-columns:1fr 1fr}
-  .quick-card{min-height:144px;padding:12px}
+  .quick-card{padding:9px}
+  .quick-card-media{height:102px}
   .quick-card .q-title{font-size:16px}
+  .home-shortcuts{gap:8px}
+  .shortcut-btn{padding:10px 6px}
+  .shortcut-btn .ico{width:34px;height:34px}
   .editorial-banner{min-height:156px}
   .editorial-banner h3{font-size:20px}
   .editorial-banner p{max-width:100%}
+  .appointments-title{font-size:22px}
+  .appointments-head{align-items:flex-start;flex-direction:column}
+  .appointments-toggle{width:100%;justify-content:space-between}
+  .appointments-toggle .filter-chip{flex:1;text-align:center;padding:10px 6px}
+  .booking-actions{grid-template-columns:1fr}
+  .service-page-title{font-size:22px}
+  .service-hero{height:110px}
+  .service-item{gap:10px}
+  .service-item-title{font-size:15px}
+  .service-item-thumb{width:58px;height:58px;flex-basis:58px}
   .grid-3{grid-template-columns:repeat(3,1fr);gap:8px}
   .metric{padding:14px 8px}
   .metric .num{font-size:23px}
   .step-row{align-items:flex-start}
   .profile-actions{grid-template-columns:1fr}
+  .profile-page-title{font-size:22px}
   .info-row{flex-direction:column;align-items:flex-start}
   .info-row .v{text-align:right}
   .menu-item{padding:14px 16px}
@@ -372,24 +465,21 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     </div>
     <div class="hero-shell">
       <div class="hero-stack">
-        <div class="badge-greet">
-          <span>✦</span>
-          <span>تجربة عناية فاخرة بابتسامتك</span>
-        </div>
+        <div class="hero-ribbon" aria-hidden="true"></div>
         <div class="header-row">
           <div class="hero-copy">
-            <div style="display:flex;align-items:center;gap:10px">
+            <div style="display:flex;align-items:flex-start;gap:10px">
               <div class="avatar">س</div>
               <div style="min-width:0">
-                <div class="welcome-line">مرحباً بكِ من جديد</div>
+                <div class="welcome-line">مرحباً بك</div>
+                <div class="hero-clinic">في عيادتنا</div>
                 <div class="patient-name">سارة أحمد محمود</div>
                 <div class="patient-meta">
-                  <span>رقم الملف</span>
-                  <span style="font-weight:900">#NF-0001</span>
+                  <span>نحن هنا لنعتني بابتسامتك وجمالك</span>
                 </div>
               </div>
             </div>
-            <p class="hero-note">لنمنح ابتسامتك عناية متكاملة مع متابعة المواعيد والخطة والعروض المميزة من مكان واحد.</p>
+            <p class="hero-note">واجهة أنعم وأوضح لتصفح الخدمات، الحجز، والعروض من مكان واحد.</p>
             <div class="hero-actions">
               <button class="btn primary" data-action="new-appt">احجز الآن</button>
               <button class="logout-btn" data-action="logout" title="تسجيل الخروج">
@@ -415,23 +505,81 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   <!-- ================== الصفحة الرئيسية ================== -->
   <section class="page active" data-page="home">
     <div class="section-title" style="margin-top:24px">
-      <div>خدماتنا المفضلة<small>اختاري الخدمة المناسبة لك</small></div>
-      <button class="btn ghost" data-action="new-appt" style="padding:10px 14px;font-size:12px">حجز سريع</button>
+      <div>خدماتنا<small>اختاري الخدمة المناسبة لك</small></div>
     </div>
 
     <div class="quick-grid">
-      <button class="quick-card" id="homeServiceDentalCard" type="button" data-prefill-type="فحص" style="background:linear-gradient(145deg,#d6bea7,#8c6548);">
-        <div class="q-label">خدمات الأسنان</div>
-        <div class="q-title">طب الأسنان</div>
-        <div class="q-desc">ابتسامة أكثر صحة وجمالاً</div>
-        <div class="q-arrow">←</div>
+      <button class="quick-card" type="button" data-prefill-type="فحص">
+        <div class="quick-card-media" id="homeServiceDentalCard"></div>
+        <div class="quick-card-body">
+          <div class="q-title">طب الأسنان</div>
+          <div class="q-desc">ابتسامة صحية وجميلة</div>
+        </div>
       </button>
-      <button class="quick-card" id="homeServiceBeautyCard" type="button" data-prefill-type="تنظيف" style="background:linear-gradient(145deg,#ccb39a,#7e5a41);">
-        <div class="q-label">خدمات التجميل</div>
-        <div class="q-title">التجميل</div>
-        <div class="q-desc">عناية عصرية ولمسات ناعمة</div>
-        <div class="q-arrow">←</div>
+      <button class="quick-card" type="button" data-prefill-type="تنظيف">
+        <div class="quick-card-media" id="homeServiceBeautyCard"></div>
+        <div class="quick-card-body">
+          <div class="q-title">التجميل</div>
+          <div class="q-desc">بشرة ناعمة وجمال طبيعي</div>
+        </div>
       </button>
+    </div>
+
+    <div class="home-shortcuts">
+      <button class="shortcut-btn" type="button" data-action="new-appt">
+        <div class="ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="6" width="18" height="15" rx="2"/><path d="M3 10h18"/></svg>
+        </div>
+        <div class="txt">حجز موعد</div>
+      </button>
+      <button class="shortcut-btn" type="button" data-nav="posts">
+        <div class="ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </div>
+        <div class="txt">العروض</div>
+      </button>
+      <button class="shortcut-btn" type="button" data-nav="loyalty">
+        <div class="ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"/></svg>
+        </div>
+        <div class="txt">العروض المميزة</div>
+      </button>
+      <button class="shortcut-btn" type="button" data-action="call-clinic">
+        <div class="ico">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.63a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.45-1.29a2 2 0 0 1 2.11-.45c.85.3 1.73.51 2.63.63A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="txt">تواصل معنا</div>
+      </button>
+    </div>
+
+    <div class="section-title">
+      <div>خدماتنا المميزة<small>الأكثر طلباً داخل المركز</small></div>
+    </div>
+    <div class="feature-strip home-featured-grid">
+      <div class="feature-card">
+        <div class="media" id="homeFeatureWhiteningMedia" style="background:linear-gradient(145deg,#d8c4af,#a37c58)"></div>
+        <div class="body">
+          <h4>تبييض الأسنان</h4>
+          <p>ابتسامة أنصع ولمعان طبيعي.</p>
+        </div>
+        <div class="feature-arrow">‹</div>
+      </div>
+      <div class="feature-card">
+        <div class="media" id="homeFeatureSkincareMedia" style="background:linear-gradient(145deg,#eadaca,#bb9473)"></div>
+        <div class="body">
+          <h4>عناية بالبشرة</h4>
+          <p>حلول تجميلية ناعمة ومشرقة.</p>
+        </div>
+        <div class="feature-arrow">‹</div>
+      </div>
+      <div class="feature-card">
+        <div class="media" id="homeFeatureImplantsMedia" style="background:linear-gradient(145deg,#e2d1bf,#9b724e)"></div>
+        <div class="body">
+          <h4>فيلر وبوتكس</h4>
+          <p>مظهر متوازن بلمسات خفيفة.</p>
+        </div>
+        <div class="feature-arrow">‹</div>
+      </div>
     </div>
 
     <div class="card appointment-card" style="margin-top:18px">
@@ -541,131 +689,120 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       </div>
     </div>
 
-    <div class="section-title">
-      <div>خدماتنا المميزة<small>الأكثر طلباً داخل المركز</small></div>
-    </div>
-    <div class="feature-strip">
-      <div class="feature-card">
-        <div class="media" id="homeFeatureWhiteningMedia" style="background:linear-gradient(145deg,#d8c4af,#a37c58)"></div>
-        <div class="body">
-          <h4>تبييض الأسنان</h4>
-          <p>جلسات آمنة ولمعان طبيعي بابتسامة أوضح.</p>
-        </div>
-      </div>
-      <div class="feature-card">
-        <div class="media" id="homeFeatureSkincareMedia" style="background:linear-gradient(145deg,#eadaca,#bb9473)"></div>
-        <div class="body">
-          <h4>العناية بالبشرة</h4>
-          <p>حلول تجميلية ناعمة بإشراف متخصص.</p>
-        </div>
-      </div>
-      <div class="feature-card">
-        <div class="media" id="homeFeatureImplantsMedia" style="background:linear-gradient(145deg,#e2d1bf,#9b724e)"></div>
-        <div class="body">
-          <h4>زراعة الأسنان</h4>
-          <p>نتائج ثابتة بمظهر متوازن وطبيعي.</p>
-        </div>
-      </div>
-    </div>
   </section>
 
   <!-- ================== المواعيد ================== -->
   <section class="page" data-page="appointments">
-    <div class="section-title">
-      <div>حجوزاتي<small>القادمة والسابقة</small></div>
-      <button class="btn primary" data-action="new-appt" style="padding:10px 16px;font-size:12px">+ حجز</button>
-    </div>
-
-    <div class="editorial-banner" id="appointmentsBanner">
-      <div class="banner-content">
-        <span class="chip cream" style="width:max-content">تنسيق موعدك</span>
-        <h3>اختاري الخدمة والوقت المناسب لك</h3>
-        <p>يمكنك طلب موعد جديد أو إرسال طلب إعادة جدولة بسهولة.</p>
-      </div>
-    </div>
-
-    <div class="filter-row" id="appointmentsFilter" style="margin-top:16px">
-      <button class="filter-chip active" data-filter="all">الكل</button>
-      <button class="filter-chip" data-filter="upcoming">القادمة</button>
-      <button class="filter-chip" data-filter="past">السابقة</button>
-      <button class="filter-chip" data-filter="requested">قيد التأكيد</button>
-    </div>
-
-    <div class="card list-card" id="appointmentsList">
-      <div class="list-item">
-        <div class="list-date"><div class="dm">12</div><div class="mn">تشرين</div></div>
-        <div class="list-body">
-          <div class="t">فحص تقويم دوري</div>
-          <div class="d">الأحد 5:30 مساءً — الدكتور خالد العلي</div>
+    <div class="appointments-shell">
+      <div class="appointments-head">
+        <div>
+          <div class="appointments-title">مواعيدي</div>
+          <div class="appointments-sub">تابعي مواعيدك القادمة والسابقة</div>
         </div>
-        <div class="list-right"><div>قادم</div><div class="sub"><span class="list-status coming">مؤكد</span></div></div>
+        <div class="appointments-toggle filter-row" id="appointmentsFilter" style="margin:0">
+          <button class="filter-chip active" data-filter="upcoming">القادمة</button>
+          <button class="filter-chip" data-filter="past">السابقة</button>
+        </div>
+      </div>
+
+      <div class="appointments-list-modern" id="appointmentsList">
+        <div class="appt-card-modern">
+          <div class="appt-card-top">
+            <div>
+              <div class="appt-card-date">السبت 14 أيلول 2025</div>
+              <div class="appt-card-time">الساعة 10:00 صباحاً</div>
+            </div>
+            <div class="appt-card-icon">🦷</div>
+          </div>
+          <div class="appt-card-service">تنظيف الأسنان</div>
+          <div class="appt-card-doctor">سمر العبد</div>
+          <div class="appt-card-badge coming">موعد مؤكد</div>
+          <div class="appt-card-actions">
+            <button class="appt-mini-btn ghost" type="button" data-action="reschedule">إعادة جدولة</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="appointments-add-wrap">
+        <button class="btn primary appointments-add-btn" data-action="new-appt">+ حجز موعد جديد</button>
       </div>
     </div>
   </section>
 
   <!-- ================== المنشورات ================== -->
   <section class="page" data-page="posts">
-    <div class="section-title">
-      <div>العروض والخدمات المميزة<small>جديد المركز</small></div>
-    </div>
-
-    <div class="editorial-banner" id="postsBanner">
-      <div class="banner-content">
-        <span class="chip cream" style="width:max-content">عرض خاص</span>
-        <h3>عروض موسمية وخدمات مختارة</h3>
-        <p>تابعي أحدث العروض والنصائح والخدمات المضافة داخل المركز.</p>
+    <div class="posts-shell">
+      <div class="section-title">
+        <div>العروض والخدمات المميزة</div>
       </div>
-    </div>
 
-    <div class="posts-wrap">
-      <div class="posts-scroll" id="postsScroll">
-        <!-- تُملأ بالجافاسكربت -->
+      <div class="offers-hero" id="postsBanner">
+        <div class="offers-hero-body" id="postsScroll">
+          <span class="offers-kicker">عرض خاص</span>
+          <div class="offers-hero-title">عرض خاص على تبييض الأسنان</div>
+          <div class="offers-hero-desc">ابتسامة أكثر إشراقاً بإطلالة أهدأ وأناقة أجمل</div>
+          <button class="offers-hero-btn" type="button">احجز الآن</button>
+        </div>
       </div>
-      <div class="dots" id="postsDots"></div>
-    </div>
 
-    <div class="section-title">كل المنشورات</div>
-    <div class="card" id="profileInfoCard">
+      <div class="posts-list-card" id="postsListCard">
       <div class="posts-list" id="postsList">
         <!-- تُملأ بالجافاسكربت -->
+      </div>
       </div>
     </div>
   </section>
 
   <!-- ================== الخطة / التشخيص ================== -->
   <section class="page" data-page="treatment">
-    <div class="section-title">
-      <div>خدماتنا ورحلتك العلاجية<small>تفاصيل العناية والمتابعة</small></div>
-    </div>
-    <div class="editorial-banner" id="treatmentBanner">
-      <div class="banner-content">
-        <span class="chip cream" style="width:max-content">خدمات الأسنان</span>
-        <h3>ابتسامة أكثر صحة وجمالاً</h3>
-        <p>متابعة مراحل العلاج مع نظرة سريعة على أبرز الخدمات داخل المركز.</p>
+    <div class="service-page-head">
+      <div>
+        <div class="service-page-title">خدمات الاسنان</div>
+        <div class="service-page-sub">لإبتسامة أكثر صحة وجمالاً</div>
       </div>
     </div>
+    <div class="service-hero" id="treatmentBanner"></div>
 
-    <div class="feature-strip" style="margin-top:16px">
-      <div class="feature-card">
-        <div class="media" id="treatmentFeatureCleaningMedia" style="background:linear-gradient(145deg,#ddc9b5,#8d6445)"></div>
-        <div class="body">
-          <h4>تبييض وتنظيف</h4>
-          <p>جلسات دورية للحفاظ على إشراقة الابتسامة.</p>
+    <div class="service-list-card">
+      <div class="service-item">
+        <div class="service-item-arrow">‹</div>
+        <div class="service-item-body">
+          <div class="service-item-title">تبييض الأسنان</div>
+          <div class="service-item-desc">ابتسامة أكثر إشراقاً</div>
         </div>
+        <div class="service-item-thumb" id="treatmentFeatureCleaningMedia"></div>
       </div>
-      <div class="feature-card">
-        <div class="media" id="treatmentFeatureAlignersMedia" style="background:linear-gradient(145deg,#d7c0a8,#a77d58)"></div>
-        <div class="body">
-          <h4>التقويم الشفاف</h4>
-          <p>خطة تدريجية مع متابعة دقيقة لكل مرحلة.</p>
+      <div class="service-item">
+        <div class="service-item-arrow">‹</div>
+        <div class="service-item-body">
+          <div class="service-item-title">زراعة الأسنان</div>
+          <div class="service-item-desc">حل دائم آمن للأسنان المفقودة</div>
         </div>
+        <div class="service-item-thumb" style="background:linear-gradient(145deg,#e8dbc9,#bea07e)"></div>
       </div>
-      <div class="feature-card">
-        <div class="media" id="treatmentFeatureVeneersMedia" style="background:linear-gradient(145deg,#e4d7c9,#94694b)"></div>
-        <div class="body">
-          <h4>التركيبات التجميلية</h4>
-          <p>حلول متوازنة لابتسامة طبيعية وأنيقة.</p>
+      <div class="service-item">
+        <div class="service-item-arrow">‹</div>
+        <div class="service-item-body">
+          <div class="service-item-title">تقويم الأسنان</div>
+          <div class="service-item-desc">تصحيح الأسنان لتحسين المظهر الوظيفي</div>
         </div>
+        <div class="service-item-thumb" id="treatmentFeatureAlignersMedia"></div>
+      </div>
+      <div class="service-item">
+        <div class="service-item-arrow">‹</div>
+        <div class="service-item-body">
+          <div class="service-item-title">حشوات تجميلية</div>
+          <div class="service-item-desc">مظهر طبيعي وجميل</div>
+        </div>
+        <div class="service-item-thumb" id="treatmentFeatureVeneersMedia"></div>
+      </div>
+      <div class="service-item">
+        <div class="service-item-arrow">‹</div>
+        <div class="service-item-body">
+          <div class="service-item-title">تنظيف الأسنان</div>
+          <div class="service-item-desc">لمعان أكثر ألقاً</div>
+        </div>
+        <div class="service-item-thumb" style="background:linear-gradient(145deg,#e6d4c0,#c99c7c)"></div>
       </div>
     </div>
 
@@ -765,40 +902,25 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
 
   <!-- ================== الملف الشخصي ================== -->
   <section class="page" data-page="profile">
-    <div style="margin-top:22px" class="card profile-card" id="profileCard">
-      <div class="profile-head">
-        <div class="avatar" id="profile-avatar">س</div>
-        <div>
-          <div class="name" id="profile-name">سارة أحمد محمود</div>
-          <div class="meta" id="profile-meta">#NF-0001 · عضوة منذ: 15 تموز 2026</div>
+    <div class="profile-shell">
+      <div class="profile-page-title">ملفي الشخصي</div>
+
+      <div style="margin-top:18px" class="card profile-card" id="profileCard">
+        <div class="profile-head">
+          <div class="avatar" id="profile-avatar">س</div>
+          <div>
+            <div class="name" id="profile-name">سارة أحمد محمود</div>
+            <div class="meta" id="profile-meta" dir="ltr">+963 9xx xxx xxx</div>
+          </div>
         </div>
       </div>
-      <div class="profile-actions">
-        <button class="btn ghost" data-action="call-clinic">اتصل بنا</button>
-        <button class="btn primary" data-action="new-appt">حجز موعد</button>
-      </div>
-    </div>
 
-    <div class="wallet-card" style="margin-top:14px" id="profileWalletCard">
-      <div class="wallet-label">محفظة النقاط</div>
-      <div class="wallet-balance">
-        <span class="num" id="profileWalletBalance">0</span>
-        <span class="unit">نقطة</span>
+      <div class="profile-hidden-wallet" id="profileWalletCard">
+        <span id="profileWalletBalance">0</span>
+        <span id="profileWalletLifetime">0</span>
       </div>
-      <div class="wallet-foot">
-        <span>نقطتان لكل موعد مؤكد</span>
-        <span class="dot">•</span>
-        <span>إجمالي ما كسبته: <strong id="profileWalletLifetime">0</strong></span>
-      </div>
-      <div class="wallet-open">
-        <button class="btn" type="button" data-nav="loyalty">عرض المكافآت واستبدال النقاط ‹</button>
-      </div>
-    </div>
 
-    <div class="section-title">
-      <div>البيانات الشخصيّة<small>معلوماتك الأساسية</small></div>
-    </div>
-    <div class="card">
+      <div class="card profile-info-card" id="profileInfoCard" style="display:none">
       <div class="info-row"><span class="k">الاسم الكامل:</span><span class="v" id="info-fullname">سارة أحمد محمود الحسن</span></div>
       <div class="info-row"><span class="k">تاريخ الميلاد:</span><span class="v" id="info-dob">10 شباط 1999 (27 سنة)</span></div>
       <div class="info-row"><span class="k">الجنس:</span><span class="v" id="info-gender">أنثى</span></div>
@@ -807,45 +929,43 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       <div class="info-row"><span class="k">العنوان:</span><span class="v" id="info-address">دمشق — المزة الغربيّة</span></div>
       <div class="info-row"><span class="k">الحالات الصحية والأدوية:</span><span class="v" id="info-medical">لا توجد</span></div>
       <div class="info-row"><span class="k">حساسيات معروفة:</span><span class="v" id="info-allergies">لا توجد</span></div>
-    </div>
+      </div>
 
-    <div class="section-title">
-      <div>خيارات سريعة<small>إعدادات وحساب</small></div>
-    </div>
-    <div class="menu-list">
-      <button class="menu-item" type="button" data-nav="profile-details">
-        <div class="left"><div class="ico">👤</div><div class="txt">معلوماتي الشخصية</div></div>
-        <div>‹</div>
-      </button>
-      <button class="menu-item" type="button" data-nav="loyalty">
-        <div class="left"><div class="ico">🎁</div><div class="txt">محفظة النقاط والمكافآت</div></div>
-        <div>‹</div>
-      </button>
-      <button class="menu-item" type="button" data-nav="appointments">
-        <div class="left"><div class="ico">📅</div><div class="txt">سجل المواعيد</div></div>
-        <div>‹</div>
-      </button>
-      <button class="menu-item" type="button" data-nav="posts">
-        <div class="left"><div class="ico">�️</div><div class="txt">العروض والخصومات</div></div>
-        <div>‹</div>
-      </button>
-      <button class="menu-item" type="button" data-action="call-clinic">
-        <div class="left"><div class="ico">☎️</div><div class="txt">التواصل معنا</div></div>
-        <div>‹</div>
-      </button>
-      <button class="menu-item" type="button" data-action="settings">
-        <div class="left"><div class="ico">⚙️</div><div class="txt">الإعدادات</div></div>
-        <div>‹</div>
-      </button>
-    </div>
+      <div class="menu-list">
+        <button class="menu-item" type="button" data-nav="profile-details">
+          <div class="left"><div class="ico">👤</div><div class="txt">معلوماتي الشخصية</div></div>
+          <div>‹</div>
+        </button>
+        <button class="menu-item" type="button" data-nav="appointments">
+          <div class="left"><div class="ico">📅</div><div class="txt">سجل المواعيد</div></div>
+          <div>‹</div>
+        </button>
+        <button class="menu-item" type="button" data-nav="posts">
+          <div class="left"><div class="ico">🏷️</div><div class="txt">العروض والخصومات</div></div>
+          <div>‹</div>
+        </button>
+        <button class="menu-item" type="button" data-action="call-clinic">
+          <div class="left"><div class="ico">☎️</div><div class="txt">التواصل معنا</div></div>
+          <div>‹</div>
+        </button>
+        <button class="menu-item" type="button" data-action="settings">
+          <div class="left"><div class="ico">⚙️</div><div class="txt">الإعدادات</div></div>
+          <div>‹</div>
+        </button>
+        <button class="menu-item" type="button" data-nav="loyalty">
+          <div class="left"><div class="ico">🎁</div><div class="txt">محفظة النقاط والمكافآت</div></div>
+          <div>‹</div>
+        </button>
+      </div>
 
-    <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <button class="btn ghost" data-action="call-clinic">
-        📞 اتصل بالعيادة
-      </button>
-      <button class="btn primary" data-action="logout">
-        🚪 تسجيل الخروج
-      </button>
+      <div class="profile-footer-actions">
+        <button class="btn ghost" data-action="call-clinic">
+          📞 اتصل بالعيادة
+        </button>
+        <button class="btn primary" data-action="logout">
+          🚪 تسجيل الخروج
+        </button>
+      </div>
     </div>
   </section>
 
@@ -938,39 +1058,55 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       <button class="modal-close" id="modalClose">✕</button>
     </div>
     <div class="booking-steps">
-      <div class="booking-step active">الخدمة</div>
-      <div class="booking-step active">التاريخ</div>
-      <div class="booking-step active">الوقت</div>
-      <div class="booking-step">التأكيد</div>
+      <div class="booking-step active" data-step="1"><div class="booking-step-num">1</div><div>الخدمة</div></div>
+      <div class="booking-step" data-step="2"><div class="booking-step-num">2</div><div>الطبيب</div></div>
+      <div class="booking-step" data-step="3"><div class="booking-step-num">3</div><div>التاريخ</div></div>
+      <div class="booking-step" data-step="4"><div class="booking-step-num">4</div><div>الوقت</div></div>
     </div>
-    <div class="modal-field">
-      <label>اختري الخدمة</label>
-      <div class="type-chips" id="typeChips">
-        <button class="type-chip" data-type="فحص">فحص شامل</button>
-        <button class="type-chip" data-type="تنظيف">تنظيف الأسنان</button>
-        <button class="type-chip" data-type="حشو">حشوات تجميلية</button>
-        <button class="type-chip" data-type="خلع">خلع وعلاج</button>
-        <button class="type-chip" data-type="تقويم">تقويم</button>
-        <button class="type-chip" data-type="زراعة">زراعة الأسنان</button>
-        <button class="type-chip" data-type="تركيب">تركيبات</button>
-        <button class="type-chip" data-type="متابعة">متابعة</button>
+
+    <div class="booking-pane" id="bookingPane1">
+      <div class="modal-field">
+        <label>اختر نوع الخدمة</label>
+        <div class="booking-category-tabs" id="bookingCategoryTabs">
+          <button class="booking-category-tab active" type="button" data-category="dental">طب الأسنان</button>
+          <button class="booking-category-tab" type="button" data-category="beauty">التجميل</button>
+        </div>
+      </div>
+      <div class="modal-field">
+        <label>اختر الخدمة</label>
+        <div class="service-options" id="typeChips">
+          <button class="service-option" type="button" data-type="تبييض الأسنان">
+            <div class="service-option-body">
+              <div class="service-option-title">تبييض الأسنان</div>
+              <div class="service-option-desc">ابتسامة أكثر إشراقاً</div>
+            </div>
+            <div class="service-option-radio"></div>
+          </button>
+        </div>
       </div>
     </div>
-    <div class="modal-field">
-      <label>اختري التاريخ</label>
-      <div class="date-slots" id="dateQuickChips"></div>
-      <input class="hidden-native" type="date" id="apptDate" />
+
+    <div class="booking-pane hidden" id="bookingPane2">
+      <div class="modal-field">
+        <label>اختر اليوم</label>
+        <div class="date-slots" id="dateQuickChips"></div>
+        <input class="hidden-native" type="date" id="apptDate" />
+      </div>
+      <div class="modal-field">
+        <label>اختر الوقت</label>
+        <div class="time-slots" id="timeQuickChips"></div>
+        <input class="hidden-native" type="time" id="apptTime" value="17:00" />
+      </div>
+      <div class="modal-field hidden-native">
+        <label>ملاحظات إضافية</label>
+        <textarea id="apptNotes" rows="3" placeholder="اذكري أي ملاحظة مهمة للطبيب أو للفريق..."></textarea>
+      </div>
     </div>
-    <div class="modal-field">
-      <label>اختري الوقت</label>
-      <div class="time-slots" id="timeQuickChips"></div>
-      <input class="hidden-native" type="time" id="apptTime" value="17:00" />
+
+    <div class="booking-actions">
+      <button class="modal-btn-secondary" id="apptPrevBtn" type="button">رجوع</button>
+      <button class="modal-btn" id="submitAppt">التالي</button>
     </div>
-    <div class="modal-field">
-      <label>ملاحظات إضافية</label>
-      <textarea id="apptNotes" rows="3" placeholder="اذكري أي ملاحظة مهمة للطبيب أو للفريق..."></textarea>
-    </div>
-    <button class="modal-btn" id="submitAppt">إرسال الطلب</button>
   </div>
 </div>
 
@@ -1532,9 +1668,26 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     localStorage.removeItem(STORAGE_KEY);
   }
 
-  var currentAppointmentsFilter = 'all';
-  var preferredType = 'فحص';
+  var currentAppointmentsFilter = 'upcoming';
+  var preferredType = 'تبييض الأسنان';
   var QUICK_TIME_SLOTS = ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00', '19:30'];
+  var BOOKING_SERVICE_SETS = {
+    dental: [
+      { value: 'تبييض الأسنان', desc: 'ابتسامة أكثر إشراقاً' },
+      { value: 'تنظيف الأسنان', desc: 'إزالة التصبغات والجير' },
+      { value: 'زراعة الأسنان', desc: 'حل دائم للأسنان المفقودة' },
+      { value: 'تقويم الأسنان', desc: 'تنسيق واصطفاف أدق' },
+      { value: 'حشوات تجميلية', desc: 'مظهر طبيعي وجميل' }
+    ],
+    beauty: [
+      { value: 'عناية بالبشرة', desc: 'نضارة يومية ولمسة أنعم' },
+      { value: 'فيلر وبوتكس', desc: 'تفاصيل متوازنة وطبيعية' },
+      { value: 'تقشير كيميائي', desc: 'تجديد وإشراقة للبشرة' },
+      { value: 'تنظيف البشرة العميق', desc: 'عناية نقية ومنعشة' }
+    ]
+  };
+  var selectedBookingCategory = 'dental';
+  var currentBookingStep = 1;
 
   function urlBase64ToUint8Array(base64String) {
     var padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -1603,7 +1756,9 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     var pName = document.getElementById('profile-name');
     if (pName) pName.textContent = PATIENT.full_name || '';
     var pMeta = document.getElementById('profile-meta');
-    if (pMeta) pMeta.textContent = (PATIENT.created_at ? 'عضو منذ: ' + formatDateFull(PATIENT.created_at) : '');
+    if (pMeta) pMeta.textContent = PATIENT.phone ? formatPhoneNumber(PATIENT.phone) : '';
+    var profileInfoCard = document.getElementById('profileInfoCard');
+    if (profileInfoCard) profileInfoCard.style.display = 'none';
 
     function setInfo(id, val, fallback) {
       var el = document.getElementById(id);
@@ -1616,7 +1771,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     setInfo('info-email', PATIENT.email);
     setInfo('info-address', PATIENT.address);
     setInfo('info-medical', PATIENT.medical_history, 'لا توجد');
-    setInfo('info-allergies', PATIENT.notes, 'لا توجد');
+    setInfo('info-allergies', PATIENT.allergies, 'لا توجد');
 
     var isOrtho = PATIENT.treatment_type === 'orthodontics';
     var orthoEls = document.querySelectorAll('[data-ortho-only]');
@@ -1715,13 +1870,20 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       else if (a.status === 'cancelled') { statusClass = 'cancel'; statusLabel = 'ملغي'; rightLabel = 'ملغي'; }
       else if (a.status === 'requested') { statusClass = 'blue'; statusLabel = 'قيد التأكيد'; rightLabel = 'مطلوب'; }
       else if (d < now) { statusClass = 'done'; statusLabel = 'منتهي'; rightLabel = 'تم'; }
-      html += '<div class="list-item">' +
-        '<div class="list-date"><div class="dm">' + dm.dm + '</div><div class="mn">' + dm.mn + '</div></div>' +
-        '<div class="list-body">' +
-          '<div class="t">' + (a.type || 'فحص') + '</div>' +
-          '<div class="d">' + formatDate(a.appointment_date) + ' · ' + formatTime(a.appointment_time) + '</div>' +
+      var icon = (a.type || '').indexOf('بشرة') !== -1 || (a.type || '').indexOf('بوتكس') !== -1 || (a.type || '').indexOf('فيلر') !== -1 ? '✨' : '🦷';
+      var badgeClass = statusClass === 'blue' ? 'requested' : statusClass;
+      html += '<div class="appt-card-modern">' +
+        '<div class="appt-card-top">' +
+          '<div>' +
+            '<div class="appt-card-date">' + formatDate(a.appointment_date) + '</div>' +
+            '<div class="appt-card-time">الساعة ' + formatTime(a.appointment_time) + '</div>' +
+          '</div>' +
+          '<div class="appt-card-icon">' + icon + '</div>' +
         '</div>' +
-        '<div class="list-right"><div>' + rightLabel + '</div><div class="sub"><span class="list-status ' + statusClass + '">' + statusLabel + '</span></div></div>' +
+        '<div class="appt-card-service">' + (a.type || 'فحص') + '</div>' +
+        '<div class="appt-card-doctor">' + (a.notes && a.notes.indexOf('إعادة جدولة') !== -1 ? 'طلب إعادة جدولة' : 'موعد لدى المركز') + '</div>' +
+        '<div class="appt-card-badge ' + badgeClass + '">' + statusLabel + '</div>' +
+        ((statusClass === 'coming' || statusClass === 'blue') ? '<div class="appt-card-actions"><button class="appt-mini-btn ghost" type="button" data-action="reschedule">إعادة جدولة</button></div>' : '') +
       '</div>';
     });
     if (rows.length === 0) {
@@ -1775,68 +1937,42 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   }
 
   function buildPostsCarousel() {
-    var scroll = document.getElementById('postsScroll');
-    var dotsWrap = document.getElementById('postsDots');
-    if (!scroll || !dotsWrap) return;
+    var hero = document.getElementById('postsScroll');
+    if (!hero) return;
     if (POSTS.length === 0) {
-      scroll.innerHTML = '<div style="text-align:center;padding:30px;color:#94a3b8">لا توجد منشورات بعد</div>';
-      dotsWrap.innerHTML = '';
+      hero.innerHTML = '<div class="posts-empty">لا توجد عروض بعد</div>';
       return;
     }
-    var html = '';
-    POSTS.forEach(function(p, i) {
-      html += '<article class="post-card">' +
-        '<img class="img" src="' + p.image + '" alt="' + p.title + '" loading="lazy" />' +
-        '<div class="body">' +
-          '<span class="ptype ' + p.type + '">' + TYPE_LABELS[p.type] + '</span>' +
-          '<div class="ptitle">' + p.title + '</div>' +
-          '<div class="pbody">' + p.body + '</div>' +
-          '<div class="pdate">' + p.date + '</div>' +
-        '</div>' +
-      '</article>';
-    });
-    scroll.innerHTML = html;
-    var dotsHtml = '';
-    POSTS.forEach(function(_, i) {
-      dotsHtml += '<button class="dot' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '" aria-label="منشور ' + (i+1) + '"></button>';
-    });
-    dotsWrap.innerHTML = dotsHtml;
-    function updateDots() {
-      var cardW = scroll.querySelector('.post-card');
-      if (!cardW) return;
-      var idx = Math.round(scroll.scrollLeft / (cardW.offsetWidth + 14));
-      idx = Math.max(0, Math.min(idx, POSTS.length - 1));
-      dotsWrap.querySelectorAll('.dot').forEach(function(d, di) {
-        d.classList.toggle('active', di === idx);
-      });
-    }
-    scroll.addEventListener('scroll', updateDots, { passive: true });
-    dotsWrap.addEventListener('click', function(e) {
-      var dot = e.target.closest('.dot');
-      if (!dot) return;
-      var idx = parseInt(dot.dataset.idx, 10);
-      var card = scroll.querySelector('.post-card');
-      if (card) scroll.scrollTo({ left: idx * (card.offsetWidth + 14), behavior: 'smooth' });
-    });
+    var featured = POSTS.find(function(p){ return p.type === 'offer' || p.type === 'ad'; }) || POSTS[0];
+    hero.innerHTML =
+      '<span class="offers-kicker">' + (TYPE_LABELS[featured.type] || 'عرض خاص') + '</span>' +
+      '<div class="offers-hero-title">' + featured.title + '</div>' +
+      '<div class="offers-hero-desc">' + featured.body + '</div>' +
+      '<button class="offers-hero-btn" type="button" data-action="new-appt">احجز الآن</button>';
   }
 
   function buildPostsList() {
     var list = document.getElementById('postsList');
     if (!list) return;
     if (POSTS.length === 0) {
-      list.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">لا توجد منشورات</div>';
+      list.innerHTML = '<div class="posts-empty">لا توجد عروض</div>';
       return;
+    }
+    function extractDiscount(post) {
+      var text = (post.title || '') + ' ' + (post.body || '');
+      var match = text.match(/(\d+)\s*%/);
+      return match ? match[1] + '%' : 'عرض';
     }
     var html = '';
     POSTS.forEach(function(p) {
       html += '<div class="post-mini">' +
-        '<img class="thumb" src="' + p.image + '" alt="" loading="lazy" />' +
+        '<div class="post-mini-arrow">‹</div>' +
         '<div class="m-body">' +
-          '<span class="ptype ' + p.type + '" style="margin-bottom:6px">' + TYPE_LABELS[p.type] + '</span>' +
           '<div class="m-title">' + p.title + '</div>' +
           '<div class="m-desc">' + p.body + '</div>' +
-          '<div class="m-date">' + p.date + '</div>' +
+          '<div class="m-discount">' + extractDiscount(p) + '<small>خصم</small></div>' +
         '</div>' +
+        '<img class="thumb" src="' + p.image + '" alt="" loading="lazy" />' +
       '</div>';
     });
     list.innerHTML = html;
@@ -1844,6 +1980,57 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
 
   function formatWeekDayShort(dateObj) {
     return DAYS_AR[dateObj.getDay()].replace('ال', '').slice(0, 5);
+  }
+
+  function inferBookingCategory(typeValue) {
+    var foundBeauty = BOOKING_SERVICE_SETS.beauty.some(function(item){ return item.value === typeValue; });
+    return foundBeauty ? 'beauty' : 'dental';
+  }
+
+  function normalizeBookingType(typeValue) {
+    if (!typeValue) return 'تبييض الأسنان';
+    var map = {
+      'فحص': 'تبييض الأسنان',
+      'تنظيف': 'تنظيف الأسنان',
+      'حشو': 'حشوات تجميلية',
+      'خلع': 'زراعة الأسنان',
+      'تقويم': 'تقويم الأسنان',
+      'زراعة': 'زراعة الأسنان',
+      'تركيب': 'حشوات تجميلية',
+      'متابعة': 'تقويم الأسنان'
+    };
+    return map[typeValue] || typeValue;
+  }
+
+  function renderServiceOptions() {
+    if (!typeChipsWrap) return;
+    var services = BOOKING_SERVICE_SETS[selectedBookingCategory] || BOOKING_SERVICE_SETS.dental;
+    var html = '';
+    services.forEach(function(item) {
+      html += '<button class="service-option' + (selectedType === item.value ? ' active' : '') + '" type="button" data-type="' + item.value + '">' +
+        '<div class="service-option-body">' +
+          '<div class="service-option-title">' + item.value + '</div>' +
+          '<div class="service-option-desc">' + item.desc + '</div>' +
+        '</div>' +
+        '<div class="service-option-radio"></div>' +
+      '</button>';
+    });
+    typeChipsWrap.innerHTML = html;
+  }
+
+  function setBookingStep(step) {
+    currentBookingStep = step;
+    var pane1 = document.getElementById('bookingPane1');
+    var pane2 = document.getElementById('bookingPane2');
+    if (pane1) pane1.classList.toggle('hidden', step !== 1);
+    if (pane2) pane2.classList.toggle('hidden', step !== 2);
+    document.querySelectorAll('.booking-step').forEach(function(el){
+      var stepNum = Number(el.getAttribute('data-step') || '1');
+      el.classList.toggle('active', stepNum === step || (step === 2 && stepNum >= 3 && stepNum <= 4));
+      el.classList.toggle('done', stepNum < step);
+    });
+    if (apptPrevBtn) apptPrevBtn.textContent = step === 1 ? 'إلغاء' : 'رجوع';
+    if (submitApptBtn) submitApptBtn.textContent = step === 1 ? 'التالي' : 'متابعة';
   }
 
   function renderDateSlots(baseDate) {
@@ -1854,7 +2041,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       start = new Date();
     }
     wrap.innerHTML = '';
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < 5; i++) {
       var d = new Date(start);
       d.setDate(d.getDate() + i);
       var iso = d.toISOString().split('T')[0];
@@ -1862,7 +2049,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       btn.type = 'button';
       btn.className = 'date-chip' + (apptDateInput.value === iso ? ' active' : '');
       btn.dataset.value = iso;
-      btn.innerHTML = '<strong>' + String(d.getDate()).padStart(2, '0') + '</strong><span>' + formatWeekDayShort(d) + '</span>';
+      btn.innerHTML = '<span>' + formatWeekDayShort(d) + '</span><strong>' + String(d.getDate()).padStart(2, '0') + '</strong>';
       wrap.appendChild(btn);
     }
   }
@@ -1882,8 +2069,8 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   }
 
   function setSelectedType(typeValue) {
-    selectedType = typeValue;
-    typeChipsWrap.querySelectorAll('.type-chip').forEach(function(c){
+    selectedType = normalizeBookingType(typeValue);
+    typeChipsWrap.querySelectorAll('.service-option').forEach(function(c){
       c.classList.toggle('active', c.dataset.type === selectedType);
     });
   }
@@ -1977,12 +2164,15 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       }
       if (target === 'profile') {
         switchTab('profile');
+        var compactInfoCard = document.getElementById('profileInfoCard');
+        if (compactInfoCard) compactInfoCard.style.display = 'none';
         return;
       }
       if (target === 'profile-details') {
         switchTab('profile');
         setTimeout(function(){
           var infoCard = document.getElementById('profileInfoCard');
+          if (infoCard) infoCard.style.display = '';
           if (infoCard && infoCard.scrollIntoView) {
             infoCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
@@ -2043,11 +2233,13 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   var apptTimeInput = document.getElementById('apptTime');
   var apptNotesInput = document.getElementById('apptNotes');
   var submitApptBtn = document.getElementById('submitAppt');
+  var apptPrevBtn = document.getElementById('apptPrevBtn');
   var modalCloseBtn = document.getElementById('modalClose');
+  var bookingCategoryTabs = document.getElementById('bookingCategoryTabs');
   var typeChipsWrap = document.getElementById('typeChips');
   var dateQuickChipsWrap = document.getElementById('dateQuickChips');
   var timeQuickChipsWrap = document.getElementById('timeQuickChips');
-  var selectedType = 'فحص';
+  var selectedType = 'تبييض الأسنان';
   var isReschedule = false;
 
   function openApptModal(reschedule, initialType) {
@@ -2058,11 +2250,20 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     var tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
     apptDateInput.value = tomorrow.toISOString().split('T')[0];
     apptDateInput.min = new Date().toISOString().split('T')[0];
-    apptTimeInput.value = '18:00';
+    apptTimeInput.value = '10:00';
     apptNotesInput.value = '';
-    setSelectedType(initialType || preferredType || 'فحص');
+    selectedType = normalizeBookingType(initialType || preferredType || 'تبييض الأسنان');
+    selectedBookingCategory = inferBookingCategory(selectedType);
+    if (bookingCategoryTabs) {
+      bookingCategoryTabs.querySelectorAll('.booking-category-tab').forEach(function(tab){
+        tab.classList.toggle('active', tab.dataset.category === selectedBookingCategory);
+      });
+    }
+    renderServiceOptions();
+    setSelectedType(selectedType);
     renderDateSlots(tomorrow);
     renderTimeSlots();
+    setBookingStep(1);
     apptModal.classList.remove('hidden');
   }
 
@@ -2071,8 +2272,32 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   modalCloseBtn.addEventListener('click', closeApptModal);
   apptModal.addEventListener('click', function(e){ if (e.target === apptModal) closeApptModal(); });
 
+  if (apptPrevBtn) {
+    apptPrevBtn.addEventListener('click', function(){
+      if (currentBookingStep === 1) closeApptModal();
+      else setBookingStep(1);
+    });
+  }
+
+  if (bookingCategoryTabs) {
+    bookingCategoryTabs.addEventListener('click', function(e){
+      var tab = e.target.closest('.booking-category-tab');
+      if (!tab) return;
+      selectedBookingCategory = tab.dataset.category || 'dental';
+      bookingCategoryTabs.querySelectorAll('.booking-category-tab').forEach(function(btn){
+        btn.classList.toggle('active', btn === tab);
+      });
+      var categoryServices = BOOKING_SERVICE_SETS[selectedBookingCategory] || [];
+      if (!categoryServices.some(function(item){ return item.value === selectedType; }) && categoryServices[0]) {
+        selectedType = categoryServices[0].value;
+      }
+      renderServiceOptions();
+      setSelectedType(selectedType);
+    });
+  }
+
   typeChipsWrap.addEventListener('click', function(e){
-    var chip = e.target.closest('.type-chip');
+    var chip = e.target.closest('.service-option');
     if (!chip) return;
     setSelectedType(chip.dataset.type);
   });
@@ -2096,6 +2321,11 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   }
 
   submitApptBtn.addEventListener('click', function(){
+    if (currentBookingStep === 1) {
+      if (!selectedType) { showToast('⚠️ الرجاء اختيار الخدمة'); return; }
+      setBookingStep(2);
+      return;
+    }
     var dateVal = apptDateInput.value;
     var timeVal = apptTimeInput.value;
     if (!dateVal) { showToast('⚠️ الرجاء اختيار التاريخ'); return; }
