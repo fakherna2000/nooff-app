@@ -2,9 +2,9 @@
   "name": "مركز نوف - بوابة المريض",
   "short_name": "مركز نوف",
   "description": "البوابة الإلكترونية لمرضى مركز نوف لطب الأسنان - اعرف مواعيدك وخطة علاجك وحسابك في أي وقت",
-  "start_url": "/patient",
-  "scope": "/patient",
-  "id": "/patient",
+  "start_url": "/portal",
+  "scope": "/portal",
+  "id": "/portal",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
   "background_color": "#faf6ec",
@@ -40,29 +40,6 @@
       "type": "image/png",
       "form_factor": "narrow",
       "label": "بوابة المريض - مركز نوف"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "مواعيدي",
-      "short_name": "المواعيد",
-      "description": "عرض مواعيد القادمة",
-      "url": "/patient/appointments",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
-    },
-    {
-      "name": "حسابي المالي",
-      "short_name": "الحساب",
-      "description": "عرض المدفوع والمتبقي",
-      "url": "/patient/payments",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
-    },
-    {
-      "name": "خطة العلاج",
-      "short_name": "الخطة",
-      "description": "متابعة مراحل العلاج الحالية",
-      "url": "/patient/treatment",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
