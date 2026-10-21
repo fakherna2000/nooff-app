@@ -1862,6 +1862,12 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     applyNotifBlock('notifBanner', 'notifBannerStatus', 'notifBannerBtn', true);
   }
 
+  // بعض متصفحات iOS/PWA لا تعكس الحالة الأولى مباشرة، لذلك نعيد مزامنة الواجهة
+  // دوريًا ما دام المريض مسجل الدخول حتى يظهر زر الإشعارات بشكل موثوق.
+  setInterval(function() {
+    if (PATIENT) updateNotifUI();
+  }, 1500);
+
   function enableNotifications() {
     var btn = document.getElementById('notifEnableBtn');
     var statusEl = document.getElementById('notifStatus');
@@ -2301,6 +2307,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   var switchTab = function(id){
     pages.forEach(function(p){ p.classList.toggle('active', p.dataset.page === id); });
     tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.tab === id); });
+    if (PATIENT) updateNotifUI();
     if (window.scrollTo) window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   tabs.forEach(function(t){ t.addEventListener('click', function(){ switchTab(t.dataset.tab); }); });
