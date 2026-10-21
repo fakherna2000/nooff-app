@@ -353,15 +353,10 @@ radial-gradient(circle at top right,rgba(255,255,255,.18),transparent 20%),
 radial-gradient(circle at 18% 28%,rgba(255,255,255,.1),transparent 22%),
 linear-gradient(140deg,rgba(67,44,28,.82),rgba(67,44,28,.38)),
 linear-gradient(145deg,#b89475,#67462e);display:flex;align-items:flex-end;justify-content:center;padding:20px}
-.login-screen.has-custom-bg{background:
-linear-gradient(180deg,rgba(255,248,240,.22),rgba(86,60,39,.18)),
-linear-gradient(145deg,rgba(255,255,255,.04),rgba(0,0,0,.08))}
 .login-screen::before{content:"";position:absolute;inset:0;background:
 linear-gradient(135deg,rgba(255,255,255,.1),rgba(255,255,255,0) 32%),
-radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%);pointer-events:none}
-.login-screen.has-custom-bg::before{background:
-linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,0) 28%),
-radial-gradient(circle at 88% 14%,rgba(255,255,255,.12),rgba(255,255,255,0) 24%)}
+radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%);pointer-events:none;z-index:1}
+.login-screen > *{position:relative;z-index:2}
 .login-screen.hidden{display:none}
 .login-card{width:100%;max-width:390px;background:rgba(255,250,244,.9);backdrop-filter:blur(18px);border-radius:34px;padding:28px 22px 24px;box-shadow:0 30px 80px rgba(15,23,42,.28);border:1px solid rgba(255,255,255,.9);position:relative;overflow:hidden}
 .login-card::before{content:"";position:absolute;top:-24%;left:-12%;width:78%;height:52%;background:linear-gradient(135deg,rgba(255,255,255,.56),rgba(255,255,255,0) 70%);border-radius:50%;pointer-events:none}
@@ -1380,13 +1375,11 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.12),rgba(255,255,255,0) 24%)
     var el = typeof selector === 'string' ? document.querySelector(selector) : selector;
     if (!el) return;
     if (imageUrl) {
-      if (el.id === 'loginScreen') el.classList.add('has-custom-bg');
       el.style.backgroundImage = gradientValue + ', url("' + escapeCssUrl(imageUrl) + '")';
       el.style.backgroundSize = 'cover';
       el.style.backgroundPosition = 'center';
       el.style.backgroundRepeat = 'no-repeat';
     } else {
-      if (el.id === 'loginScreen') el.classList.remove('has-custom-bg');
       el.style.backgroundImage = gradientValue;
     }
   }
@@ -1431,10 +1424,10 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.12),rgba(255,255,255,0) 24%)
 
     applyAppBackground(images.app_background_image_url);
 
-    setBackgroundImage(
+    setLayeredImage(
       '#loginScreen',
       images.app_background_image_url || images.login_background_image_url,
-      'radial-gradient(circle at top right,rgba(255,255,255,.12),transparent 20%),linear-gradient(140deg,rgba(69,45,27,.8),rgba(69,45,27,.32)),linear-gradient(145deg,#b59172,#6c4a31)'
+      'radial-gradient(circle at top right,rgba(255,255,255,.12),transparent 20%),linear-gradient(140deg,rgba(69,45,27,.52),rgba(69,45,27,.18)),linear-gradient(145deg,#b59172,#6c4a31)'
     );
     setLayeredImage(
       '#heroMedia',
