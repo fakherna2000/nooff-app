@@ -1425,7 +1425,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
 
     setBackgroundImage(
       '#loginScreen',
-      images.login_background_image_url,
+      images.login_background_image_url || images.app_background_image_url,
       'radial-gradient(circle at top right,rgba(255,255,255,.12),transparent 20%),linear-gradient(140deg,rgba(69,45,27,.8),rgba(69,45,27,.32)),linear-gradient(145deg,#b59172,#6c4a31)'
     );
     setLayeredImage(

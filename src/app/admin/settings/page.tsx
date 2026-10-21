@@ -41,12 +41,12 @@ const MOBILE_IMAGE_FIELDS: Array<{ key: keyof MobileAppImages; label: string; hi
   {
     key: 'app_background_image_url',
     label: 'خلفية التطبيق (كل الصفحات)',
-    hint: 'خلفية عامة تظهر خلف جميع صفحات تطبيق المريض',
+    hint: 'خلفية عامة تظهر خلف جميع صفحات تطبيق المريض، وتُستخدم أيضًا لشاشة الدخول إذا لم تُحدد صورة خاصة لها',
   },
   {
     key: 'login_background_image_url',
     label: 'خلفية شاشة الدخول',
-    hint: 'الصورة الرئيسية قبل تسجيل الدخول',
+    hint: 'صورة خاصة لشاشة الدخول فقط. إذا تركتها فارغة سيستخدم التطبيق خلفية التطبيق العامة',
   },
   {
     key: 'home_hero_image_url',
