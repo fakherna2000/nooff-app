@@ -1,6 +1,7 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export interface MobileAppImages {
+  app_background_image_url?: string | null;
   login_background_image_url?: string | null;
   home_hero_image_url?: string | null;
   appointments_banner_image_url?: string | null;

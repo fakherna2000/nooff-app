@@ -42,6 +42,9 @@ radial-gradient(circle at 40% 40%,rgba(255,255,255,.44),rgba(255,255,255,0) 62%)
 .page{display:none;animation:fade .28s ease both}
 .page.active{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.app-bg{position:fixed;inset:0;z-index:-1;display:none;pointer-events:none;background-size:cover;background-position:center;background-repeat:no-repeat}
+body.has-app-bg .app-bg{display:block}
+body.has-app-bg::before,body.has-app-bg::after{display:none}
 
 .header{padding:6px 0 0}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -457,6 +460,8 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
 </style>
 </head>
 <body>
+
+<div class="app-bg" id="appBg" aria-hidden="true"></div>
 
 <div class="login-screen" id="loginScreen">
   <div class="login-card">
@@ -1378,6 +1383,18 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     }
   }
 
+  function applyAppBackground(imageUrl) {
+    var layer = document.getElementById('appBg');
+    if (!layer) return;
+    if (!imageUrl) {
+      layer.style.backgroundImage = '';
+      document.body.classList.remove('has-app-bg');
+      return;
+    }
+    layer.style.backgroundImage = 'linear-gradient(180deg,rgba(248,241,232,.84),rgba(246,238,229,.9)),url("' + escapeCssUrl(imageUrl) + '")';
+    document.body.classList.add('has-app-bg');
+  }
+
   function applyClinicSettings() {
     if (!APP_SETTINGS) return;
 
@@ -1403,6 +1420,8 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
         loginLogo.style.backgroundRepeat = 'no-repeat';
       }
     }
+
+    applyAppBackground(images.app_background_image_url);
 
     setBackgroundImage(
       '#loginScreen',

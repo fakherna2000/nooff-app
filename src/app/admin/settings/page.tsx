@@ -39,6 +39,11 @@ import type {
 
 const MOBILE_IMAGE_FIELDS: Array<{ key: keyof MobileAppImages; label: string; hint: string }> = [
   {
+    key: 'app_background_image_url',
+    label: 'خلفية التطبيق (كل الصفحات)',
+    hint: 'خلفية عامة تظهر خلف جميع صفحات تطبيق المريض',
+  },
+  {
     key: 'login_background_image_url',
     label: 'خلفية شاشة الدخول',
     hint: 'الصورة الرئيسية قبل تسجيل الدخول',
