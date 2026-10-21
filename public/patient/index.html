@@ -8,6 +8,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="مركز نوف" />
+<script>
+window.__noofDiag = [];
+window.addEventListener('error', function (e) {
+  window.__noofDiag.push('ERR: ' + (e.message || 'unknown') + ' @' + (e.lineno || '?'));
+});
+window.addEventListener('unhandledrejection', function (e) {
+  var r = e.reason;
+  window.__noofDiag.push('REJ: ' + ((r && (r.message || r)) || 'unknown'));
+});
+</script>
 <title>مركز نوف لطب الأسنان | البوابة الإلكترونية للمرضى</title>
 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <link rel="shortcut icon" href="/icon-192.png" />
@@ -2604,6 +2614,42 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       showLogin();
     }
   });
+})();
+</script>
+<script>
+(function () {
+  var el = document.createElement('div');
+  el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:2147483647;pointer-events:none;background:rgba(8,8,8,.9);color:#7cf67c;font:10px/1.55 monospace;padding:5px 8px;direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-word;max-height:42vh;overflow:hidden';
+  function has(id) { return document.getElementById(id) ? 1 : 0; }
+  function disp(id) {
+    try {
+      var n = document.getElementById(id);
+      if (!n) return '-';
+      return getComputedStyle(n).display;
+    } catch (e) { return 'e'; }
+  }
+  function render() {
+    var l = [];
+    l.push('NOOF-DIAG-1 path=' + location.pathname);
+    l.push('sw=' + (('serviceWorker' in navigator) ? 1 : 0) + ' push=' + (('PushManager' in window) ? 1 : 0) + ' notif=' + (('Notification' in window) ? 1 : 0));
+    try {
+      l.push('perm=' + (('Notification' in window) ? Notification.permission : '-') + ' standalone=' + ((window.navigator.standalone === true) ? 1 : 0));
+    } catch (e) { l.push('perm=err'); }
+    l.push('notifCard=' + has('notifCard') + '(' + disp('notifCard') + ') banner=' + has('notifBanner') + '(' + disp('notifBanner') + ') profile=' + has('profileCard'));
+    var errs = window.__noofDiag || [];
+    if (errs.length) {
+      l.push('--- errors (' + errs.length + ') ---');
+      for (var i = 0; i < errs.length && i < 4; i++) l.push(errs[i]);
+    }
+    el.textContent = l.join('\n');
+  }
+  function start() {
+    render();
+    document.body.appendChild(el);
+    setInterval(render, 1500);
+  }
+  if (document.body) start();
+  else window.addEventListener('DOMContentLoaded', start);
 })();
 </script>
 </body>
