@@ -19,6 +19,8 @@ export interface MobileAppImages {
   posts_fallback_image_url?: string | null;
 }
 
+export type ClinicUiTexts = Record<string, string>;
+
 export interface Database {
   public: {
     Tables: {
@@ -329,6 +331,7 @@ export interface Database {
           logo_url: string | null;
           currency_id: string | null;
           mobile_images: MobileAppImages | null;
+          ui_texts: ClinicUiTexts | null;
           updated_at: string;
         };
         Insert: {
@@ -340,6 +343,7 @@ export interface Database {
           logo_url?: string | null;
           currency_id?: string | null;
           mobile_images?: MobileAppImages | null;
+          ui_texts?: ClinicUiTexts | null;
           updated_at?: string;
         };
         Update: {
@@ -351,6 +355,7 @@ export interface Database {
           logo_url?: string | null;
           currency_id?: string | null;
           mobile_images?: MobileAppImages | null;
+          ui_texts?: ClinicUiTexts | null;
           updated_at?: string;
         };
       };

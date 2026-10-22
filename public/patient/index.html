@@ -479,18 +479,18 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   <div class="login-card">
     <div class="login-logo" id="loginLogo">ن</div>
     <div class="login-title" id="loginTitle">مركز نوف لطب الأسنان</div>
-    <div class="login-sub">البوابة الإلكترونية للمرضى</div>
+    <div class="login-sub" data-noof-text="login.subtitle">البوابة الإلكترونية للمرضى</div>
     <div class="login-error" id="loginError"></div>
     <div class="login-field">
-      <label>البريد الإلكتروني</label>
-      <input type="email" id="loginEmail" placeholder="patient@email.com" autocomplete="email" />
+      <label data-noof-text="login.email_label">البريد الإلكتروني</label>
+      <input type="email" id="loginEmail" placeholder="patient@email.com" data-noof-text-placeholder="login.email_placeholder" autocomplete="email" />
     </div>
     <div class="login-field">
-      <label>كلمة المرور</label>
-      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" />
+      <label data-noof-text="login.password_label">كلمة المرور</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" data-noof-text-placeholder="login.password_placeholder" autocomplete="current-password" />
     </div>
-    <button class="login-btn" id="loginBtn">تسجيل الدخول</button>
-    <div class="login-hint">للدخول، استخدم البريد الإلكتروني وكلمة المرور التي زودك بها المركز</div>
+    <button class="login-btn" id="loginBtn" data-noof-text="login.button">تسجيل الدخول</button>
+    <div class="login-hint" data-noof-text="login.hint">للدخول، استخدم البريد الإلكتروني وكلمة المرور التي زودك بها المركز</div>
   </div>
 </div>
 
@@ -512,27 +512,27 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
             <div style="display:flex;align-items:flex-start;gap:10px">
               <div class="avatar">س</div>
               <div style="min-width:0">
-                <div class="welcome-line">مرحباً بك</div>
-                <div class="hero-clinic">في عيادتنا</div>
+                <div class="welcome-line" data-noof-text="header.welcome">مرحباً بك</div>
+                <div class="hero-clinic" data-noof-text="header.clinic_prefix">في عيادتنا</div>
                 <div class="patient-name">سارة أحمد محمود</div>
                 <div class="patient-meta">
-                  <span>نحن هنا لنعتني بابتسامتك وجمالك</span>
+                  <span data-noof-text="header.tagline">نحن هنا لنعتني بابتسامتك وجمالك</span>
                 </div>
               </div>
             </div>
-            <p class="hero-note">واجهة أنعم وأوضح لتصفح الخدمات، الحجز، والعروض من مكان واحد.</p>
+            <p class="hero-note" data-noof-text="header.note">واجهة أنعم وأوضح لتصفح الخدمات، الحجز، والعروض من مكان واحد.</p>
             <div class="hero-actions">
-              <button class="btn primary" data-action="new-appt">احجز الآن</button>
-              <button class="logout-btn" data-action="logout" title="تسجيل الخروج">
+              <button class="btn primary" data-action="new-appt" data-noof-text="header.book_now">احجز الآن</button>
+              <button class="logout-btn" data-action="logout" title="تسجيل الخروج" data-noof-text-title="header.logout_title">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                خروج
+                <span data-noof-text="header.logout">خروج</span>
               </button>
             </div>
           </div>
           <div class="hero-media" id="heroMedia">
             <div class="brand-monogram">
               <div class="mark">N</div>
-              <div class="sub">Dental & Aesthetic</div>
+              <div class="sub" data-noof-text="header.brand_sub">Dental & Aesthetic</div>
             </div>
           </div>
         </div>
@@ -546,22 +546,22 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   <!-- ================== الصفحة الرئيسية ================== -->
   <section class="page active" data-page="home">
     <div class="section-title" style="margin-top:24px">
-      <div>خدماتنا<small>اختاري الخدمة المناسبة لك</small></div>
+      <div><span data-noof-text="home.services.title">خدماتنا</span><small data-noof-text="home.services.subtitle">اختاري الخدمة المناسبة لك</small></div>
     </div>
 
     <div class="quick-grid">
       <button class="quick-card" type="button" data-prefill-type="فحص">
         <div class="quick-card-media" id="homeServiceDentalCard"></div>
         <div class="quick-card-body">
-          <div class="q-title">طب الأسنان</div>
-          <div class="q-desc">ابتسامة صحية وجميلة</div>
+          <div class="q-title" data-noof-text="home.quick.dental_title">طب الأسنان</div>
+          <div class="q-desc" data-noof-text="home.quick.dental_desc">ابتسامة صحية وجميلة</div>
         </div>
       </button>
       <button class="quick-card" type="button" data-prefill-type="تنظيف">
         <div class="quick-card-media" id="homeServiceBeautyCard"></div>
         <div class="quick-card-body">
-          <div class="q-title">التجميل</div>
-          <div class="q-desc">بشرة ناعمة وجمال طبيعي</div>
+          <div class="q-title" data-noof-text="home.quick.beauty_title">التجميل</div>
+          <div class="q-desc" data-noof-text="home.quick.beauty_desc">بشرة ناعمة وجمال طبيعي</div>
         </div>
       </button>
     </div>
@@ -571,25 +571,25 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         <div class="ico">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="6" width="18" height="15" rx="2"/><path d="M3 10h18"/></svg>
         </div>
-        <div class="txt">حجز موعد</div>
+        <div class="txt" data-noof-text="home.shortcut.book">حجز موعد</div>
       </button>
       <button class="shortcut-btn" type="button" data-nav="posts">
         <div class="ico">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>
         </div>
-        <div class="txt">العروض</div>
+        <div class="txt" data-noof-text="home.shortcut.offers">العروض</div>
       </button>
       <button class="shortcut-btn" type="button" data-nav="loyalty">
         <div class="ico">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"/></svg>
         </div>
-        <div class="txt">العروض المميزة</div>
+        <div class="txt" data-noof-text="home.shortcut.loyalty">العروض المميزة</div>
       </button>
       <button class="shortcut-btn" type="button" data-action="call-clinic">
         <div class="ico">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.63a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.45-1.29a2 2 0 0 1 2.11-.45c.85.3 1.73.51 2.63.63A2 2 0 0 1 22 16.92z"/></svg>
         </div>
-        <div class="txt">تواصل معنا</div>
+        <div class="txt" data-noof-text="home.shortcut.contact">تواصل معنا</div>
       </button>
     </div>
 
@@ -597,38 +597,38 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       <div class="notif-head">
         <div class="notif-ico">🔔</div>
         <div>
-          <div class="notif-title">إشعارات المواعيد</div>
+          <div class="notif-title" data-noof-text="home.notif.title">إشعارات المواعيد</div>
           <div class="notif-desc" id="notifBannerStatus">فعّل الإشعارات ليصلك تأكيد موعدك فوراً</div>
         </div>
       </div>
-      <button class="notif-btn" type="button" id="notifBannerBtn">تفعيل الإشعارات</button>
+      <button class="notif-btn" type="button" id="notifBannerBtn" data-noof-text="home.notif.button">تفعيل الإشعارات</button>
     </div>
 
     <div class="section-title">
-      <div>خدماتنا المميزة<small>الأكثر طلباً داخل المركز</small></div>
+      <div><span data-noof-text="home.featured.title">خدماتنا المميزة</span><small data-noof-text="home.featured.subtitle">الأكثر طلباً داخل المركز</small></div>
     </div>
     <div class="feature-strip home-featured-grid">
       <div class="feature-card">
         <div class="media" id="homeFeatureWhiteningMedia" style="background:linear-gradient(145deg,#d8c4af,#a37c58)"></div>
         <div class="body">
-          <h4>تبييض الأسنان</h4>
-          <p>ابتسامة أنصع ولمعان طبيعي.</p>
+          <h4 data-noof-text="home.featured.item1_title">تبييض الأسنان</h4>
+          <p data-noof-text="home.featured.item1_desc">ابتسامة أنصع ولمعان طبيعي.</p>
         </div>
         <div class="feature-arrow">‹</div>
       </div>
       <div class="feature-card">
         <div class="media" id="homeFeatureSkincareMedia" style="background:linear-gradient(145deg,#eadaca,#bb9473)"></div>
         <div class="body">
-          <h4>عناية بالبشرة</h4>
-          <p>حلول تجميلية ناعمة ومشرقة.</p>
+          <h4 data-noof-text="home.featured.item2_title">عناية بالبشرة</h4>
+          <p data-noof-text="home.featured.item2_desc">حلول تجميلية ناعمة ومشرقة.</p>
         </div>
         <div class="feature-arrow">‹</div>
       </div>
       <div class="feature-card">
         <div class="media" id="homeFeatureImplantsMedia" style="background:linear-gradient(145deg,#e2d1bf,#9b724e)"></div>
         <div class="body">
-          <h4>فيلر وبوتكس</h4>
-          <p>مظهر متوازن بلمسات خفيفة.</p>
+          <h4 data-noof-text="home.featured.item3_title">فيلر وبوتكس</h4>
+          <p data-noof-text="home.featured.item3_desc">مظهر متوازن بلمسات خفيفة.</p>
         </div>
         <div class="feature-arrow">‹</div>
       </div>
@@ -636,21 +636,21 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
 
     <div class="doctors-section" id="doctorsSection">
       <div class="section-title">
-        <div>تعرّفي على أطبائنا<small>خبرات موثوقة ولمسة إنسانية في العلاج</small></div>
+        <div><span data-noof-text="home.doctors.title">تعرّفي على أطبائنا</span><small data-noof-text="home.doctors.subtitle">خبرات موثوقة ولمسة إنسانية في العلاج</small></div>
       </div>
       <div class="doctors-strip" id="doctorsList"></div>
     </div>
 
     <div class="card appointment-card" style="margin-top:18px">
       <div class="appt-head">
-        <span class="appt-title">موعدك القادم</span>
-        <span class="chip cream">قادم</span>
+        <span class="appt-title" data-noof-text="home.appt.title">موعدك القادم</span>
+        <span class="chip cream" data-noof-text="home.appt.chip">قادم</span>
       </div>
       <div class="appt-big">الأحد 12 تشرين الأول</div>
       <div class="appt-sub">الساعة 5:30 مساءً — متابعة وتقويم</div>
       <div class="btn-row">
-        <button class="btn ghost-rose" data-action="reschedule">إعادة جدولة</button>
-        <button class="btn primary" data-action="confirm">تأكيد الحضور</button>
+        <button class="btn ghost-rose" data-action="reschedule" data-noof-text="home.appt.reschedule">إعادة جدولة</button>
+        <button class="btn primary" data-action="confirm" data-noof-text="home.appt.confirm">تأكيد الحضور</button>
       </div>
     </div>
 
@@ -658,15 +658,15 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     <div class="grid-3" data-ortho-only>
       <div class="metric">
         <div class="num blue">3</div>
-        <div class="lbl">مواعيد قادمة</div>
+        <div class="lbl" data-noof-text="home.metric.upcoming">مواعيد قادمة</div>
       </div>
       <div class="metric">
         <div class="num">4/14</div>
-        <div class="lbl">القالب الحالي</div>
+        <div class="lbl" data-noof-text="home.metric.current_aligner">القالب الحالي</div>
       </div>
       <div class="metric">
         <div class="num green">60%</div>
-        <div class="lbl">تقدّم الخطة</div>
+        <div class="lbl" data-noof-text="home.metric.progress">تقدّم الخطة</div>
       </div>
     </div>
 
@@ -674,18 +674,18 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     <div class="grid-2" data-general-only style="display:none">
       <div class="metric">
         <div class="num blue">3</div>
-        <div class="lbl">مواعيد قادمة</div>
+        <div class="lbl" data-noof-text="home.metric.upcoming_general">مواعيد قادمة</div>
       </div>
       <div class="metric">
         <div class="num green">1</div>
-        <div class="lbl">زيارات مكتملة</div>
+        <div class="lbl" data-noof-text="home.metric.visits_done">زيارات مكتملة</div>
       </div>
     </div>
 
     <!-- للمريض التقويم: خطة العلاج -->
     <div data-ortho-only>
       <div class="section-title">
-        <div>رحلة العلاج<small>مراحل الخطة الحالية</small></div>
+        <div><span data-noof-text="home.journey.title">رحلة العلاج</span><small data-noof-text="home.journey.subtitle">مراحل الخطة الحالية</small></div>
       </div>
       <div class="card progress-card">
         <div class="progress-head">
@@ -706,7 +706,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       </div>
 
       <div class="section-title">
-        <div>خطوتك القادمة<small>المتابعة الموصى بها</small></div>
+        <div><span data-noof-text="home.nextstep.title">خطوتك القادمة</span><small data-noof-text="home.nextstep.subtitle">المتابعة الموصى بها</small></div>
       </div>
       <div class="card">
         <div class="step-row">
@@ -719,7 +719,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
           <div class="step-body">
             <div class="lbl">تركيب القالب الشفاف رقم 5</div>
             <div class="t">مدة ارتداء كل قالب: 22 ساعة يومياً</div>
-            <div class="d">مدة إرتداء القالب الحالي 7 أيام من تاريخ بدايته</div>
+            <div class="d" data-noof-text="home.nextstep.desc">مدة إرتداء القالب الحالي 7 أيام من تاريخ بدايته</div>
           </div>
         </div>
       </div>
@@ -728,7 +728,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     <!-- للمرضى العامين: تشخيص الطبيب -->
     <div data-general-only style="display:none">
       <div class="section-title">
-        <div>تشخيص الطبيب<small>ملخص الحالة الحالية</small></div>
+        <div><span data-noof-text="home.diagnosis.title">تشخيص الطبيب</span><small data-noof-text="home.diagnosis.subtitle">ملخص الحالة الحالية</small></div>
       </div>
       <div class="diagnosis-box">
         <div class="diagnosis-head">
@@ -743,7 +743,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         <div class="diagnosis-text" id="home-diagnosis-text">يوجد تسوس في الضرس العلوي الأيمن يتطلب حشوة ضوئية. يُنصح بزيارة نظافة كل 6 أشهر.</div>
         <div class="diagnosis-note">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          للتواصل مع الطبيب حول التشخيص، يرجى حجز موعد أو الاتصال بالعيادة.
+          <span data-noof-text="home.diagnosis.note">للتواصل مع الطبيب حول التشخيص، يرجى حجز موعد أو الاتصال بالعيادة.</span>
         </div>
       </div>
     </div>
@@ -755,12 +755,12 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     <div class="appointments-shell">
       <div class="appointments-head">
         <div>
-          <div class="appointments-title">مواعيدي</div>
-          <div class="appointments-sub">تابعي مواعيدك القادمة والسابقة</div>
+          <div class="appointments-title" data-noof-text="appointments.title">مواعيدي</div>
+          <div class="appointments-sub" data-noof-text="appointments.subtitle">تابعي مواعيدك القادمة والسابقة</div>
         </div>
         <div class="appointments-toggle filter-row" id="appointmentsFilter" style="margin:0">
-          <button class="filter-chip active" data-filter="upcoming">القادمة</button>
-          <button class="filter-chip" data-filter="past">السابقة</button>
+          <button class="filter-chip active" data-filter="upcoming" data-noof-text="appointments.filter.upcoming">القادمة</button>
+          <button class="filter-chip" data-filter="past" data-noof-text="appointments.filter.past">السابقة</button>
         </div>
       </div>
 
@@ -783,7 +783,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       </div>
 
       <div class="appointments-add-wrap">
-        <button class="btn primary appointments-add-btn" data-action="new-appt">+ حجز موعد جديد</button>
+        <button class="btn primary appointments-add-btn" data-action="new-appt" data-noof-text="appointments.add">+ حجز موعد جديد</button>
       </div>
     </div>
   </section>
@@ -792,15 +792,15 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   <section class="page" data-page="posts">
     <div class="posts-shell">
       <div class="section-title">
-        <div>العروض والخدمات المميزة</div>
+        <div><span data-noof-text="posts.title">العروض والخدمات المميزة</span></div>
       </div>
 
       <div class="offers-hero" id="postsBanner">
         <div class="offers-hero-body" id="postsScroll">
-          <span class="offers-kicker">عرض خاص</span>
-          <div class="offers-hero-title">عرض خاص على تبييض الأسنان</div>
-          <div class="offers-hero-desc">ابتسامة أكثر إشراقاً بإطلالة أهدأ وأناقة أجمل</div>
-          <button class="offers-hero-btn" type="button">احجز الآن</button>
+          <span class="offers-kicker" data-noof-text="posts.banner.kicker">عرض خاص</span>
+          <div class="offers-hero-title" data-noof-text="posts.banner.title">عرض خاص على تبييض الأسنان</div>
+          <div class="offers-hero-desc" data-noof-text="posts.banner.desc">ابتسامة أكثر إشراقاً بإطلالة أهدأ وأناقة أجمل</div>
+          <button class="offers-hero-btn" type="button" data-noof-text="posts.banner.button">احجز الآن</button>
         </div>
       </div>
 
@@ -816,8 +816,8 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   <section class="page" data-page="treatment">
     <div class="service-page-head">
       <div>
-        <div class="service-page-title">خدمات الاسنان</div>
-        <div class="service-page-sub">لإبتسامة أكثر صحة وجمالاً</div>
+        <div class="service-page-title" data-noof-text="treatment.title">خدمات الاسنان</div>
+        <div class="service-page-sub" data-noof-text="treatment.subtitle">لإبتسامة أكثر صحة وجمالاً</div>
       </div>
     </div>
     <div class="service-hero" id="treatmentBanner"></div>
@@ -836,7 +836,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     <!-- للمريض التقويم: خطة العلاج بالمراحل -->
     <div data-ortho-only>
       <div class="section-title">
-        <div>خطة التقويم الشفاف<small>التقدّم الحالي</small></div>
+        <div><span data-noof-text="treatment.plan.title">خطة التقويم الشفاف</span><small data-noof-text="treatment.plan.subtitle">التقدّم الحالي</small></div>
       </div>
       <div class="card progress-card">
         <div class="progress-head" style="margin-bottom:14px">
@@ -857,7 +857,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       </div>
 
       <div class="section-title">
-        <div>المراحل والقوالب<small>سجل الخطة</small></div>
+        <div><span data-noof-text="treatment.stages.title">المراحل والقوالب</span><small data-noof-text="treatment.stages.subtitle">سجل الخطة</small></div>
       </div>
       <div class="card list-card" id="treatmentStages">
         <div class="list-item">
@@ -906,7 +906,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     <!-- للمرضى العامين: تشخيص الطبيب -->
     <div data-general-only style="display:none">
       <div class="section-title">
-        <div>تشخيص الطبيب<small>تفاصيل الحالة الحالية</small></div>
+        <div><span data-noof-text="treatment.diagnosis.title">تشخيص الطبيب</span><small data-noof-text="treatment.diagnosis.subtitle">تفاصيل الحالة الحالية</small></div>
       </div>
       <div class="diagnosis-box">
         <div class="diagnosis-head">
@@ -921,7 +921,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         <div class="diagnosis-text" id="treatment-diagnosis-text">يوجد تسوس في الضرس العلوي الأيمن يتطلب حشوة ضوئية. يُنصح بزيارة نظافة كل 6 أشهر.</div>
         <div class="diagnosis-note">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          للتواصل مع الطبيب حول التشخيص، يرجى حجز موعد أو الاتصال بالعيادة.
+          <span data-noof-text="treatment.diagnosis.note">للتواصل مع الطبيب حول التشخيص، يرجى حجز موعد أو الاتصال بالعيادة.</span>
         </div>
       </div>
     </div>
@@ -930,7 +930,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   <!-- ================== الملف الشخصي ================== -->
   <section class="page" data-page="profile">
     <div class="profile-shell">
-      <div class="profile-page-title">ملفي الشخصي</div>
+      <div class="profile-page-title" data-noof-text="profile.title">ملفي الشخصي</div>
 
       <div style="margin-top:18px" class="card profile-card" id="profileCard">
         <div class="profile-head">
@@ -951,57 +951,57 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         <div class="notif-head">
           <div class="notif-ico">🔔</div>
           <div>
-            <div class="notif-title">إشعارات المواعيد</div>
+            <div class="notif-title" data-noof-text="profile.notif.title">إشعارات المواعيد</div>
             <div class="notif-desc" id="notifStatus">فعّل الإشعارات ليصلك تأكيد موعدك فوراً</div>
           </div>
         </div>
-        <button class="notif-btn" type="button" id="notifEnableBtn">تفعيل الإشعارات</button>
+        <button class="notif-btn" type="button" id="notifEnableBtn" data-noof-text="profile.notif.button">تفعيل الإشعارات</button>
       </div>
 
       <div class="card profile-info-card" id="profileInfoCard" style="display:none">
-      <div class="info-row"><span class="k">الاسم الكامل:</span><span class="v" id="info-fullname">سارة أحمد محمود الحسن</span></div>
-      <div class="info-row"><span class="k">تاريخ الميلاد:</span><span class="v" id="info-dob">10 شباط 1999 (27 سنة)</span></div>
-      <div class="info-row"><span class="k">الجنس:</span><span class="v" id="info-gender">أنثى</span></div>
-      <div class="info-row"><span class="k">رقم الهاتف:</span><span class="v" id="info-phone" dir="ltr">0933 123 4567</span></div>
-      <div class="info-row"><span class="k">البريد الإلكتروني:</span><span class="v" id="info-email">sara.ahmed@noof.dental</span></div>
-      <div class="info-row"><span class="k">العنوان:</span><span class="v" id="info-address">دمشق — المزة الغربيّة</span></div>
-      <div class="info-row"><span class="k">الحالات الصحية والأدوية:</span><span class="v" id="info-medical">لا توجد</span></div>
-      <div class="info-row"><span class="k">حساسيات معروفة:</span><span class="v" id="info-allergies">لا توجد</span></div>
+      <div class="info-row"><span class="k" data-noof-text="profile.info.fullname">الاسم الكامل:</span><span class="v" id="info-fullname">سارة أحمد محمود الحسن</span></div>
+      <div class="info-row"><span class="k" data-noof-text="profile.info.dob">تاريخ الميلاد:</span><span class="v" id="info-dob">10 شباط 1999 (27 سنة)</span></div>
+      <div class="info-row"><span class="k" data-noof-text="profile.info.gender">الجنس:</span><span class="v" id="info-gender">أنثى</span></div>
+      <div class="info-row"><span class="k" data-noof-text="profile.info.phone">رقم الهاتف:</span><span class="v" id="info-phone" dir="ltr">0933 123 4567</span></div>
+      <div class="info-row"><span class="k" data-noof-text="profile.info.email">البريد الإلكتروني:</span><span class="v" id="info-email">sara.ahmed@noof.dental</span></div>
+      <div class="info-row"><span class="k" data-noof-text="profile.info.address">العنوان:</span><span class="v" id="info-address">دمشق — المزة الغربيّة</span></div>
+      <div class="info-row"><span class="k" data-noof-text="profile.info.medical">الحالات الصحية والأدوية:</span><span class="v" id="info-medical">لا توجد</span></div>
+      <div class="info-row"><span class="k" data-noof-text="profile.info.allergies">حساسيات معروفة:</span><span class="v" id="info-allergies">لا توجد</span></div>
       </div>
 
       <div class="menu-list">
         <button class="menu-item" type="button" data-nav="profile-details">
-          <div class="left"><div class="ico">👤</div><div class="txt">معلوماتي الشخصية</div></div>
+          <div class="left"><div class="ico">👤</div><div class="txt" data-noof-text="profile.menu.details">معلوماتي الشخصية</div></div>
           <div>‹</div>
         </button>
         <button class="menu-item" type="button" data-nav="appointments">
-          <div class="left"><div class="ico">📅</div><div class="txt">سجل المواعيد</div></div>
+          <div class="left"><div class="ico">📅</div><div class="txt" data-noof-text="profile.menu.history">سجل المواعيد</div></div>
           <div>‹</div>
         </button>
         <button class="menu-item" type="button" data-nav="posts">
-          <div class="left"><div class="ico">🏷️</div><div class="txt">العروض والخصومات</div></div>
+          <div class="left"><div class="ico">🏷️</div><div class="txt" data-noof-text="profile.menu.offers">العروض والخصومات</div></div>
           <div>‹</div>
         </button>
         <button class="menu-item" type="button" data-action="call-clinic">
-          <div class="left"><div class="ico">☎️</div><div class="txt">التواصل معنا</div></div>
+          <div class="left"><div class="ico">☎️</div><div class="txt" data-noof-text="profile.menu.contact">التواصل معنا</div></div>
           <div>‹</div>
         </button>
         <button class="menu-item" type="button" data-action="settings">
-          <div class="left"><div class="ico">⚙️</div><div class="txt">الإعدادات</div></div>
+          <div class="left"><div class="ico">⚙️</div><div class="txt" data-noof-text="profile.menu.settings">الإعدادات</div></div>
           <div>‹</div>
         </button>
         <button class="menu-item" type="button" data-nav="loyalty">
-          <div class="left"><div class="ico">🎁</div><div class="txt">محفظة النقاط والمكافآت</div></div>
+          <div class="left"><div class="ico">🎁</div><div class="txt" data-noof-text="profile.menu.loyalty">محفظة النقاط والمكافآت</div></div>
           <div>‹</div>
         </button>
       </div>
 
       <div class="profile-footer-actions">
         <button class="btn ghost" data-action="call-clinic">
-          📞 اتصل بالعيادة
+          <span data-noof-text="profile.footer.call">📞 اتصل بالعيادة</span>
         </button>
         <button class="btn primary" data-action="logout">
-          🚪 تسجيل الخروج
+          <span data-noof-text="profile.footer.logout">🚪 تسجيل الخروج</span>
         </button>
       </div>
     </div>
@@ -1010,35 +1010,35 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   <!-- ================== محفظة النقاط والمكافآت ================== -->
   <section class="page" data-page="loyalty">
     <div class="section-title" style="margin-top:22px">
-      <div>محفظة النقاط<small>اكسبي نقاط واحصلي على مكافآت</small></div>
-      <button class="btn ghost" type="button" data-nav="profile" style="padding:9px 14px;font-size:12px">رجوع</button>
+      <div><span data-noof-text="loyalty.title">محفظة النقاط</span><small data-noof-text="loyalty.subtitle">اكسبي نقاط واحصلي على مكافآت</small></div>
+      <button class="btn ghost" type="button" data-nav="profile" style="padding:9px 14px;font-size:12px" data-noof-text="loyalty.back">رجوع</button>
     </div>
 
     <div class="wallet-card">
-      <div class="wallet-label">رصيدك الحالي</div>
+      <div class="wallet-label" data-noof-text="loyalty.balance_label">رصيدك الحالي</div>
       <div class="wallet-balance">
         <span class="num" id="walletBalance">0</span>
-        <span class="unit">نقطة</span>
+        <span class="unit" data-noof-text="loyalty.unit">نقطة</span>
       </div>
       <div class="wallet-foot">
-        <span>نقطتان لكل موعد مؤكد</span>
+        <span data-noof-text="loyalty.foot_rate">نقطتان لكل موعد مؤكد</span>
         <span class="dot">•</span>
         <span>إجمالي ما كسبته: <strong id="walletLifetime">0</strong></span>
       </div>
     </div>
 
     <div class="section-title">
-      <div>المكافآت المتاحة<small>استبدلي نقاطك</small></div>
+      <div><span data-noof-text="loyalty.rewards.title">المكافآت المتاحة</span><small data-noof-text="loyalty.rewards.subtitle">استبدلي نقاطك</small></div>
     </div>
     <div class="rewards-grid" id="rewardsGrid">
-      <div class="empty">جاري تحميل المكافآت...</div>
+      <div class="empty" data-noof-text="loyalty.loading">جاري تحميل المكافآت...</div>
     </div>
 
     <div class="section-title">
-      <div>سجل النقاط<small>آخر الحركات</small></div>
+      <div><span data-noof-text="loyalty.history.title">سجل النقاط</span><small data-noof-text="loyalty.history.subtitle">آخر الحركات</small></div>
     </div>
     <div class="card list-card" id="loyaltyTxList">
-      <div class="empty">لا توجد حركات بعد</div>
+      <div class="empty" data-noof-text="loyalty.empty">لا توجد حركات بعد</div>
     </div>
   </section>
 
@@ -1052,7 +1052,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
         <circle cx="12" cy="7" r="4"/>
       </svg>
-      <span>ملفي</span>
+      <span data-noof-text="nav.profile">ملفي</span>
     </button>
     <button class="tab" data-tab="treatment" title="العلاج">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1066,7 +1066,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         <line x1="3" y1="9" x2="21" y2="9"/>
         <line x1="9" y1="21" x2="9" y2="9"/>
       </svg>
-      <span>العروض</span>
+      <span data-noof-text="nav.posts">العروض</span>
     </button>
     <button class="tab" data-tab="appointments" title="المواعيد">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1075,13 +1075,13 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         <line x1="8" y1="2" x2="8" y2="6"/>
         <line x1="3" y1="10" x2="21" y2="10"/>
       </svg>
-      <span>حجوزاتي</span>
+      <span data-noof-text="nav.appointments">حجوزاتي</span>
     </button>
     <button class="tab active" data-tab="home" title="الرئيسية">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 10.5 12 3l9 7.5V20a2 2 0 0 1-2 2h-4v-6h-6v6H5a2 2 0 0 1-2-2z"/>
       </svg>
-      <span>الرئيسية</span>
+      <span data-noof-text="nav.home">الرئيسية</span>
     </button>
   </div>
 </nav>
@@ -1096,22 +1096,22 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       <button class="modal-close" id="modalClose">✕</button>
     </div>
     <div class="booking-steps">
-      <div class="booking-step active" data-step="1"><div class="booking-step-num">1</div><div>الخدمة</div></div>
-      <div class="booking-step" data-step="2"><div class="booking-step-num">2</div><div>الطبيب</div></div>
-      <div class="booking-step" data-step="3"><div class="booking-step-num">3</div><div>التاريخ</div></div>
-      <div class="booking-step" data-step="4"><div class="booking-step-num">4</div><div>الوقت</div></div>
+      <div class="booking-step active" data-step="1"><div class="booking-step-num">1</div><div data-noof-text="booking.step1">الخدمة</div></div>
+      <div class="booking-step" data-step="2"><div class="booking-step-num">2</div><div data-noof-text="booking.step2">الطبيب</div></div>
+      <div class="booking-step" data-step="3"><div class="booking-step-num">3</div><div data-noof-text="booking.step3">التاريخ</div></div>
+      <div class="booking-step" data-step="4"><div class="booking-step-num">4</div><div data-noof-text="booking.step4">الوقت</div></div>
     </div>
 
     <div class="booking-pane" id="bookingPane1">
       <div class="modal-field">
-        <label>اختر نوع الخدمة</label>
+        <label data-noof-text="booking.service_type_label">اختر نوع الخدمة</label>
         <div class="booking-category-tabs" id="bookingCategoryTabs">
-          <button class="booking-category-tab active" type="button" data-category="dental">طب الأسنان</button>
-          <button class="booking-category-tab" type="button" data-category="beauty">التجميل</button>
+          <button class="booking-category-tab active" type="button" data-category="dental" data-noof-text="booking.category.dental">طب الأسنان</button>
+          <button class="booking-category-tab" type="button" data-category="beauty" data-noof-text="booking.category.beauty">التجميل</button>
         </div>
       </div>
       <div class="modal-field">
-        <label>اختر الخدمة</label>
+        <label data-noof-text="booking.service_label">اختر الخدمة</label>
         <div class="service-options" id="typeChips">
           <button class="service-option" type="button" data-type="تبييض الأسنان">
             <div class="service-option-body">
@@ -1126,18 +1126,18 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
 
     <div class="booking-pane hidden" id="bookingPane2">
       <div class="modal-field">
-        <label>اختر اليوم</label>
+        <label data-noof-text="booking.day_label">اختر اليوم</label>
         <div class="date-slots" id="dateQuickChips"></div>
         <input class="hidden-native" type="date" id="apptDate" />
       </div>
       <div class="modal-field">
-        <label>اختر الوقت</label>
+        <label data-noof-text="booking.time_label">اختر الوقت</label>
         <div class="time-slots" id="timeQuickChips"></div>
         <input class="hidden-native" type="time" id="apptTime" value="17:00" />
       </div>
       <div class="modal-field hidden-native">
-        <label>ملاحظات إضافية</label>
-        <textarea id="apptNotes" rows="3" placeholder="اذكري أي ملاحظة مهمة للطبيب أو للفريق..."></textarea>
+        <label data-noof-text="booking.notes_label">ملاحظات إضافية</label>
+        <textarea id="apptNotes" rows="3" placeholder="اذكري أي ملاحظة مهمة للطبيب أو للفريق..." data-noof-text-placeholder="booking.notes_placeholder"></textarea>
       </div>
     </div>
 
@@ -1345,6 +1345,42 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     return images;
   }
 
+  // ================== نصوص الواجهة القابلة للتعديل ==================
+  function getUiTexts() {
+    var texts = APP_SETTINGS && APP_SETTINGS.ui_texts;
+    if (!texts || typeof texts !== 'object' || Array.isArray(texts)) return {};
+    return texts;
+  }
+
+  function T(key, fallback) {
+    var texts = getUiTexts();
+    var value = texts[key];
+    if (typeof value === 'string' && value.trim() !== '') return value;
+    return fallback != null ? fallback : '';
+  }
+
+  function applyUiTexts() {
+    var texts = getUiTexts();
+
+    document.querySelectorAll('[data-noof-text]').forEach(function(el) {
+      var value = texts[el.getAttribute('data-noof-text')];
+      if (typeof value === 'string' && value.trim() !== '') el.textContent = value;
+    });
+
+    document.querySelectorAll('[data-noof-text-placeholder]').forEach(function(el) {
+      var value = texts[el.getAttribute('data-noof-text-placeholder')];
+      if (typeof value === 'string' && value.trim() !== '') el.setAttribute('placeholder', value);
+    });
+
+    document.querySelectorAll('[data-noof-text-title]').forEach(function(el) {
+      var value = texts[el.getAttribute('data-noof-text-title')];
+      if (typeof value === 'string' && value.trim() !== '') {
+        el.setAttribute('title', value);
+        el.setAttribute('aria-label', value);
+      }
+    });
+  }
+
   function escapeCssUrl(url) {
     return String(url || '').replace(/"/g, '\\"');
   }
@@ -1434,7 +1470,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     var logoUrl = APP_SETTINGS.logo_url || '';
     var images = getMobileImages();
 
-    document.title = clinicName + ' | البوابة الإلكترونية للمرضى';
+    document.title = clinicName + ' | ' + T('login.subtitle', 'البوابة الإلكترونية للمرضى');
 
     var appNameMeta = document.querySelector('meta[name="application-name"]');
     if (appNameMeta) appNameMeta.setAttribute('content', clinicName);
@@ -1525,6 +1561,8 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       images.treatment_feature_veneers_image_url,
       'linear-gradient(145deg,#e4d7c9,#94694b)'
     );
+
+    applyUiTexts();
   }
 
   function loadClinicSettings() {
@@ -1561,7 +1599,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
           error: err && err.message ? String(err.message) : 'fetch-failed'
         };
         window.__noofSettingsDiag = SETTINGS_DIAG;
-        return sbFetch('/rest/v1/clinic_settings?select=clinic_name,logo_url,mobile_images&limit=1')
+        return sbFetch('/rest/v1/clinic_settings?select=clinic_name,logo_url,mobile_images,ui_texts&limit=1')
           .then(function(rows) {
             applySettings(rows);
           })
@@ -1749,7 +1787,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     var grid = document.getElementById('rewardsGrid');
     if (grid) {
       if (!LOYALTY.rewards.length) {
-        grid.innerHTML = '<div class="empty">لا توجد مكافآت متاحة حالياً</div>';
+        grid.innerHTML = '<div class="empty">' + T('loyalty.rewards_empty', 'لا توجد مكافآت متاحة حالياً') + '</div>';
       } else {
         var html = '';
         LOYALTY.rewards.forEach(function(r) {
@@ -1762,7 +1800,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
               '<div class="reward-cost">' + r.points_cost + ' نقطة</div>' +
             '</div>' +
             '<button class="btn ' + (canRedeem ? 'primary' : 'ghost') + '" type="button" data-redeem="' + r.id + '"' +
-              (canRedeem ? '' : ' disabled') + '>' + (canRedeem ? 'استبدال' : 'نقاط غير كافية') + '</button>' +
+              (canRedeem ? '' : ' disabled') + '>' + (canRedeem ? T('loyalty.redeem', 'استبدال') : T('loyalty.insufficient', 'نقاط غير كافية')) + '</button>' +
           '</div>';
         });
         grid.innerHTML = html;
@@ -1772,7 +1810,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     var txList = document.getElementById('loyaltyTxList');
     if (txList) {
       if (!LOYALTY.transactions.length) {
-        txList.innerHTML = '<div class="empty">لا توجد حركات بعد</div>';
+        txList.innerHTML = '<div class="empty">' + T('loyalty.empty', 'لا توجد حركات بعد') + '</div>';
       } else {
         var txHtml = '';
         LOYALTY.transactions.forEach(function(t) {
@@ -2171,8 +2209,8 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       if (big) big.textContent = formatDate(next.appointment_date);
       if (sub) sub.textContent = 'الساعة ' + formatTime(next.appointment_time) + ' — ' + (next.type || 'فحص');
     } else {
-      if (big) big.textContent = 'لا يوجد مواعيد قادمة';
-      if (sub) sub.textContent = 'يمكنك طلب موعد جديد من زر "طلب موعد جديد"';
+      if (big) big.textContent = T('home.appt.empty_title', 'لا يوجد مواعيد قادمة');
+      if (sub) sub.textContent = T('home.appt.empty_desc', 'يمكنك طلب موعد جديد من زر "طلب موعد جديد"');
     }
   }
 
@@ -2241,11 +2279,11 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         '<div class="appt-card-service">' + (a.type || 'فحص') + '</div>' +
         '<div class="appt-card-doctor">' + (a.notes && a.notes.indexOf('إعادة جدولة') !== -1 ? 'طلب إعادة جدولة' : 'موعد لدى المركز') + '</div>' +
         '<div class="appt-card-badge ' + badgeClass + '">' + statusLabel + '</div>' +
-        ((statusClass === 'coming' || statusClass === 'blue') ? '<div class="appt-card-actions"><button class="appt-mini-btn ghost" type="button" data-action="reschedule">إعادة جدولة</button></div>' : '') +
+        ((statusClass === 'coming' || statusClass === 'blue') ? '<div class="appt-card-actions"><button class="appt-mini-btn ghost" type="button" data-action="reschedule">' + T('appointments.reschedule', 'إعادة جدولة') + '</button></div>' : '') +
       '</div>';
     });
     if (rows.length === 0) {
-      html = '<div class="empty">لا توجد مواعيد ضمن هذا التصنيف حالياً</div>';
+      html = '<div class="empty">' + T('appointments.empty', 'لا توجد مواعيد ضمن هذا التصنيف حالياً') + '</div>';
     }
     list.innerHTML = html;
   }
@@ -2298,7 +2336,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     var hero = document.getElementById('postsScroll');
     if (!hero) return;
     if (POSTS.length === 0) {
-      hero.innerHTML = '<div class="posts-empty">لا توجد عروض بعد</div>';
+      hero.innerHTML = '<div class="posts-empty">' + T('posts.empty', 'لا توجد عروض بعد') + '</div>';
       return;
     }
     var featured = POSTS.find(function(p){ return p.type === 'offer' || p.type === 'ad'; }) || POSTS[0];
@@ -2306,14 +2344,14 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       '<span class="offers-kicker">' + (TYPE_LABELS[featured.type] || 'عرض خاص') + '</span>' +
       '<div class="offers-hero-title">' + featured.title + '</div>' +
       '<div class="offers-hero-desc">' + featured.body + '</div>' +
-      '<button class="offers-hero-btn" type="button" data-action="new-appt">احجز الآن</button>';
+      '<button class="offers-hero-btn" type="button" data-action="new-appt">' + T('posts.banner.button', 'احجز الآن') + '</button>';
   }
 
   function buildPostsList() {
     var list = document.getElementById('postsList');
     if (!list) return;
     if (POSTS.length === 0) {
-      list.innerHTML = '<div class="posts-empty">لا توجد عروض</div>';
+      list.innerHTML = '<div class="posts-empty">' + T('posts.empty_list', 'لا توجد عروض') + '</div>';
       return;
     }
     function extractDiscount(post) {
@@ -2387,8 +2425,8 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       el.classList.toggle('active', stepNum === step || (step === 2 && stepNum >= 3 && stepNum <= 4));
       el.classList.toggle('done', stepNum < step);
     });
-    if (apptPrevBtn) apptPrevBtn.textContent = step === 1 ? 'إلغاء' : 'رجوع';
-    if (submitApptBtn) submitApptBtn.textContent = step === 1 ? 'التالي' : 'متابعة';
+    if (apptPrevBtn) apptPrevBtn.textContent = step === 1 ? T('booking.cancel', 'إلغاء') : T('booking.prev', 'رجوع');
+    if (submitApptBtn) submitApptBtn.textContent = step === 1 ? T('booking.next', 'التالي') : T('booking.continue', 'متابعة');
   }
 
   function renderDateSlots(baseDate) {
@@ -2556,12 +2594,12 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     var email = emailInput.value.trim();
     var pass = passInput.value;
     if (!email || !pass) {
-      loginError.textContent = 'الرجاء إدخال البريد الإلكتروني وكلمة المرور';
+      loginError.textContent = T('login.error_empty', 'الرجاء إدخال البريد الإلكتروني وكلمة المرور');
       loginError.classList.add('show');
       return;
     }
     loginBtn.disabled = true;
-    loginBtn.textContent = 'جاري الدخول...';
+    loginBtn.textContent = T('login.loading', 'جاري الدخول...');
     loginError.classList.remove('show');
     login(email, pass).then(function(authData) {
       saveSession(authData);
@@ -2578,7 +2616,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       loginError.classList.add('show');
     }).finally(function() {
       loginBtn.disabled = false;
-      loginBtn.textContent = 'تسجيل الدخول';
+      loginBtn.textContent = T('login.button', 'تسجيل الدخول');
     });
   }
 
@@ -2605,7 +2643,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     if (!PATIENT || !PATIENT.id) { showToast('⚠️ يجب تسجيل الدخول أولاً'); return; }
     isReschedule = !!reschedule;
     var titleEl = document.getElementById('apptModalTitle');
-    if (titleEl) titleEl.textContent = isReschedule ? 'إعادة جدولة الموعد' : 'طلب موعد جديد';
+    if (titleEl) titleEl.textContent = isReschedule ? T('booking.reschedule_title', 'إعادة جدولة الموعد') : T('booking.title', 'طلب موعد جديد');
     var tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
     apptDateInput.value = tomorrow.toISOString().split('T')[0];
     apptDateInput.min = new Date().toISOString().split('T')[0];
@@ -2691,7 +2729,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     if (!timeVal) { showToast('⚠️ الرجاء اختيار الوقت'); return; }
 
     submitApptBtn.disabled = true;
-    submitApptBtn.textContent = 'جاري الإرسال...';
+    submitApptBtn.textContent = T('booking.sending', 'جاري الإرسال...');
 
     var notes = apptNotesInput.value || null;
     if (isReschedule) {
@@ -2730,7 +2768,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       showToast('❌ فشل إرسال الطلب، حاول مرة أخرى');
     }).finally(function(){
       submitApptBtn.disabled = false;
-      submitApptBtn.textContent = 'إرسال الطلب';
+      submitApptBtn.textContent = T('booking.submit', 'إرسال الطلب');
     });
   });
 

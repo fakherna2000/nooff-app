@@ -16,7 +16,7 @@ export async function GET() {
     const admin = createAdminClient();
     const { data, error } = await admin
       .from('clinic_settings')
-      .select('clinic_name, logo_url, mobile_images')
+      .select('clinic_name, logo_url, mobile_images, ui_texts')
       .limit(1)
       .single();
 
