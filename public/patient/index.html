@@ -1514,6 +1514,14 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   function loadClinicSettings() {
     SETTINGS_DIAG = { state: 'loading', source: 'public-api', status: '-', error: '-' };
     window.__noofSettingsDiag = SETTINGS_DIAG;
+    function applySettings(payload) {
+      APP_SETTINGS = payload && payload.data ? payload.data : payload && payload[0] ? payload[0] : null;
+      SETTINGS_DIAG.state = APP_SETTINGS ? 'ok' : 'empty';
+      window.__noofSettingsDiag = SETTINGS_DIAG;
+      var images = getMobileImages();
+      DEFAULT_POST_IMAGE = images.posts_fallback_image_url || APP_SETTINGS && APP_SETTINGS.logo_url || '/icon-512.png';
+      applyClinicSettings();
+    }
     return fetch(API_BASE_URL + '/api/public/clinic-settings?_=' + Date.now(), {
       cache: 'no-store',
       headers: {
@@ -1527,19 +1535,27 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
         return r.json();
       })
       .then(function(payload) {
-        APP_SETTINGS = payload && payload.data ? payload.data : null;
-        SETTINGS_DIAG.state = APP_SETTINGS ? 'ok' : 'empty';
-        window.__noofSettingsDiag = SETTINGS_DIAG;
-        var images = getMobileImages();
-        DEFAULT_POST_IMAGE = images.posts_fallback_image_url || APP_SETTINGS && APP_SETTINGS.logo_url || '/icon-512.png';
-        applyClinicSettings();
+        applySettings(payload);
       })
       .catch(function(err) {
-        APP_SETTINGS = null;
-        SETTINGS_DIAG.state = 'error';
-        SETTINGS_DIAG.error = err && err.message ? String(err.message) : 'fetch-failed';
+        SETTINGS_DIAG = {
+          state: 'fallback',
+          source: 'supabase-direct',
+          status: SETTINGS_DIAG.status || '-',
+          error: err && err.message ? String(err.message) : 'fetch-failed'
+        };
         window.__noofSettingsDiag = SETTINGS_DIAG;
-        DEFAULT_POST_IMAGE = '/icon-512.png';
+        return sbFetch('/rest/v1/clinic_settings?select=clinic_name,logo_url,mobile_images&limit=1&_=' + Date.now())
+          .then(function(rows) {
+            applySettings(rows);
+          })
+          .catch(function(fallbackErr) {
+            APP_SETTINGS = null;
+            SETTINGS_DIAG.state = 'error';
+            SETTINGS_DIAG.error = fallbackErr && fallbackErr.message ? String(fallbackErr.message) : 'fallback-failed';
+            window.__noofSettingsDiag = SETTINGS_DIAG;
+            DEFAULT_POST_IMAGE = '/icon-512.png';
+          });
       });
   }
 
