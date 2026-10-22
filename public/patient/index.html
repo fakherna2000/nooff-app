@@ -1510,7 +1510,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   }
 
   function loadClinicSettings() {
-    return sbFetch('/rest/v1/clinic_settings?select=clinic_name,logo_url,mobile_images&limit=1')
+    return sbFetch('/rest/v1/clinic_settings?select=clinic_name,logo_url,mobile_images&limit=1&_=' + Date.now())
       .then(function(rows) {
         APP_SETTINGS = rows && rows[0] ? rows[0] : null;
         var images = getMobileImages();
@@ -1526,8 +1526,11 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   function sbFetch(path, opts) {
     opts = opts || {};
     opts.headers = opts.headers || {};
+    opts.cache = 'no-store';
     opts.headers['apikey'] = SUPABASE_ANON_KEY;
     opts.headers['Content-Type'] = 'application/json';
+    opts.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+    opts.headers['Pragma'] = 'no-cache';
     if (PATIENT && PATIENT._token) {
       opts.headers['Authorization'] = 'Bearer ' + PATIENT._token;
     }
