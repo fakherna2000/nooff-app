@@ -1899,18 +1899,49 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   }
 
   function saveSession(authData) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      token: authData.access_token,
-      userId: authData.user.id,
-      expiresAt: Date.now() + (authData.expires_in * 1000)
-    }));
-  }
-  function getSession() {
     try {
-      var s = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      if (s && s.expiresAt > Date.now()) return s;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        token: authData.access_token,
+        refreshToken: authData.refresh_token || null,
+        userId: (authData.user && authData.user.id) || null,
+        expiresAt: Date.now() + ((authData.expires_in || 3600) * 1000)
+      }));
     } catch(e) {}
-    return null;
+  }
+  function readSession() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY));
+    } catch(e) {
+      return null;
+    }
+  }
+  function refreshSession(session) {
+    if (!session || !session.refreshToken) {
+      return Promise.reject(new Error('no refresh token'));
+    }
+    return fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: session.refreshToken })
+    }).then(function(r) {
+      if (!r.ok) throw new Error('refresh failed');
+      return r.json();
+    }).then(function(authData) {
+      saveSession(authData);
+      return authData;
+    });
+  }
+  // يستعيد الجلسة المحفوظة؛ يجدّد الرمز تلقائياً عند انتهاء صلاحيته
+  function restoreSession() {
+    var session = readSession();
+    if (!session || !session.token) return Promise.resolve(null);
+    if (session.expiresAt && session.expiresAt > Date.now() + 60000) {
+      return Promise.resolve(session);
+    }
+    if (session.refreshToken) {
+      return refreshSession(session).catch(function() { return null; });
+    }
+    return Promise.resolve(null);
   }
   function clearSession() {
     localStorage.removeItem(STORAGE_KEY);
@@ -2773,9 +2804,12 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   });
 
   Promise.all([loadClinicSettings(), loadServices(), loadDoctors()]).finally(function() {
-    var session = getSession();
-    if (session) {
-      fetch(SUPABASE_URL + '/auth/v1/user', {
+    restoreSession().then(function(session) {
+      if (!session) {
+        showLogin();
+        return;
+      }
+      return fetch(SUPABASE_URL + '/auth/v1/user', {
         headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + session.token }
       }).then(function(r) {
         if (!r.ok) throw new Error('session expired');
@@ -2793,10 +2827,18 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         clearSession();
         showLogin();
       });
-    } else {
-      showLogin();
-    }
+    });
   });
+
+  // تجديد تلقائي للرمز قبل انتهاء صلاحيته للحفاظ على تسجيل الدخول
+  setInterval(function() {
+    var s = readSession();
+    if (s && s.refreshToken && s.expiresAt && (s.expiresAt - Date.now()) < 5 * 60 * 1000) {
+      refreshSession(s).then(function(authData) {
+        if (PATIENT) PATIENT._token = authData.access_token;
+      }).catch(function() {});
+    }
+  }, 60 * 1000);
 })();
 </script>
 </body>
