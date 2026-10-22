@@ -1545,7 +1545,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
           error: err && err.message ? String(err.message) : 'fetch-failed'
         };
         window.__noofSettingsDiag = SETTINGS_DIAG;
-        return sbFetch('/rest/v1/clinic_settings?select=clinic_name,logo_url,mobile_images&limit=1&_=' + Date.now())
+        return sbFetch('/rest/v1/clinic_settings?select=clinic_name,logo_url,mobile_images&limit=1')
           .then(function(rows) {
             applySettings(rows);
           })
