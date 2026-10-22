@@ -380,6 +380,12 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
 .login-btn:disabled{opacity:.6;cursor:not-allowed}
 .login-error{background:rgba(254,242,242,.82);color:#b91c1c;font-size:13px;padding:10px 12px;border-radius:14px;margin-bottom:14px;display:none;border:1px solid rgba(255,255,255,.42);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .login-error.show{display:block}
+.login-restore{display:none;flex-direction:column;align-items:center;gap:14px;padding:6px 0 2px;text-align:center}
+.login-restore.show{display:flex}
+.login-restore-spinner{width:42px;height:42px;border-radius:50%;border:3px solid rgba(163,127,96,.28);border-top-color:#6f5138;animation:loginSpin .9s linear infinite}
+@keyframes loginSpin{to{transform:rotate(360deg)}}
+.login-restore-text{font-size:14.5px;font-weight:800;color:#5a4433;line-height:1.7}
+.login-restore-link{margin-top:4px;font-size:13px;font-weight:800;color:#7a6047;text-decoration:underline;background:none;border:0;cursor:pointer;font-family:inherit}
 .login-hint{text-align:center;font-size:11.5px;color:rgba(78,57,40,.66);margin-top:16px;line-height:1.8}
 
 .modal-overlay{position:fixed;inset:0;z-index:150;background:rgba(25,18,12,.42);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;padding:0}
@@ -481,16 +487,24 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     <div class="login-title" id="loginTitle">مركز نوف لطب الأسنان</div>
     <div class="login-sub" data-noof-text="login.subtitle">البوابة الإلكترونية للمرضى</div>
     <div class="login-error" id="loginError"></div>
-    <div class="login-field">
-      <label data-noof-text="login.email_label">البريد الإلكتروني</label>
-      <input type="email" id="loginEmail" placeholder="patient@email.com" data-noof-text-placeholder="login.email_placeholder" autocomplete="email" />
+    <div class="login-restore" id="loginRestore">
+      <div class="login-restore-spinner"></div>
+      <div class="login-restore-text" id="loginRestoreText">جارٍ استعادة جلستك...</div>
+      <button class="login-btn" id="retrySessionBtn" type="button" style="display:none">إعادة المحاولة</button>
+      <button class="login-restore-link" id="switchAccountBtn" type="button" style="display:none">تسجيل الدخول بحساب آخر</button>
     </div>
-    <div class="login-field">
-      <label data-noof-text="login.password_label">كلمة المرور</label>
-      <input type="password" id="loginPassword" placeholder="••••••••" data-noof-text-placeholder="login.password_placeholder" autocomplete="current-password" />
+    <div id="loginForm">
+      <div class="login-field">
+        <label data-noof-text="login.email_label">البريد الإلكتروني</label>
+        <input type="email" id="loginEmail" placeholder="patient@email.com" data-noof-text-placeholder="login.email_placeholder" autocomplete="email" />
+      </div>
+      <div class="login-field">
+        <label data-noof-text="login.password_label">كلمة المرور</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" data-noof-text-placeholder="login.password_placeholder" autocomplete="current-password" />
+      </div>
+      <button class="login-btn" id="loginBtn" data-noof-text="login.button">تسجيل الدخول</button>
+      <div class="login-hint" data-noof-text="login.hint">للدخول، استخدم البريد الإلكتروني وكلمة المرور التي زودك بها المركز</div>
     </div>
-    <button class="login-btn" id="loginBtn" data-noof-text="login.button">تسجيل الدخول</button>
-    <div class="login-hint" data-noof-text="login.hint">للدخول، استخدم البريد الإلكتروني وكلمة المرور التي زودك بها المركز</div>
   </div>
 </div>
 
@@ -1898,53 +1912,91 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     });
   }
 
+  // ============ تخزين جلسة الدخول ============
+  // نُخزّن الجلسة في localStorage، ونحتفظ بنسخة احتياطية من رمز التجديد في كوكي
+  // حتى لا يفقد المريض دخوله إذا مُسحت بيانات المتصفح.
+  var SESSION_COOKIE = 'noof_session_rt';
+  var SEEN_COOKIE = 'noof_seen';
+
+  function setCookie(name, value, maxAge) {
+    try {
+      document.cookie = name + '=' + encodeURIComponent(value) + '; path=/; max-age=' + maxAge + '; SameSite=Lax';
+    } catch(e) {}
+  }
+  function getCookie(name) {
+    try {
+      var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+      return m && m[1] ? decodeURIComponent(m[1]) : '';
+    } catch(e) {
+      return '';
+    }
+  }
+
   function saveSession(authData) {
+    var refreshToken = authData.refresh_token || '';
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         token: authData.access_token,
-        refreshToken: authData.refresh_token || null,
+        refreshToken: refreshToken || null,
         userId: (authData.user && authData.user.id) || null,
         expiresAt: Date.now() + ((authData.expires_in || 3600) * 1000)
       }));
     } catch(e) {}
+    if (refreshToken) setCookie(SESSION_COOKIE, refreshToken, 31536000);
+    setCookie(SEEN_COOKIE, '1', 31536000);
   }
   function readSession() {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY));
-    } catch(e) {
-      return null;
-    }
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    // لا توجد جلسة في localStorage → نحاول من الكوكي الاحتياطي
+    var backup = getCookie(SESSION_COOKIE);
+    if (backup) return { token: null, refreshToken: backup, userId: null, expiresAt: 0 };
+    return null;
   }
   function refreshSession(session) {
     if (!session || !session.refreshToken) {
-      return Promise.reject(new Error('no refresh token'));
+      var noToken = new Error('no refresh token');
+      noToken.authInvalid = true;
+      return Promise.reject(noToken);
     }
     return fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
       method: 'POST',
       headers: { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: session.refreshToken })
     }).then(function(r) {
-      if (!r.ok) throw new Error('refresh failed');
+      // 400/401/403 = رمز التجديد مرفوض فعلاً من السيرفر → الجلسة انتهت
+      if (r.status === 400 || r.status === 401 || r.status === 403) {
+        var rejected = new Error('refresh rejected');
+        rejected.authInvalid = true;
+        throw rejected;
+      }
+      if (!r.ok) throw new Error('refresh failed HTTP ' + r.status);
       return r.json();
     }).then(function(authData) {
       saveSession(authData);
       return authData;
     });
   }
-  // يستعيد الجلسة المحفوظة؛ يجدّد الرمز تلقائياً عند انتهاء صلاحيته
-  function restoreSession() {
-    var session = readSession();
-    if (!session || !session.token) return Promise.resolve(null);
-    if (session.expiresAt && session.expiresAt > Date.now() + 60000) {
+  // يضمن وجود رمز وصول صالح؛ يجدّده عند الحاجة. أخطاء الشبكة تبقى غير authInvalid
+  // حتى نُبقي الجلسة ونسمح بإعادة المحاولة بدل تسجيل الخروج.
+  function ensureFreshToken(session) {
+    if (session.token && session.expiresAt && session.expiresAt > Date.now() + 60000) {
       return Promise.resolve(session);
     }
-    if (session.refreshToken) {
-      return refreshSession(session).catch(function() { return null; });
-    }
-    return Promise.resolve(null);
+    return refreshSession(session).then(function(authData) {
+      return {
+        token: authData.access_token,
+        refreshToken: authData.refresh_token || session.refreshToken,
+        userId: (authData.user && authData.user.id) || session.userId || null,
+        expiresAt: Date.now() + ((authData.expires_in || 3600) * 1000)
+      };
+    });
   }
   function clearSession() {
-    localStorage.removeItem(STORAGE_KEY);
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+    setCookie(SESSION_COOKIE, '', 0);
   }
 
   var currentAppointmentsFilter = 'upcoming';
@@ -2163,10 +2215,31 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   }
 
   function showLogin() {
+    hideRestoreUi();
     document.getElementById('loginScreen').classList.remove('hidden');
   }
   function hideLogin() {
     document.getElementById('loginScreen').classList.add('hidden');
+  }
+
+  // شاشة استعادة الجلسة: تظهر أثناء محاولة الدخول التلقائي بدل نموذج الدخول
+  var loginRestoreEl = document.getElementById('loginRestore');
+  var loginRestoreTextEl = document.getElementById('loginRestoreText');
+  var loginFormEl = document.getElementById('loginForm');
+  var retrySessionBtn = document.getElementById('retrySessionBtn');
+  var switchAccountBtn = document.getElementById('switchAccountBtn');
+
+  function showRestoreUi(message, showRetry) {
+    document.getElementById('loginScreen').classList.remove('hidden');
+    if (loginFormEl) loginFormEl.style.display = 'none';
+    if (loginRestoreEl) loginRestoreEl.classList.add('show');
+    if (loginRestoreTextEl) loginRestoreTextEl.textContent = message || 'جارٍ استعادة جلستك...';
+    if (retrySessionBtn) retrySessionBtn.style.display = showRetry ? 'block' : 'none';
+    if (switchAccountBtn) switchAccountBtn.style.display = showRetry ? 'inline-block' : 'none';
+  }
+  function hideRestoreUi() {
+    if (loginRestoreEl) loginRestoreEl.classList.remove('show');
+    if (loginFormEl) loginFormEl.style.display = '';
   }
 
   function renderPatient() {
@@ -2636,12 +2709,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       saveSession(authData);
       return loadPatientData(authData);
     }).then(function() {
-      hideLogin();
-      renderPatient();
-      buildPostsCarousel();
-      buildPostsList();
-      initPushNotifications();
-      initFCM();
+      enterApp();
     }).catch(function(err) {
       loginError.textContent = err.message || 'حدث خطأ، حاول مرة أخرى';
       loginError.classList.add('show');
@@ -2803,32 +2871,97 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     });
   });
 
-  Promise.all([loadClinicSettings(), loadServices(), loadDoctors()]).finally(function() {
-    restoreSession().then(function(session) {
-      if (!session) {
-        showLogin();
-        return;
+  // محاولة استعادة الدخول مع إعادة المحاولة عند ضعف الشبكة
+  function restoreAttempt(session) {
+    return fetch(SUPABASE_URL + '/auth/v1/user', {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + session.token }
+    }).then(function(r) {
+      // 401/403 = الجلسة غير صالحة فعلاً، أما باقي الأخطاء فمؤقتة
+      if (r.status === 401 || r.status === 403) {
+        var authErr = new Error('unauthorized');
+        authErr.authInvalid = true;
+        throw authErr;
       }
-      return fetch(SUPABASE_URL + '/auth/v1/user', {
-        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + session.token }
-      }).then(function(r) {
-        if (!r.ok) throw new Error('session expired');
-        return r.json();
-      }).then(function(user) {
-        return loadPatientData({ access_token: session.token, user: user });
-      }).then(function() {
-        hideLogin();
-        renderPatient();
-        buildPostsCarousel();
-        buildPostsList();
-        initPushNotifications();
-        initFCM();
-      }).catch(function() {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function(user) {
+      return loadPatientData({ access_token: session.token, user: user });
+    });
+  }
+
+  function isAuthError(err) {
+    if (!err) return false;
+    if (err.authInvalid) return true;
+    var msg = String(err.message || '');
+    return msg.indexOf('HTTP 401') === 0 || msg.indexOf('HTTP 403') === 0;
+  }
+
+  function restoreWithRetry(session, attempts) {
+    return restoreAttempt(session).catch(function(err) {
+      // لا نعيد المحاولة إذا كانت الجلسة مرفوضة أو انتهت المحاولات
+      if (isAuthError(err) || attempts <= 1) throw err;
+      return new Promise(function(resolve) { setTimeout(resolve, 1500); })
+        .then(function() { return restoreWithRetry(session, attempts - 1); });
+    });
+  }
+
+  // إظهار واجهة التطبيق بعد نجاح الدخول.
+  // كل خطوة معزولة حتى لا يُخرج أي خطأ في العرض أو الإشعارات المستخدم من حسابه.
+  function enterApp() {
+    hideRestoreUi();
+    hideLogin();
+    var steps = [renderPatient, buildPostsCarousel, buildPostsList, initPushNotifications, initFCM];
+    for (var i = 0; i < steps.length; i++) {
+      try {
+        steps[i]();
+      } catch (e) {
+        if (window.console && console.warn) console.warn('noof boot step failed:', e);
+      }
+    }
+  }
+
+  // يحاول استعادة جلسة محفوظة والدخول تلقائياً.
+  // قاعدة أساسية: لا نحذف الجلسة إلا إذا رفضها السيرفر (401/403) — أي خطأ شبكة
+  // أو تعذّر تحميل البيانات يُبقي الجلسة ويعرض زر «إعادة المحاولة» فقط.
+  function autoLogin() {
+    var session = readSession();
+    if (!session) {
+      showLogin();
+      // كان هناك دخول سابق لكن الجلسة اختفت فعلاً (بيانات التطبيق مُسحت)
+      if (getCookie(SEEN_COOKIE) && loginError) {
+        loginError.textContent = 'انتهت جلستك السابقة، يرجى تسجيل الدخول من جديد.';
+        loginError.classList.add('show');
+      }
+      return;
+    }
+    showRestoreUi('جارٍ استعادة جلستك...', false);
+    ensureFreshToken(session).then(function(fresh) {
+      return restoreWithRetry(fresh, 4);
+    }).then(function() {
+      enterApp();
+    }).catch(function(err) {
+      // الجلسة مرفوضة من السيرفر فقط → نحذفها ونسجّل الخروج
+      if (err && err.authInvalid) {
         clearSession();
         showLogin();
-      });
+        if (loginError) {
+          loginError.textContent = 'انتهت جلستك، يرجى تسجيل الدخول من جديد.';
+          loginError.classList.add('show');
+        }
+        return;
+      }
+      // خطأ شبكة/بيانات مؤقت → نُبقي الجلسة ونسمح بإعادة المحاولة
+      showRestoreUi('تعذّر الاتصال بالإنترنت. تأكدي من الشبكة ثم أعيدي المحاولة.', true);
     });
+  }
+
+  if (retrySessionBtn) retrySessionBtn.addEventListener('click', function() { autoLogin(); });
+  if (switchAccountBtn) switchAccountBtn.addEventListener('click', function() {
+    clearSession();
+    showLogin();
   });
+
+  Promise.all([loadClinicSettings(), loadServices(), loadDoctors()]).finally(autoLogin);
 
   // تجديد تلقائي للرمز قبل انتهاء صلاحيته للحفاظ على تسجيل الدخول
   setInterval(function() {
