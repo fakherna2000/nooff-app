@@ -1158,6 +1158,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   var APP_SETTINGS = null;
   var DEFAULT_POST_IMAGE = '/icon-512.png';
   var LOYALTY = { balance: 0, lifetime: 0, transactions: [], rewards: [] };
+  var SETTINGS_DIAG = { state: 'idle', source: '-', status: '-', error: '-' };
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -1510,6 +1511,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   }
 
   function loadClinicSettings() {
+    SETTINGS_DIAG = { state: 'loading', source: 'public-api', status: '-', error: '-' };
     return fetch(API_BASE_URL + '/api/public/clinic-settings?_=' + Date.now(), {
       cache: 'no-store',
       headers: {
@@ -1518,17 +1520,21 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       }
     })
       .then(function(r) {
+        SETTINGS_DIAG.status = String(r.status);
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
       })
       .then(function(payload) {
         APP_SETTINGS = payload && payload.data ? payload.data : null;
+        SETTINGS_DIAG.state = APP_SETTINGS ? 'ok' : 'empty';
         var images = getMobileImages();
         DEFAULT_POST_IMAGE = images.posts_fallback_image_url || APP_SETTINGS && APP_SETTINGS.logo_url || '/icon-512.png';
         applyClinicSettings();
       })
-      .catch(function() {
+      .catch(function(err) {
         APP_SETTINGS = null;
+        SETTINGS_DIAG.state = 'error';
+        SETTINGS_DIAG.error = err && err.message ? String(err.message) : 'fetch-failed';
         DEFAULT_POST_IMAGE = '/icon-512.png';
       });
   }
@@ -2704,6 +2710,10 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       l.push('loginUrl=' + shortUrl(loginBg));
       l.push('appUrl=' + shortUrl(appBg));
     } catch (e) { l.push('bgdiag=err'); }
+    try {
+      l.push('settings=' + (SETTINGS_DIAG.state || '-') + ' status=' + (SETTINGS_DIAG.status || '-') + ' src=' + (SETTINGS_DIAG.source || '-'));
+      if (SETTINGS_DIAG.error && SETTINGS_DIAG.error !== '-') l.push('settingsErr=' + SETTINGS_DIAG.error);
+    } catch (e) { l.push('settingsdiag=err'); }
     var errs = window.__noofDiag || [];
     if (errs.length) {
       l.push('--- errors (' + errs.length + ') ---');
