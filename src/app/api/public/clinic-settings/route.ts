@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export async function GET() {
   try {
     const admin = createAdminClient();
@@ -11,11 +21,14 @@ export async function GET() {
       .single();
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: error.message }, { status: 500, headers: corsHeaders });
     }
 
-    return NextResponse.json({ data });
+    return NextResponse.json({ data }, { headers: corsHeaders });
   } catch (error: any) {
-    return NextResponse.json({ error: error?.message || 'Failed to load clinic settings' }, { status: 500 });
+    return NextResponse.json(
+      { error: error?.message || 'Failed to load clinic settings' },
+      { status: 500, headers: corsHeaders }
+    );
   }
 }
