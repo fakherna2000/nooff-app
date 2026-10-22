@@ -1510,9 +1510,19 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   }
 
   function loadClinicSettings() {
-    return sbFetch('/rest/v1/clinic_settings?select=clinic_name,logo_url,mobile_images&limit=1&_=' + Date.now())
-      .then(function(rows) {
-        APP_SETTINGS = rows && rows[0] ? rows[0] : null;
+    return fetch(API_BASE_URL + '/api/public/clinic-settings?_=' + Date.now(), {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      }
+    })
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(payload) {
+        APP_SETTINGS = payload && payload.data ? payload.data : null;
         var images = getMobileImages();
         DEFAULT_POST_IMAGE = images.posts_fallback_image_url || APP_SETTINGS && APP_SETTINGS.logo_url || '/icon-512.png';
         applyClinicSettings();
