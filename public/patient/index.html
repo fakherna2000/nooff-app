@@ -2671,6 +2671,12 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       return getComputedStyle(n).display;
     } catch (e) { return 'e'; }
   }
+  function shortUrl(value) {
+    if (!value) return '-';
+    value = String(value);
+    if (value.length <= 72) return value;
+    return value.slice(0, 28) + '...' + value.slice(-28);
+  }
   function render() {
     var l = [];
     l.push('NOOF-DIAG-1 path=' + location.pathname);
@@ -2679,6 +2685,15 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       l.push('perm=' + (('Notification' in window) ? Notification.permission : '-') + ' standalone=' + ((window.navigator.standalone === true) ? 1 : 0));
     } catch (e) { l.push('perm=err'); }
     l.push('notifCard=' + has('notifCard') + '(' + disp('notifCard') + ') banner=' + has('notifBanner') + '(' + disp('notifBanner') + ') profile=' + has('profileCard'));
+    try {
+      var imgs = (typeof getMobileImages === 'function') ? getMobileImages() : {};
+      var loginBg = imgs && imgs.login_background_image_url || '';
+      var appBg = imgs && imgs.app_background_image_url || '';
+      var chosen = loginBg || appBg || '';
+      l.push('loginBg=' + (loginBg ? 1 : 0) + ' appBg=' + (appBg ? 1 : 0) + ' chosen=' + (chosen ? (chosen === loginBg ? 'login' : 'app') : '-'));
+      l.push('loginUrl=' + shortUrl(loginBg));
+      l.push('appUrl=' + shortUrl(appBg));
+    } catch (e) { l.push('bgdiag=err'); }
     var errs = window.__noofDiag || [];
     if (errs.length) {
       l.push('--- errors (' + errs.length + ') ---');
