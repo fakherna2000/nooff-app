@@ -1159,6 +1159,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   var DEFAULT_POST_IMAGE = '/icon-512.png';
   var LOYALTY = { balance: 0, lifetime: 0, transactions: [], rewards: [] };
   var SETTINGS_DIAG = { state: 'idle', source: '-', status: '-', error: '-' };
+  window.__noofSettingsDiag = SETTINGS_DIAG;
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -1512,6 +1513,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
 
   function loadClinicSettings() {
     SETTINGS_DIAG = { state: 'loading', source: 'public-api', status: '-', error: '-' };
+    window.__noofSettingsDiag = SETTINGS_DIAG;
     return fetch(API_BASE_URL + '/api/public/clinic-settings?_=' + Date.now(), {
       cache: 'no-store',
       headers: {
@@ -1527,6 +1529,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       .then(function(payload) {
         APP_SETTINGS = payload && payload.data ? payload.data : null;
         SETTINGS_DIAG.state = APP_SETTINGS ? 'ok' : 'empty';
+        window.__noofSettingsDiag = SETTINGS_DIAG;
         var images = getMobileImages();
         DEFAULT_POST_IMAGE = images.posts_fallback_image_url || APP_SETTINGS && APP_SETTINGS.logo_url || '/icon-512.png';
         applyClinicSettings();
@@ -1535,6 +1538,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
         APP_SETTINGS = null;
         SETTINGS_DIAG.state = 'error';
         SETTINGS_DIAG.error = err && err.message ? String(err.message) : 'fetch-failed';
+        window.__noofSettingsDiag = SETTINGS_DIAG;
         DEFAULT_POST_IMAGE = '/icon-512.png';
       });
   }
@@ -2711,8 +2715,9 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       l.push('appUrl=' + shortUrl(appBg));
     } catch (e) { l.push('bgdiag=err'); }
     try {
-      l.push('settings=' + (SETTINGS_DIAG.state || '-') + ' status=' + (SETTINGS_DIAG.status || '-') + ' src=' + (SETTINGS_DIAG.source || '-'));
-      if (SETTINGS_DIAG.error && SETTINGS_DIAG.error !== '-') l.push('settingsErr=' + SETTINGS_DIAG.error);
+      var sd = window.__noofSettingsDiag || {};
+      l.push('settings=' + (sd.state || '-') + ' status=' + (sd.status || '-') + ' src=' + (sd.source || '-'));
+      if (sd.error && sd.error !== '-') l.push('settingsErr=' + sd.error);
     } catch (e) { l.push('settingsdiag=err'); }
     var errs = window.__noofDiag || [];
     if (errs.length) {
