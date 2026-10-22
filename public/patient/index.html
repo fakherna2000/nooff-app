@@ -156,6 +156,19 @@ linear-gradient(145deg,rgba(255,255,255,.95),rgba(242,230,215,.95));border-radiu
 .home-featured-grid .feature-card h4{font-size:14px;font-weight:900;line-height:1.45}
 .home-featured-grid .feature-card p{font-size:11.5px;color:var(--text-2);margin-top:4px}
 .home-featured-grid .feature-arrow{width:28px;height:28px;border-radius:10px;background:#f4eadf;color:var(--brand-2);display:flex;align-items:center;justify-content:center;flex:0 0 28px}
+.doctors-section{display:none}
+.doctors-section.visible{display:block}
+.doctors-strip{display:flex;gap:12px;overflow:auto;padding-bottom:4px;scrollbar-width:none}
+.doctors-strip::-webkit-scrollbar{display:none}
+.doctor-card{flex:0 0 84%;padding:12px;border-radius:26px;background:rgba(255,251,247,.92);border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.doctor-card-head{display:flex;align-items:center;gap:12px}
+.doctor-photo,.doctor-photo-placeholder{width:88px;height:88px;flex:0 0 88px;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-soft)}
+.doctor-photo{object-fit:cover;background:#eadccc}
+.doctor-photo-placeholder{display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#e7d6c5,#b8926e);color:#fff;font-size:30px;font-weight:900}
+.doctor-meta{flex:1;min-width:0}
+.doctor-name{font-size:18px;font-weight:900;color:var(--text);line-height:1.35}
+.doctor-specialty{font-size:12.5px;color:var(--brand-2);font-weight:800;margin-top:4px;line-height:1.65}
+.doctor-bio{font-size:13px;color:var(--text-2);line-height:1.9;white-space:pre-wrap}
 .service-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin:4px 2px 14px}
 .service-page-title{font-size:28px;font-weight:900;line-height:1.2;color:var(--text)}
 .service-page-sub{font-size:13px;color:var(--text-2);margin-top:4px;font-weight:700}
@@ -428,6 +441,9 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
   .editorial-banner{min-height:156px}
   .editorial-banner h3{font-size:20px}
   .editorial-banner p{max-width:100%}
+  .doctor-card{flex-basis:88%}
+  .doctor-photo,.doctor-photo-placeholder{width:78px;height:78px;flex-basis:78px;border-radius:20px}
+  .doctor-name{font-size:16px}
   .appointments-title{font-size:22px}
   .appointments-head{align-items:flex-start;flex-direction:column}
   .appointments-toggle{width:100%;justify-content:space-between}
@@ -612,6 +628,13 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
         </div>
         <div class="feature-arrow">‹</div>
       </div>
+    </div>
+
+    <div class="doctors-section" id="doctorsSection">
+      <div class="section-title">
+        <div>تعرّفي على أطبائنا<small>خبرات موثوقة ولمسة إنسانية في العلاج</small></div>
+      </div>
+      <div class="doctors-strip" id="doctorsList"></div>
     </div>
 
     <div class="card appointment-card" style="margin-top:18px">
@@ -1586,6 +1609,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
 
   // ================== الخدمات الديناميكية ==================
   var SERVICES = [];
+  var DOCTORS = [];
   var SERVICE_CATEGORY_ORDER = { dental: 0, beauty: 1 };
 
   function loadServices() {
@@ -1640,6 +1664,55 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
       '</div>';
     });
     container.innerHTML = html;
+  }
+
+  function loadDoctors() {
+    return sbFetchSafe('/rest/v1/clinic_doctors?is_active=eq.true&select=*&order=sort_order.asc')
+      .then(function(rows) {
+        DOCTORS = Array.isArray(rows) ? rows : [];
+        renderDoctors();
+      })
+      .catch(function() {
+        DOCTORS = [];
+        renderDoctors();
+      });
+  }
+
+  function renderDoctors() {
+    var section = document.getElementById('doctorsSection');
+    var container = document.getElementById('doctorsList');
+    if (!section || !container) return;
+
+    if (!DOCTORS.length) {
+      section.classList.remove('visible');
+      container.innerHTML = '';
+      return;
+    }
+
+    var html = '';
+    DOCTORS.forEach(function(doctor) {
+      var name = escapeHtml(doctor.name || 'الطبيب');
+      var specialty = doctor.specialty ? '<div class="doctor-specialty">' + escapeHtml(doctor.specialty) + '</div>' : '';
+      var bio = doctor.bio ? '<div class="doctor-bio">' + escapeHtml(doctor.bio) + '</div>' : '';
+      var initial = escapeHtml((doctor.name || 'ط').trim().charAt(0) || 'ط');
+      var media = doctor.image_url
+        ? '<img class="doctor-photo" src="' + escapeHtml(doctor.image_url) + '" alt="' + name + '">'
+        : '<div class="doctor-photo-placeholder">' + initial + '</div>';
+
+      html += '<article class="doctor-card">' +
+        '<div class="doctor-card-head">' +
+          media +
+          '<div class="doctor-meta">' +
+            '<div class="doctor-name">' + name + '</div>' +
+            specialty +
+          '</div>' +
+        '</div>' +
+        bio +
+      '</article>';
+    });
+
+    container.innerHTML = html;
+    section.classList.add('visible');
   }
 
   function loadLoyalty() {
@@ -2657,7 +2730,7 @@ radial-gradient(circle at 88% 14%,rgba(255,255,255,.16),rgba(255,255,255,0) 24%)
     });
   });
 
-  Promise.all([loadClinicSettings(), loadServices()]).finally(function() {
+  Promise.all([loadClinicSettings(), loadServices(), loadDoctors()]).finally(function() {
     var session = getSession();
     if (session) {
       fetch(SUPABASE_URL + '/auth/v1/user', {
