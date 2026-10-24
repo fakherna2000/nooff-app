@@ -2,9 +2,19 @@ import { NextResponse } from 'next/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 import webpush from 'web-push';
 import { sendFcmToTokens } from '@/lib/fcm-helper';
+import { getApiUser } from '@/lib/api-auth';
 
 export async function POST(request: Request) {
   try {
+    // بثّ إشعار لكل المستخدمين — للأدمن فقط
+    const currentUser = await getApiUser(request);
+    if (!currentUser) {
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });
+    }
+    if (currentUser.role !== 'admin') {
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });
+    }
+
     const body = await request.json();
     const { title, body: messageBody, data } = body;
 

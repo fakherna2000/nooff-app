@@ -1,8 +1,18 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { getApiUser } from '@/lib/api-auth';
 
 export async function POST(req: Request) {
   try {
+    // إضافة مريض — للأدمن فقط
+    const currentUser = await getApiUser(req);
+    if (!currentUser) {
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });
+    }
+    if (currentUser.role !== 'admin') {
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });
+    }
+
     const body = await req.json();
     const {
       full_name,

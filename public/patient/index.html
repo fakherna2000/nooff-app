@@ -1209,14 +1209,16 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       return;
     }
     fcmLog('sending token to server...');
-    fetch(API_BASE_URL + '/api/push/fcm-register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        token: tokenValue,
-        user_id: PATIENT._userId,
-        patient_id: PATIENT.id
-      })
+    getPushAuthHeaders().then(function(headers) {
+      return fetch(API_BASE_URL + '/api/push/fcm-register', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+          token: tokenValue,
+          user_id: PATIENT._userId,
+          patient_id: PATIENT.id
+        })
+      });
     }).then(function(r) { return r.json(); }).then(function(d) {
       fcmLog('server response: ' + JSON.stringify(d));
     }).catch(function(e) {
@@ -1999,6 +2001,24 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     setCookie(SESSION_COOKIE, '', 0);
   }
 
+  // هيدرات المصادقة (Bearer) لطلبات الـ API — مسارات الإشعارات تتحقق من الجلسة
+  function getPushAuthHeaders() {
+    function build(token) {
+      var h = { 'Content-Type': 'application/json' };
+      if (token) h['Authorization'] = 'Bearer ' + token;
+      return h;
+    }
+    if (PATIENT && PATIENT._token) return Promise.resolve(build(PATIENT._token));
+    var s = readSession();
+    if (!s) return Promise.resolve(build(null));
+    return ensureFreshToken(s).then(function(fresh) {
+      if (PATIENT) PATIENT._token = fresh.token;
+      return build(fresh.token);
+    }).catch(function() {
+      return build(null);
+    });
+  }
+
   var currentAppointmentsFilter = 'upcoming';
   var preferredType = 'تبييض الأسنان';
   var QUICK_TIME_SLOTS = ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00', '19:30'];
@@ -2181,15 +2201,17 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       if (existing) return existing;
       return registration.pushManager.subscribe(subscribeOptions);
     }).then(function(subscription) {
-      return fetch(API_BASE_URL + '/api/push/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          subscription: subscription,
-          user_id: PATIENT._userId,
-          patient_id: PATIENT.id,
-          user_agent: navigator.userAgent
-        })
+      return getPushAuthHeaders().then(function(headers) {
+        return fetch(API_BASE_URL + '/api/push/subscribe', {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify({
+            subscription: subscription,
+            user_id: PATIENT._userId,
+            patient_id: PATIENT.id,
+            user_agent: navigator.userAgent
+          })
+        });
       });
     }).then(function(res) {
       if (!res || !res.ok) throw new Error('subscribe-failed');

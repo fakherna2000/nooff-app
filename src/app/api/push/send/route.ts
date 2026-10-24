@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 import webpush from 'web-push';
 import crypto from 'crypto';
+import { getApiUser } from '@/lib/api-auth';
 
 let cachedAccessToken: { token: string; expiresAt: number } | null = null;
 
@@ -50,6 +51,15 @@ async function getFcmAccessToken(): Promise<string | null> {
 
 export async function POST(request: Request) {
   try {
+    // إرسال إشعار لمريض محدّد — للأدمن فقط
+    const currentUser = await getApiUser(request);
+    if (!currentUser) {
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });
+    }
+    if (currentUser.role !== 'admin') {
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 403 });
+    }
+
     const body = await request.json();
     const { patient_id, title, body: messageBody, data } = body;
 

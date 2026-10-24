@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
+import { getApiUser } from '@/lib/api-auth';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -14,6 +15,11 @@ export async function OPTIONS() {
 // تسجيل اشتراك Web Push (للآيفون والمتصفح) — يستخدم service_role لتجاوز RLS
 export async function POST(request: Request) {
   try {
+    const currentUser = await getApiUser(request);
+    if (!currentUser) {
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 401, headers: corsHeaders });
+    }
+
     const body = await request.json();
     const { subscription, user_id, patient_id, user_agent } = body;
 
@@ -22,6 +28,11 @@ export async function POST(request: Request) {
         { error: 'Missing required fields' },
         { status: 400, headers: corsHeaders },
       );
+    }
+
+    // لا يمكن لمستخدم تسجيل اشتراك لغيره
+    if (user_id !== currentUser.id) {
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 403, headers: corsHeaders });
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

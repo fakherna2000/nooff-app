@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
+import { getApiUser } from '@/lib/api-auth';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,6 +14,11 @@ export async function OPTIONS() {
 
 export async function POST(request: Request) {
   try {
+    const currentUser = await getApiUser(request);
+    if (!currentUser) {
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 401, headers: corsHeaders });
+    }
+
     const body = await request.json();
     const { endpoint } = body;
 
@@ -31,10 +37,12 @@ export async function POST(request: Request) {
 
     const supabase = createAdminClient(supabaseUrl, serviceKey);
 
+    // الحذف مشروط بملكية المستخدم للاشتراك لمنع حذف اشتراكات الآخرين
     const { error } = await supabase
       .from('push_subscriptions')
       .delete()
-      .eq('endpoint', endpoint);
+      .eq('endpoint', endpoint)
+      .eq('user_id', currentUser.id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500, headers: corsHeaders });

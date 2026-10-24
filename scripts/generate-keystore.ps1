@@ -50,11 +50,19 @@ $AppDir = Join-Path $AndroidDir "app"
 $KeystoreFile = Join-Path $AppDir "noof-release-key.jks"
 $PropsFile = Join-Path $AndroidDir "keystore.properties"
 
-# 3. قيم افتراضية (يمكن تعديلها لاحقاً)
-$StorePass = "NoofDentalClinic2026!"
-$KeyPass   = "NoofDentalClinic2026!"
+# 3. قيم التوقيع — تُطلب من المستخدم ولا تُكتب داخل السكربت أبداً
 $Alias     = "noofapp"
 $DName     = "CN=Noof Dental Clinic, OU=IT Department, O=Noof Center, L=Damascus, S=Damascus, C=SY"
+
+$securePass = Read-Host "أدخل كلمة سر قوية للـ Keystore (لن تظهر على الشاشة)" -AsSecureString
+$StorePass = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
+    [Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePass)
+)
+if ([string]::IsNullOrWhiteSpace($StorePass) -or $StorePass.Length -lt 8) {
+    Write-Host "❌ كلمة السر قصيرة جداً (8 أحرف على الأقل)." -ForegroundColor Red
+    exit 1
+}
+$KeyPass = $StorePass
 
 if (Test-Path $KeystoreFile) {
     Write-Host ""
@@ -88,13 +96,13 @@ if (-not (Test-Path $KeystoreFile)) {
 $sizeKB = [math]::Round((Get-Item $KeystoreFile).Length / 1KB, 1)
 Write-Host "✅ تم توليد Keystore بنجاح: $KeystoreFile ($sizeKB KB)" -ForegroundColor Green
 
-# 5. توليد keystore.properties
+# 5. توليد keystore.properties (مسار الملف نسبي لمجلد android/app، وترميز ASCII لتجنب BOM)
 @"
-STORE_FILE=app/noof-release-key.jks
+STORE_FILE=noof-release-key.jks
 STORE_PASSWORD=$StorePass
 KEY_ALIAS=$Alias
 KEY_PASSWORD=$KeyPass
-"@ | Set-Content -Path $PropsFile -Encoding UTF8
+"@ | Set-Content -Path $PropsFile -Encoding ASCII
 Write-Host "✅ تم إنشاء $PropsFile" -ForegroundColor Green
 
 # 6. التحقق من صحة المفتاح

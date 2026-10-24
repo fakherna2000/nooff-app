@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,8 +13,10 @@ export async function OPTIONS() {
 
 export async function GET() {
   try {
-    const admin = createAdminClient();
-    const { data, error } = await admin
+    // قراءة عامة عبر عميل anon — جدول clinic_settings له سياسة قراءة عامة (RLS)،
+    // فلا داعي لاستخدام service_role هنا.
+    const supabase = createClient();
+    const { data, error } = await supabase
       .from('clinic_settings')
       .select('clinic_name, logo_url, mobile_images, ui_texts')
       .limit(1)

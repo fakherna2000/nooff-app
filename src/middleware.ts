@@ -71,6 +71,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
+  // مسارات الإدارة تتطلب دور admin صراحةً (منع المريض من الوصول للوحة التحكم)
+  if (pathname.startsWith('/admin') && user) {
+    const role =
+      (user.app_metadata?.role as string) ||
+      (user.user_metadata?.role as string) ||
+      '';
+    if (role !== 'admin') {
+      return NextResponse.redirect(new URL('/portal', request.url));
+    }
+  }
+
   return response;
 }
 
