@@ -3,19 +3,29 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { getApiUser } from '@/lib/api-auth';
 import { CLINIC_QR_TOKEN, CLINIC_QR_POINTS } from '@/lib/loyalty-qr';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 // قراءة QR العيادة من تطبيق المريض → إضافة نقاط للمحفظة
 export async function POST(request: Request) {
   try {
     const user = await getApiUser(request);
     if (!user) {
-      return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });
+      return NextResponse.json({ error: 'غير مصرح' }, { status: 401, headers: corsHeaders });
     }
 
     const body = await request.json().catch(() => ({}));
     const code = String(body?.code || '').trim();
 
     if (!code || code !== CLINIC_QR_TOKEN) {
-      return NextResponse.json({ error: 'هذا الرمز غير صحيح' }, { status: 400 });
+      return NextResponse.json({ error: 'هذا الرمز غير صحيح' }, { status: 400, headers: corsHeaders });
     }
 
     const admin = createAdminClient() as any;
@@ -28,10 +38,13 @@ export async function POST(request: Request) {
       .maybeSingle();
 
     if (patientError) {
-      return NextResponse.json({ error: patientError.message }, { status: 500 });
+      return NextResponse.json({ error: patientError.message }, { status: 500, headers: corsHeaders });
     }
     if (!patient) {
-      return NextResponse.json({ error: 'لا يوجد ملف مريض مرتبط بحسابك' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'لا يوجد ملف مريض مرتبط بحسابك' },
+        { status: 404, headers: corsHeaders }
+      );
     }
 
     const { data, error } = await admin.rpc('loyalty_adjust_points', {
@@ -42,13 +55,13 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: error.message }, { status: 500, headers: corsHeaders });
     }
 
     return NextResponse.json({
       data: { points_balance: data, added: CLINIC_QR_POINTS },
-    });
+    }, { headers: corsHeaders });
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return NextResponse.json({ error: e.message }, { status: 500, headers: corsHeaders });
   }
 }
