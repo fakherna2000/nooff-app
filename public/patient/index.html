@@ -333,6 +333,19 @@ linear-gradient(135deg,#9a7758,#5e4028);box-shadow:0 20px 42px rgba(103,73,44,.2
 .reward-cost{display:inline-flex;align-items:center;gap:4px;margin-top:7px;font-size:12px;font-weight:900;color:var(--brand-2);background:#f6ecdf;padding:4px 10px;border-radius:999px}
 .reward-card .btn{padding:10px 13px;font-size:12.5px;border-radius:14px;flex:0 0 auto}
 .reward-card .btn[disabled]{opacity:.6;cursor:not-allowed}
+.scan-shell{display:flex;flex-direction:column;gap:14px}
+.scan-video-wrap{position:relative;width:100%;aspect-ratio:1/1;max-height:64vh;border-radius:28px;overflow:hidden;background:#101010;border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.scan-video-wrap video{width:100%;height:100%;object-fit:cover;display:none}
+.scan-video-wrap.live video{display:block}
+.scan-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:rgba(255,255,255,.72);font-size:13px;font-weight:800;text-align:center;padding:24px}
+.scan-video-wrap.live .scan-placeholder{display:none}
+.scan-placeholder .ph-ico{font-size:46px}
+.scan-frame{position:absolute;top:50%;left:50%;width:62%;max-width:260px;aspect-ratio:1/1;transform:translate(-50%,-50%);border:3px solid rgba(255,255,255,.85);border-radius:24px;box-shadow:0 0 0 2000px rgba(0,0,0,.35);display:none}
+.scan-video-wrap.live .scan-frame{display:block}
+.scan-hint{text-align:center;font-size:13px;font-weight:800;color:var(--text-2);padding:0 6px}
+.scan-actions{margin-top:2px}
+.scan-actions .btn{width:100%}
+.scan-points-badge{display:inline-flex;align-items:center;gap:6px;align-self:center;font-size:12px;font-weight:900;color:var(--brand-2);background:#f6ecdf;padding:7px 14px;border-radius:999px}
 .tx-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid rgba(232,220,203,.75)}
 .tx-item:last-child{border-bottom:0}
 .tx-item .t{font-weight:800;font-size:13.5px}
@@ -1008,6 +1021,10 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
           <div class="left"><div class="ico">🎁</div><div class="txt" data-noof-text="profile.menu.loyalty">محفظة النقاط والمكافآت</div></div>
           <div>‹</div>
         </button>
+        <button class="menu-item" type="button" data-nav="scan">
+          <div class="left"><div class="ico">📷</div><div class="txt" data-noof-text="profile.menu.scan">سكان — اكسب نقاط</div></div>
+          <div>‹</div>
+        </button>
       </div>
 
       <div class="profile-footer-actions">
@@ -1053,6 +1070,34 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     </div>
     <div class="card list-card" id="loyaltyTxList">
       <div class="empty" data-noof-text="loyalty.empty">لا توجد حركات بعد</div>
+    </div>
+  </section>
+
+  <!-- ================== سكان (مسح QR العيادة) ================== -->
+  <section class="page" data-page="scan">
+    <div class="section-title" style="margin-top:22px">
+      <div><span data-noof-text="scan.title">سكان</span><small data-noof-text="scan.subtitle">امسح رمز العيادة واحصل على 2 نقطة</small></div>
+      <button class="btn ghost" type="button" data-nav="profile" style="padding:9px 14px;font-size:12px" data-noof-text="scan.back">رجوع</button>
+    </div>
+
+    <div class="scan-shell">
+      <div class="scan-points-badge" data-noof-text="scan.reward_badge">🎁 كل رمز تمسحه = 2 نقطة</div>
+
+      <div class="scan-video-wrap" id="scanVideoWrap">
+        <video id="scanVideo" playsinline muted autoplay></video>
+        <canvas id="scanCanvas" style="display:none"></canvas>
+        <div class="scan-frame"></div>
+        <div class="scan-placeholder">
+          <div class="ph-ico">📷</div>
+          <div data-noof-text="scan.placeholder">اضغط «ابدأ المسح» ثم وجّه الكاميرا نحو رمز QR المعلّق في العيادة</div>
+        </div>
+      </div>
+
+      <div class="scan-hint" id="scanHint" data-noof-text="scan.hint">وجّه الكاميرا نحو رمز QR المعلّق في العيادة</div>
+
+      <div class="scan-actions">
+        <button class="btn primary" type="button" id="scanStartBtn" data-noof-text="scan.start">ابدأ المسح</button>
+      </div>
     </div>
   </section>
 
@@ -1173,6 +1218,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
 </script>
 <script src="/capacitor.js"></script>
 <script src="/native-bridge.js"></script>
+<script src="/jsQR.js"></script>
 <script>
 (function(){
   var SUPABASE_URL = 'https://pcxuausibbcfycvhiolj.supabase.co';
@@ -1842,6 +1888,161 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         txList.innerHTML = txHtml;
       }
     }
+  }
+
+  // ===== سكان: قراءة QR العيادة وإضافة النقاط =====
+  var SCAN_POINTS = 2;
+  var SCAN = { stream: null, raf: 0, running: false, busy: false };
+
+  function scanSetHint(msg) {
+    var el = document.getElementById('scanHint');
+    if (el) el.textContent = msg;
+  }
+
+  function scanSetButton(text, disabled) {
+    var btn = document.getElementById('scanStartBtn');
+    if (!btn) return;
+    btn.textContent = text;
+    btn.disabled = !!disabled;
+  }
+
+  function stopScan() {
+    SCAN.running = false;
+    if (SCAN.raf) { cancelAnimationFrame(SCAN.raf); SCAN.raf = 0; }
+    if (SCAN.stream) {
+      try { SCAN.stream.getTracks().forEach(function(t){ t.stop(); }); } catch (e) {}
+      SCAN.stream = null;
+    }
+    var v = document.getElementById('scanVideo');
+    if (v) { try { v.pause(); } catch (e) {} v.srcObject = null; }
+    var wrap = document.getElementById('scanVideoWrap');
+    if (wrap) wrap.classList.remove('live');
+    scanSetButton(T('scan.start', 'ابدأ المسح'), false);
+  }
+
+  function playScanChime() {
+    try {
+      primeAudioContext();
+      if (!audioCtx) return;
+      var now = audioCtx.currentTime + 0.02;
+      var notes = [{ f: 783.99, t: 0.00 }, { f: 1046.50, t: 0.11 }];
+      for (var i = 0; i < notes.length; i++) {
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(notes[i].f, now + notes[i].t);
+        gain.gain.setValueAtTime(0.0001, now + notes[i].t);
+        gain.gain.exponentialRampToValueAtTime(0.12, now + notes[i].t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + notes[i].t + 0.4);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now + notes[i].t);
+        osc.stop(now + notes[i].t + 0.45);
+      }
+    } catch (e) {}
+  }
+
+  function handleScanResult(code) {
+    var normalized = String(code || '').trim();
+    if (!normalized) { SCAN.busy = false; return; }
+    scanSetHint(T('scan.checking', 'تم قراءة الرمز، جاري التحقق...'));
+
+    getPushAuthHeaders().then(function(headers) {
+      return fetch(API_BASE_URL + '/api/loyalty/scan-qr', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ code: normalized })
+      });
+    }).then(function(r) {
+      return r.json().catch(function(){ return {}; }).then(function(body) {
+        return { ok: r.ok, body: body };
+      });
+    }).then(function(res) {
+      if (res.ok && res.body && res.body.data) {
+        var added = res.body.data.added || SCAN_POINTS;
+        showToast('🎉 تمت إضافة ' + added + ' نقاط إلى محفظتك!');
+        playScanChime();
+        return loadLoyalty();
+      }
+      showToast('⚠️ ' + ((res.body && res.body.error) || 'تعذّر إضافة النقاط'));
+    }).catch(function() {
+      showToast('❌ تعذّر الاتصال بالخدمة، تحقق من اتصالك بالإنترنت');
+    }).then(function() {
+      SCAN.busy = false;
+      scanSetHint(T('scan.hint', 'وجّه الكاميرا نحو رمز QR المعلّق في العيادة'));
+    });
+  }
+
+  function scanTick() {
+    if (!SCAN.running) return;
+    var video = document.getElementById('scanVideo');
+    var canvas = document.getElementById('scanCanvas');
+    if (video && canvas && video.readyState >= 2 && typeof window.jsQR === 'function') {
+      var w = video.videoWidth, h = video.videoHeight;
+      if (w && h) {
+        if (canvas.width !== w) canvas.width = w;
+        if (canvas.height !== h) canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, w, h);
+        try {
+          var img = ctx.getImageData(0, 0, w, h);
+          var result = window.jsQR(img.data, w, h, { inversionAttempts: 'dontInvert' });
+          if (result && result.data) {
+            SCAN.busy = true;
+            stopScan();
+            handleScanResult(result.data);
+            return;
+          }
+        } catch (e) {}
+      }
+    }
+    SCAN.raf = requestAnimationFrame(scanTick);
+  }
+
+  function startScan() {
+    if (SCAN.running) return;
+    var video = document.getElementById('scanVideo');
+    if (!video) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      scanSetHint('الكاميرا غير متاحة على هذا الجهاز');
+      return;
+    }
+    scanSetButton(T('scan.starting', 'جاري تشغيل الكاميرا...'), true);
+    scanSetHint(T('scan.starting', 'جاري تشغيل الكاميرا...'));
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false })
+      .then(function(stream) {
+        SCAN.stream = stream;
+        SCAN.running = true;
+        video.setAttribute('playsinline', 'true');
+        video.muted = true;
+        video.srcObject = stream;
+        var p = video.play();
+        return p && p.catch ? p.catch(function(){}) : null;
+      })
+      .then(function() {
+        var wrap = document.getElementById('scanVideoWrap');
+        if (wrap) wrap.classList.add('live');
+        scanSetButton(T('scan.stop', 'إيقاف المسح'), false);
+        scanSetHint(T('scan.hint', 'وجّه الكاميرا نحو رمز QR المعلّق في العيادة'));
+        scanTick();
+      })
+      .catch(function(err) {
+        var name = (err && err.name) || '';
+        stopScan();
+        if (name === 'NotAllowedError' || name === 'SecurityError') {
+          scanSetHint('لم يتم السماح بالوصول إلى الكاميرا. فعّل إذن الكاميرا من إعدادات التطبيق.');
+        } else if (name === 'NotFoundError' || name === 'OverconstrainedError') {
+          scanSetHint('لا توجد كاميرا متاحة على هذا الجهاز.');
+        } else {
+          scanSetHint('تعذّر تشغيل الكاميرا، حاول مرة أخرى.');
+        }
+      });
+  }
+
+  function toggleScan() {
+    if (SCAN.running) { stopScan(); return; }
+    startScan();
   }
 
   function redeemReward(rewardId) {
@@ -2607,6 +2808,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     showToast._t = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
   };
   var switchTab = function(id){
+    if (id !== 'scan' && SCAN.running) stopScan();
     pages.forEach(function(p){ p.classList.toggle('active', p.dataset.page === id); });
     tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.tab === id); });
     if (PATIENT) updateNotifUI();
@@ -2624,6 +2826,9 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       renderAppointmentsList();
     });
   }
+
+  var scanStartBtn = document.getElementById('scanStartBtn');
+  if (scanStartBtn) scanStartBtn.addEventListener('click', toggleScan);
 
   var rewardsGridEl = document.getElementById('rewardsGrid');
   if (rewardsGridEl) {
@@ -2683,6 +2888,10 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       if (target === 'loyalty') {
         switchTab('loyalty');
         loadLoyalty();
+        return;
+      }
+      if (target === 'scan') {
+        switchTab('scan');
         return;
       }
       if (target === 'profile') {

@@ -22,6 +22,7 @@ import {
   Sparkles,
   Stethoscope,
   Type,
+  QrCode,
 } from 'lucide-react';
 import { Tooth } from '@/components/icons/Tooth';
 import { useAuth } from '@/hooks/useAuth';
@@ -41,6 +42,7 @@ const navItems = [
   { href: '/admin/services', label: 'الخدمات', icon: Sparkles, exact: false },
   { href: '/admin/doctors', label: 'الأطباء', icon: Stethoscope, exact: false },
   { href: '/admin/rewards', label: 'مكافآت الولاء', icon: Gift, exact: false },
+  { href: '/admin/scan-qr', label: 'QR النقاط', icon: QrCode, exact: false },
   { href: '/admin/texts', label: 'نصوص التطبيق', icon: Type, exact: false },
   { href: '/admin/users', label: 'المستخدمون', icon: UserCog, exact: false },
   { href: '/admin/settings', label: 'الإعدادات', icon: Settings, exact: false },
