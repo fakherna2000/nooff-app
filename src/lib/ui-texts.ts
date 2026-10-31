@@ -61,7 +61,7 @@ export const UI_TEXT_GROUPS: UiTextGroup[] = [
       { key: 'home.quick.beauty_desc', label: 'كرت شركاؤنا — الوصف', default: 'إعلانات وعروض من شركائنا المميزين' },
       { key: 'home.shortcut.book', label: 'اختصار حجز موعد', default: 'حجز موعد' },
       { key: 'home.shortcut.offers', label: 'اختصار العروض', default: 'العروض' },
-      { key: 'home.shortcut.loyalty', label: 'اختصار العروض المميزة', default: 'العروض المميزة' },
+      { key: 'home.shortcut.loyalty', label: 'اختصار مكافآتي', default: 'مكافآتي' },
       { key: 'home.shortcut.contact', label: 'اختصار تواصل معنا', default: 'تواصل معنا' },
     ],
   },
@@ -267,6 +267,15 @@ export const UI_TEXT_GROUPS: UiTextGroup[] = [
       { key: 'nav.appointments', label: 'حجوزاتي', default: 'حجوزاتي' },
       { key: 'nav.posts', label: 'العروض', default: 'العروض' },
       { key: 'nav.profile', label: 'ملفي', default: 'ملفي' },
+      { key: 'nav.rewards', label: 'مكافآتي', default: 'مكافآتي' },
+    ],
+  },
+  {
+    id: 'rewards',
+    label: 'مكافآتي (المحفظة والسكان)',
+    fields: [
+      { key: 'rewards.title', label: 'عنوان الصفحة', default: 'مكافآتي' },
+      { key: 'rewards.subtitle', label: 'وصف الصفحة', default: 'محفظتك ومكافآتك ومسح رمز العيادة' },
     ],
   },
   {
