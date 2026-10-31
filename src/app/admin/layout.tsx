@@ -23,6 +23,7 @@ import {
   Stethoscope,
   Type,
   QrCode,
+  Building2,
 } from 'lucide-react';
 import { Tooth } from '@/components/icons/Tooth';
 import { useAuth } from '@/hooks/useAuth';
@@ -39,6 +40,7 @@ const navItems = [
   { href: '/admin/appointments', label: 'المواعيد', icon: Calendar, exact: false },
   { href: '/admin/broadcast', label: 'إشعارات عامة', icon: Megaphone, exact: false },
   { href: '/admin/posts', label: 'المنشورات', icon: Newspaper, exact: false },
+  { href: '/admin/partners', label: 'شركاؤنا', icon: Building2, exact: false },
   { href: '/admin/services', label: 'الخدمات', icon: Sparkles, exact: false },
   { href: '/admin/doctors', label: 'الأطباء', icon: Stethoscope, exact: false },
   { href: '/admin/rewards', label: 'مكافآت الولاء', icon: Gift, exact: false },

@@ -270,6 +270,20 @@ linear-gradient(135deg,#d8c0a7,#855f43);box-shadow:0 18px 38px rgba(92,63,38,.2)
 .post-mini .m-discount small{font-size:12px;font-weight:800;color:var(--text-2);margin-right:4px}
 .post-mini .thumb{width:78px;height:78px;border-radius:18px;object-fit:cover;flex:0 0 78px;background:#e2e8f0}
 .posts-empty{padding:26px 10px;text-align:center;color:#94a3b8;font-weight:700}
+.post-mini.is-clickable{cursor:pointer}
+.partners-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:8px}
+.partner-card{background:rgba(255,251,247,.92);border:1px solid rgba(255,255,255,.95);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+.partner-media{height:160px;background:
+radial-gradient(circle at top left,rgba(255,255,255,.28),transparent 34%),
+linear-gradient(180deg,rgba(58,39,26,.05),rgba(58,39,26,.28)),
+linear-gradient(135deg,#d8c0a7,#855f43);background-size:cover;background-position:center}
+.partner-body{padding:16px}
+.partner-badge{display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:#f6ecdf;color:var(--brand-2);font-size:11px;font-weight:900;margin-bottom:10px}
+.partner-title{font-size:18px;font-weight:900;color:var(--text);line-height:1.4}
+.partner-desc{font-size:13px;color:var(--text-2);margin-top:6px;line-height:1.8}
+.partner-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+.partner-order{font-size:11px;color:var(--text-3);font-weight:800}
+.partner-link{min-width:110px;text-decoration:none}
 
 .profile-shell{padding-top:6px}
 .profile-page-title{font-size:26px;font-weight:900;color:var(--text);text-align:center;margin-top:6px}
@@ -584,11 +598,11 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
           <div class="q-desc" data-noof-text="home.quick.dental_desc">ابتسامة صحية وجميلة</div>
         </div>
       </button>
-      <button class="quick-card" type="button" data-prefill-type="تنظيف">
+      <button class="quick-card" type="button" data-nav="partners">
         <div class="quick-card-media" id="homeServiceBeautyCard"></div>
         <div class="quick-card-body">
-          <div class="q-title" data-noof-text="home.quick.beauty_title">التجميل</div>
-          <div class="q-desc" data-noof-text="home.quick.beauty_desc">بشرة ناعمة وجمال طبيعي</div>
+          <div class="q-title" data-noof-text="home.quick.beauty_title">شركاؤنا</div>
+          <div class="q-desc" data-noof-text="home.quick.beauty_desc">إعلانات وعروض من شركائنا المميزين</div>
         </div>
       </button>
     </div>
@@ -835,6 +849,20 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       <div class="posts-list" id="postsList">
         <!-- تُملأ بالجافاسكربت -->
       </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================== شركاؤنا ================== -->
+  <section class="page" data-page="partners">
+    <div class="posts-shell">
+      <div class="section-title">
+        <div><span data-noof-text="partners.title">شركاؤنا</span><small data-noof-text="partners.subtitle">إعلانات وعروض من مطاعم وصيدليات وشركاء المركز</small></div>
+        <button class="btn ghost" type="button" data-nav="home" style="padding:9px 14px;font-size:12px" data-noof-text="partners.back">رجوع</button>
+      </div>
+
+      <div class="partners-grid" id="partnersList">
+        <div class="empty" data-noof-text="partners.empty">لا توجد إعلانات شركاء حالياً</div>
       </div>
     </div>
   </section>
@@ -1373,6 +1401,14 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     general: 'منشور'
   };
 
+  function partnerCategoryLabel(category) {
+    if (category === 'restaurant') return T('partners.badge.restaurant', 'مطعم');
+    if (category === 'pharmacy') return T('partners.badge.pharmacy', 'صيدلية');
+    if (category === 'lab') return T('partners.badge.lab', 'مختبر');
+    if (category === 'store') return T('partners.badge.store', 'متجر');
+    return T('partners.badge.other', 'شريك');
+  }
+
   var MONTHS_AR = ['كانون الثاني','شباط','آذار','نيسان','أيار','حزيران','تموز','آب','أيلول','تشرين الأول','تشرين الثاني','كانون الأول'];
   var DAYS_AR = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 
@@ -1625,6 +1661,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     );
 
     applyUiTexts();
+    if (typeof renderPartners === 'function') renderPartners();
   }
 
   function loadClinicSettings() {
@@ -1714,6 +1751,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   // ================== الخدمات الديناميكية ==================
   var SERVICES = [];
   var DOCTORS = [];
+  var PARTNERS = [];
   var SERVICE_CATEGORY_ORDER = { dental: 0, beauty: 1 };
 
   function loadServices() {
@@ -1817,6 +1855,57 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
 
     container.innerHTML = html;
     section.classList.add('visible');
+  }
+
+  function loadPartners() {
+    return sbFetchSafe('/rest/v1/partner_ads?is_active=eq.true&select=*&order=sort_order.asc')
+      .then(function(rows) {
+        PARTNERS = Array.isArray(rows) ? rows : [];
+        renderPartners();
+      })
+      .catch(function() {
+        PARTNERS = [];
+        renderPartners();
+      });
+  }
+
+  function renderPartners() {
+    var list = document.getElementById('partnersList');
+    if (!list) return;
+
+    if (!PARTNERS.length) {
+      list.innerHTML = '<div class="empty">' + T('partners.empty', 'لا توجد إعلانات شركاء حالياً') + '</div>';
+      return;
+    }
+
+    var html = '';
+    PARTNERS.forEach(function(partner, idx) {
+      var mediaStyle = partner.image_url
+        ? 'background-image:url(' + escapeHtml(partner.image_url) + ');'
+        : '';
+      var cta = '';
+      if (partner.target_url) {
+        cta =
+          '<a class="btn primary partner-link" href="' + escapeHtml(partner.target_url) + '" target="_blank" rel="noopener noreferrer">' +
+          escapeHtml(partner.cta_label || T('partners.cta_fallback', 'عرض التفاصيل')) +
+          '</a>';
+      }
+
+      html += '<article class="partner-card">' +
+        '<div class="partner-media" style="' + mediaStyle + '"></div>' +
+        '<div class="partner-body">' +
+          '<div class="partner-badge">' + escapeHtml(partnerCategoryLabel(partner.category)) + '</div>' +
+          '<div class="partner-title">' + escapeHtml(partner.title) + '</div>' +
+          '<div class="partner-desc">' + escapeHtml(partner.description || '') + '</div>' +
+          '<div class="partner-footer">' +
+            '<div class="partner-order">#' + String(idx + 1) + '</div>' +
+            cta +
+          '</div>' +
+        '</div>' +
+      '</article>';
+    });
+
+    list.innerHTML = html;
   }
 
   function loadLoyalty() {
@@ -2667,11 +2756,14 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       return;
     }
     var featured = POSTS.find(function(p){ return p.type === 'offer' || p.type === 'ad'; }) || POSTS[0];
+    var actionBtn = featured.type === 'ad'
+      ? '<button class="offers-hero-btn" type="button" data-post-nav="partners">' + T('partners.open', 'فتح الإعلان') + '</button>'
+      : '<button class="offers-hero-btn" type="button" data-action="new-appt">' + T('posts.banner.button', 'احجز الآن') + '</button>';
     hero.innerHTML =
       '<span class="offers-kicker">' + (TYPE_LABELS[featured.type] || 'عرض خاص') + '</span>' +
       '<div class="offers-hero-title">' + featured.title + '</div>' +
       '<div class="offers-hero-desc">' + featured.body + '</div>' +
-      '<button class="offers-hero-btn" type="button" data-action="new-appt">' + T('posts.banner.button', 'احجز الآن') + '</button>';
+      actionBtn;
   }
 
   function buildPostsList() {
@@ -2682,18 +2774,19 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       return;
     }
     function extractDiscount(post) {
+      if (post.type === 'ad') return 'شريك';
       var text = (post.title || '') + ' ' + (post.body || '');
       var match = text.match(/(\d+)\s*%/);
       return match ? match[1] + '%' : 'عرض';
     }
     var html = '';
     POSTS.forEach(function(p) {
-      html += '<div class="post-mini">' +
+      html += '<div class="post-mini' + (p.type === 'ad' ? ' is-clickable' : '') + '"' + (p.type === 'ad' ? ' data-post-nav="partners"' : '') + '>' +
         '<div class="post-mini-arrow">‹</div>' +
         '<div class="m-body">' +
           '<div class="m-title">' + p.title + '</div>' +
           '<div class="m-desc">' + p.body + '</div>' +
-          '<div class="m-discount">' + extractDiscount(p) + '<small>خصم</small></div>' +
+          '<div class="m-discount">' + extractDiscount(p) + '<small>' + (p.type === 'ad' ? 'إعلان' : 'خصم') + '</small></div>' +
         '</div>' +
         '<img class="thumb" src="' + p.image + '" alt="" loading="lazy" />' +
       '</div>';
@@ -2830,6 +2923,24 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   var scanStartBtn = document.getElementById('scanStartBtn');
   if (scanStartBtn) scanStartBtn.addEventListener('click', toggleScan);
 
+  var postsBannerEl = document.getElementById('postsBanner');
+  if (postsBannerEl) {
+    postsBannerEl.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-post-nav]');
+      if (!btn) return;
+      if (btn.dataset.postNav === 'partners') switchTab('partners');
+    });
+  }
+
+  var postsListEl = document.getElementById('postsList');
+  if (postsListEl) {
+    postsListEl.addEventListener('click', function(e){
+      var card = e.target.closest('[data-post-nav]');
+      if (!card) return;
+      if (card.dataset.postNav === 'partners') switchTab('partners');
+    });
+  }
+
   var rewardsGridEl = document.getElementById('rewardsGrid');
   if (rewardsGridEl) {
     rewardsGridEl.addEventListener('click', function(e){
@@ -2877,12 +2988,20 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   document.querySelectorAll('[data-nav]').forEach(function(item){
     item.addEventListener('click', function(){
       var target = item.dataset.nav;
+      if (target === 'home') {
+        switchTab('home');
+        return;
+      }
       if (target === 'appointments') {
         switchTab('appointments');
         return;
       }
       if (target === 'posts') {
         switchTab('posts');
+        return;
+      }
+      if (target === 'partners') {
+        switchTab('partners');
         return;
       }
       if (target === 'loyalty') {
@@ -3234,7 +3353,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     showLogin();
   });
 
-  Promise.all([loadClinicSettings(), loadServices(), loadDoctors()]).finally(autoLogin);
+  Promise.all([loadClinicSettings(), loadServices(), loadDoctors(), loadPartners()]).finally(autoLogin);
 
   // تجديد تلقائي للرمز قبل انتهاء صلاحيته للحفاظ على تسجيل الدخول
   setInterval(function() {

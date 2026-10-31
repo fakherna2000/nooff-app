@@ -359,6 +359,47 @@ export interface Database {
           updated_at?: string;
         };
       };
+      partner_ads: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          category: 'restaurant' | 'pharmacy' | 'lab' | 'store' | 'other';
+          image_url: string | null;
+          cta_label: string | null;
+          target_url: string | null;
+          is_active: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          category?: 'restaurant' | 'pharmacy' | 'lab' | 'store' | 'other';
+          image_url?: string | null;
+          cta_label?: string | null;
+          target_url?: string | null;
+          is_active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string | null;
+          category?: 'restaurant' | 'pharmacy' | 'lab' | 'store' | 'other';
+          image_url?: string | null;
+          cta_label?: string | null;
+          target_url?: string | null;
+          is_active?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
       clinic_services: {
         Row: {
           id: string;
@@ -575,6 +616,7 @@ export type Appointment = Database['public']['Tables']['appointments']['Row'];
 export type Post = Database['public']['Tables']['posts']['Row'];
 export type Currency = Database['public']['Tables']['currencies']['Row'];
 export type ClinicSettings = Database['public']['Tables']['clinic_settings']['Row'];
+export type PartnerAd = Database['public']['Tables']['partner_ads']['Row'];
 export type ClinicService = Database['public']['Tables']['clinic_services']['Row'];
 export type ClinicDoctor = Database['public']['Tables']['clinic_doctors']['Row'];
 export type LoyaltyReward = Database['public']['Tables']['loyalty_rewards']['Row'];
