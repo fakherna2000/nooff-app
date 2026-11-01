@@ -37,9 +37,7 @@ body.has-app-bg .app-bg{display:block}
 body.has-app-bg::before,body.has-app-bg::after{display:none}
 
 .header{padding:6px 0 0}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.topbar-btn,.logout-btn{appearance:none;border:0;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
-.topbar-btn{width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.65);backdrop-filter:blur(18px);box-shadow:var(--shadow-soft);color:var(--text)}
+.logout-btn{appearance:none;border:0;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
 .hero-shell{position:relative;border-radius:36px;overflow:hidden;padding:20px 18px 18px;background:
 radial-gradient(circle at top right,rgba(255,255,255,.96),rgba(255,255,255,.46) 42%,transparent 68%),
 radial-gradient(circle at 15% 20%,rgba(255,255,255,.56),transparent 24%),
@@ -537,14 +535,6 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
 
 <header class="header">
   <div class="container">
-    <div class="topbar">
-      <button class="topbar-btn" type="button" aria-label="الإشعارات">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5"/><path d="M9 17a3 3 0 0 0 6 0"/></svg>
-      </button>
-      <button class="topbar-btn" type="button" aria-label="القائمة">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="7" y1="17" x2="20" y2="17"/></svg>
-      </button>
-    </div>
     <div class="hero-shell">
       <div class="hero-stack">
         <div class="hero-ribbon" aria-hidden="true"></div>
@@ -985,32 +975,9 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   <!-- ================== الملف الشخصي ================== -->
   <section class="page" data-page="profile">
     <div class="profile-shell">
-      <div class="profile-page-title" data-noof-text="profile.title">ملفي الشخصي</div>
-
-      <div style="margin-top:18px" class="card profile-card" id="profileCard">
-        <div class="profile-head">
-          <div class="avatar" id="profile-avatar">س</div>
-          <div>
-            <div class="name" id="profile-name">سارة أحمد محمود</div>
-            <div class="meta" id="profile-meta" dir="ltr">+963 9xx xxx xxx</div>
-          </div>
-        </div>
-      </div>
-
       <div class="profile-hidden-wallet" id="profileWalletCard">
         <span id="profileWalletBalance">0</span>
         <span id="profileWalletLifetime">0</span>
-      </div>
-
-      <div class="notif-card" id="notifCard" style="display:none">
-        <div class="notif-head">
-          <div class="notif-ico">🔔</div>
-          <div>
-            <div class="notif-title" data-noof-text="profile.notif.title">إشعارات المواعيد</div>
-            <div class="notif-desc" id="notifStatus">فعّل الإشعارات ليصلك تأكيد موعدك فوراً</div>
-          </div>
-        </div>
-        <button class="notif-btn" type="button" id="notifEnableBtn" data-noof-text="profile.notif.button">تفعيل الإشعارات</button>
       </div>
 
       <div class="card profile-info-card" id="profileInfoCard" style="display:none">
@@ -3034,7 +3001,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     if (a === 'confirm') showToast('✅ تم تأكيد حضورك لموعدك القادم!');
     else if (a === 'reschedule') openApptModal(true);
     else if (a === 'new-appt') openApptModal();
-    else if (a === 'call-clinic') showToast('📞 يتم فتح الاتصال بالعيادة...');
+    else if (a === 'call-clinic') window.open('https://wa.me/963938190364', '_blank');
     else if (a === 'settings') showToast('⚙️ صفحة الإعدادات ستكون متاحة قريباً');
     else if (a === 'logout') { clearSession(); location.reload(); }
   });

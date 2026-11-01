@@ -24,7 +24,7 @@ self.addEventListener('push', function (event) {
 
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
-  const urlToOpen = event.notification.data?.url || '/patient';
+  const urlToOpen = event.notification.data?.url || '/portal';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
       for (var i = 0; i < clientList.length; i++) {

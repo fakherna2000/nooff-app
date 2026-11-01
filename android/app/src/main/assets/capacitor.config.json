@@ -3,7 +3,7 @@
 	"appName": "مركز نوف",
 	"webDir": "public",
 	"android": {
-		"backgroundColor": "#ffffff"
+		"backgroundColor": "#faf6ec"
 	},
 	"server": {
 		"androidScheme": "https",
@@ -16,13 +16,13 @@
 	},
 	"ios": {
 		"contentInset": "automatic",
-		"backgroundColor": "#1a84f5"
+		"backgroundColor": "#c19b2e"
 	},
 	"plugins": {
 		"SplashScreen": {
 			"launchShowDuration": 2500,
 			"launchAutoHide": true,
-			"backgroundColor": "#1a84f5",
+			"backgroundColor": "#c19b2e",
 			"androidSplashResourceName": "splash",
 			"androidScaleType": "CENTER_CROP",
 			"showSpinner": true,
@@ -33,7 +33,7 @@
 		},
 		"StatusBar": {
 			"style": "LIGHT",
-			"backgroundColor": "#1a84f5",
+			"backgroundColor": "#c19b2e",
 			"overlaysWebView": false
 		},
 		"Keyboard": {

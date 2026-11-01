@@ -7,23 +7,23 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', 'Segoe UI', system-ui, -apple-system, sans-serif; }
   body {
-    background: linear-gradient(135deg, #eff6ff 0%, #fdf4ff 100%);
+    background: linear-gradient(135deg, #faf6ec 0%, #f5edda 100%);
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
     padding: 20px;
   }
   .card {
     background: white; border-radius: 24px; padding: 40px 32px;
-    box-shadow: 0 20px 60px rgba(26,132,245,0.12);
+    box-shadow: 0 20px 60px rgba(193,155,46,0.12);
     max-width: 620px; width: 100%; text-align: center;
   }
   .logo {
     width: 96px; height: 96px; border-radius: 24px;
-    background: linear-gradient(135deg, #1a84f5 0%, #a855f7 100%);
+    background: linear-gradient(135deg, #c19b2e 0%, #d4af37 100%);
     margin: 0 auto 20px;
     display: flex; align-items: center; justify-content: center;
     color: white; font-size: 32px; font-weight: 800;
-    box-shadow: 0 8px 28px rgba(168,85,247,0.25);
+    box-shadow: 0 8px 28px rgba(193,155,46,0.25);
   }
   h1 { color: #0f172a; font-size: 28px; margin-bottom: 8px; }
   .subtitle { color: #64748b; font-size: 15px; margin-bottom: 28px; line-height: 1.8; }
@@ -46,7 +46,7 @@
     border: 1px solid #e2e8f0; cursor: pointer; user-select: all;
     transition: all 0.2s;
   }
-  .url-box:hover { border-color:#1a84f5; background:#e0f2fe; }
+  .url-box:hover { border-color:#c19b2e; background:#fdfaf1; }
   .copy-hint { color: #059669; font-size: 12.5px; margin-bottom: 18px; opacity: 0; transition: 0.3s; text-align: right; }
   .copy-hint.show { opacity: 1; }
   .btn-group { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
@@ -56,14 +56,14 @@
     border: none; cursor: pointer; transition: all 0.2s ease;
   }
   .btn-primary {
-    background: linear-gradient(135deg, #1a84f5 0%, #a855f7 100%);
-    color: white; box-shadow: 0 8px 24px rgba(26,132,245,0.25);
+    background: linear-gradient(135deg, #c19b2e 0%, #d4af37 100%);
+    color: white; box-shadow: 0 8px 24px rgba(193,155,46,0.25);
   }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(26,132,245,0.32); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(193,155,46,0.32); }
   .btn-secondary {
     background: white; color: #0f172a; border: 2px solid #e2e8f0;
   }
-  .btn-secondary:hover { border-color: #1a84f5; color: #1a84f5; }
+  .btn-secondary:hover { border-color: #c19b2e; color: #a17f24; }
   .note {
     background: #fffbeb; border: 1px solid #fde68a; border-radius: 14px;
     padding: 16px; margin-top: 24px; color: #92400e; font-size: 13.5px;
@@ -71,14 +71,14 @@
   }
   .note strong { color: #78350f; }
   .steps { text-align: right; margin-top: 20px; color: #334155; font-size: 14.5px; line-height: 2; list-style: none; padding-right: 0; }
-  .steps .n { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #1a84f5; color: white; border-radius: 50%; font-size: 12px; font-weight: 700; margin-left: 8px; }
+  .steps .n { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #c19b2e; color: white; border-radius: 50%; font-size: 12px; font-weight: 700; margin-left: 8px; }
   .ip-row { display: flex; gap: 8px; margin: 20px 0 8px; align-items: center; }
   .ip-row input {
     flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid #cbd5e1;
     font-family: ui-monospace, monospace; direction: ltr; text-align: left; font-size: 14px;
   }
   .ip-row button {
-    padding: 12px 20px; background: #1a84f5; color: white; border-radius: 12px;
+    padding: 12px 20px; background: #c19b2e; color: white; border-radius: 12px;
     font-weight: 700; border: none; cursor: pointer; font-size: 14px;
   }
   @media (max-width: 500px) {
