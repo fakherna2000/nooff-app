@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   XCircle,
   UserMinus,
+  Stethoscope,
 } from 'lucide-react';
 import { useAppointments, usePatients } from '@/hooks/useData';
 import type { Appointment, Patient } from '@/lib/database.types';
@@ -235,6 +236,11 @@ export default function AdminAppointmentsPage() {
                             {(appt as any).patients?.full_name || 'مريض'}
                           </p>
                           <p className="text-gray-600 truncate">{appt.type}</p>
+                          {(appt as any).clinic_doctors?.name && (
+                            <p className="text-[10px] text-primary-700 truncate">
+                              د. {(appt as any).clinic_doctors.name}
+                            </p>
+                          )}
                           <div className="mt-2 flex gap-1">
                             <select
                               defaultValue={appt.status}
@@ -324,6 +330,12 @@ export default function AdminAppointmentsPage() {
                         <User className="w-3.5 h-3.5" />
                         {appt.type}
                       </span>
+                      {(appt as any).clinic_doctors?.name && (
+                        <span className="inline-flex items-center gap-1 text-primary-700">
+                          <Stethoscope className="w-3.5 h-3.5" />
+                          د. {(appt as any).clinic_doctors.name}
+                        </span>
+                      )}
                       {phone && (
                         <a
                           href={`tel:${phone}`}

@@ -132,6 +132,7 @@ const DEMO_APPOINTMENTS: (Appointment & { patients?: { full_name: string; phone:
     status: 'confirmed',
     type: 'checkup',
     notes: 'فحص دوري',
+    doctor_id: null,
     created_at: '2026-10-01T08:00:00Z',
     updated_at: '2026-10-01T08:00:00Z',
     patients: { full_name: 'سارة أحمد', phone: '+971501234567' },
@@ -145,6 +146,7 @@ const DEMO_APPOINTMENTS: (Appointment & { patients?: { full_name: string; phone:
     status: 'confirmed',
     type: 'filling',
     notes: 'حشوة ضرس علوي أيمن',
+    doctor_id: null,
     created_at: '2026-10-02T10:00:00Z',
     updated_at: '2026-10-02T10:00:00Z',
     patients: { full_name: 'محمد سعيد', phone: '+971509988776' },
@@ -158,6 +160,7 @@ const DEMO_APPOINTMENTS: (Appointment & { patients?: { full_name: string; phone:
     status: 'pending',
     type: 'consultation',
     notes: 'استشارة تقويم',
+    doctor_id: null,
     created_at: '2026-10-03T12:00:00Z',
     updated_at: '2026-10-03T12:00:00Z',
     patients: { full_name: 'فاطمة علي', phone: '+971505511223' },
@@ -171,6 +174,7 @@ const DEMO_APPOINTMENTS: (Appointment & { patients?: { full_name: string; phone:
     status: 'confirmed',
     type: 'implant',
     notes: 'زراعة غرسة سفلية وسطى',
+    doctor_id: null,
     created_at: '2026-09-28T09:00:00Z',
     updated_at: '2026-09-28T09:00:00Z',
     patients: { full_name: 'خالد عبدالله', phone: '+971507788990' },
@@ -184,6 +188,7 @@ const DEMO_APPOINTMENTS: (Appointment & { patients?: { full_name: string; phone:
     status: 'confirmed',
     type: 'cleaning',
     notes: 'تنظيف وتلميع',
+    doctor_id: null,
     created_at: '2026-10-04T13:00:00Z',
     updated_at: '2026-10-04T13:00:00Z',
     patients: { full_name: 'نورة حسن', phone: '+971503344556' },
@@ -197,6 +202,7 @@ const DEMO_APPOINTMENTS: (Appointment & { patients?: { full_name: string; phone:
     status: 'pending',
     type: 'root_canal',
     notes: 'معالجة عصب ضرس سفلي',
+    doctor_id: null,
     created_at: '2026-10-05T10:30:00Z',
     updated_at: '2026-10-05T10:30:00Z',
     patients: { full_name: 'سارة أحمد', phone: '+971501234567' },
@@ -815,12 +821,15 @@ export function useAppointments() {
 
     const { data, error } = await supabase
       .from('appointments')
-      .select('*, patients (full_name, phone)')
+      .select('*, patients (full_name, phone), clinic_doctors (name)')
       .order('appointment_date', { ascending: true })
       .order('appointment_time', { ascending: true });
 
     if (error) throw error;
-    return data as (Appointment & { patients: { full_name: string; phone: string } })[];
+    return data as (Appointment & {
+      patients: { full_name: string; phone: string };
+      clinic_doctors?: { name: string } | null;
+    })[];
   }, []);
 
   const getAppointmentsForDate = useCallback(async (date: string) => {
@@ -839,11 +848,14 @@ export function useAppointments() {
 
   const createAppointment = useCallback(
     async (
-      appointmentData: Omit<Appointment, 'id' | 'created_at' | 'updated_at'>
+      appointmentData: Omit<Appointment, 'id' | 'created_at' | 'updated_at' | 'doctor_id'> & {
+        doctor_id?: string | null;
+      }
     ) => {
       if (demoMode()) {
         const a: Appointment & { patients: { full_name: string; phone: string } } = {
           ...appointmentData,
+          doctor_id: appointmentData.doctor_id ?? null,
           id: 'demo-apt-' + rand(1000, 9999),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),

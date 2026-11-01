@@ -1218,6 +1218,13 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
 
     <div class="booking-pane hidden" id="bookingPane2">
       <div class="modal-field">
+        <label data-noof-text="booking.doctor_label">اختر الطبيب</label>
+        <div class="service-options" id="doctorOptions"></div>
+      </div>
+    </div>
+
+    <div class="booking-pane hidden" id="bookingPane3">
+      <div class="modal-field">
         <label data-noof-text="booking.day_label">اختر اليوم</label>
         <div class="date-slots" id="dateQuickChips"></div>
         <input class="hidden-native" type="date" id="apptDate" />
@@ -2334,6 +2341,50 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   };
   var selectedBookingCategory = 'dental';
   var currentBookingStep = 1;
+  var selectedDoctorId = '';
+
+  // خيارات اختيار الطبيب في نافذة الحجز
+  function renderDoctorOptions() {
+    var wrap = document.getElementById('doctorOptions');
+    if (!wrap) return;
+    var html = '<button class="service-option" type="button" data-doctor="">' +
+      '<div class="service-option-body">' +
+        '<div class="service-option-title">' + T('booking.doctor_any', 'أي طبيب متاح') + '</div>' +
+        '<div class="service-option-desc">' + T('booking.doctor_any_desc', 'سيحدد المركز الطبيب المناسب لك') + '</div>' +
+      '</div>' +
+      '<div class="service-option-radio"></div>' +
+    '</button>';
+    (DOCTORS || []).forEach(function(d) {
+      var name = d.name ? escapeHtml(String(d.name)) : 'الطبيب';
+      var specialty = d.specialty ? escapeHtml(String(d.specialty)) : '';
+      html += '<button class="service-option" type="button" data-doctor="' + (d.id || '') + '">' +
+        '<div class="service-option-body">' +
+          '<div class="service-option-title">' + name + '</div>' +
+          (specialty ? '<div class="service-option-desc">' + specialty + '</div>' : '') +
+        '</div>' +
+        '<div class="service-option-radio"></div>' +
+      '</button>';
+    });
+    wrap.innerHTML = html;
+    setSelectedDoctor(selectedDoctorId);
+  }
+
+  function setSelectedDoctor(id) {
+    selectedDoctorId = id || '';
+    var wrap = document.getElementById('doctorOptions');
+    if (!wrap) return;
+    wrap.querySelectorAll('.service-option').forEach(function(btn) {
+      btn.classList.toggle('active', (btn.getAttribute('data-doctor') || '') === selectedDoctorId);
+    });
+  }
+
+  function doctorNameById(id) {
+    if (!id) return '';
+    for (var i = 0; i < (DOCTORS || []).length; i++) {
+      if (DOCTORS[i].id === id) return DOCTORS[i].name || '';
+    }
+    return '';
+  }
 
   function urlBase64ToUint8Array(base64String) {
     var padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -2689,6 +2740,8 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       else if (d < now) { statusClass = 'done'; statusLabel = 'منتهي'; rightLabel = 'تم'; }
       var icon = (a.type || '').indexOf('بشرة') !== -1 || (a.type || '').indexOf('بوتكس') !== -1 || (a.type || '').indexOf('فيلر') !== -1 ? '✨' : '🦷';
       var badgeClass = statusClass === 'blue' ? 'requested' : statusClass;
+      var docName = doctorNameById(a.doctor_id);
+      var doctorLine = docName ? escapeHtml(docName) : (a.notes && a.notes.indexOf('إعادة جدولة') !== -1 ? 'طلب إعادة جدولة' : 'موعد لدى المركز');
       html += '<div class="appt-card-modern">' +
         '<div class="appt-card-top">' +
           '<div>' +
@@ -2698,7 +2751,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
           '<div class="appt-card-icon">' + icon + '</div>' +
         '</div>' +
         '<div class="appt-card-service">' + (a.type || 'فحص') + '</div>' +
-        '<div class="appt-card-doctor">' + (a.notes && a.notes.indexOf('إعادة جدولة') !== -1 ? 'طلب إعادة جدولة' : 'موعد لدى المركز') + '</div>' +
+        '<div class="appt-card-doctor">' + doctorLine + '</div>' +
         '<div class="appt-card-badge ' + badgeClass + '">' + statusLabel + '</div>' +
         ((statusClass === 'coming' || statusClass === 'blue') ? '<div class="appt-card-actions"><button class="appt-mini-btn ghost" type="button" data-action="reschedule">' + T('appointments.reschedule', 'إعادة جدولة') + '</button></div>' : '') +
       '</div>';
@@ -2843,15 +2896,17 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     currentBookingStep = step;
     var pane1 = document.getElementById('bookingPane1');
     var pane2 = document.getElementById('bookingPane2');
+    var pane3 = document.getElementById('bookingPane3');
     if (pane1) pane1.classList.toggle('hidden', step !== 1);
     if (pane2) pane2.classList.toggle('hidden', step !== 2);
+    if (pane3) pane3.classList.toggle('hidden', step !== 3);
     document.querySelectorAll('.booking-step').forEach(function(el){
       var stepNum = Number(el.getAttribute('data-step') || '1');
-      el.classList.toggle('active', stepNum === step || (step === 2 && stepNum >= 3 && stepNum <= 4));
+      el.classList.toggle('active', stepNum === step || (step === 3 && stepNum === 4));
       el.classList.toggle('done', stepNum < step);
     });
     if (apptPrevBtn) apptPrevBtn.textContent = step === 1 ? T('booking.cancel', 'إلغاء') : T('booking.prev', 'رجوع');
-    if (submitApptBtn) submitApptBtn.textContent = step === 1 ? T('booking.next', 'التالي') : T('booking.continue', 'متابعة');
+    if (submitApptBtn) submitApptBtn.textContent = step === 3 ? T('booking.submit', 'إرسال الطلب') : T('booking.next', 'التالي');
   }
 
   function renderDateSlots(baseDate) {
@@ -3156,6 +3211,11 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     setSelectedType(selectedType);
     renderDateSlots(tomorrow);
     renderTimeSlots();
+    selectedDoctorId = '';
+    renderDoctorOptions();
+    if (!DOCTORS.length) {
+      loadDoctors().then(function(){ renderDoctorOptions(); });
+    }
     setBookingStep(1);
     apptModal.classList.remove('hidden');
   }
@@ -3168,7 +3228,16 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   if (apptPrevBtn) {
     apptPrevBtn.addEventListener('click', function(){
       if (currentBookingStep === 1) closeApptModal();
-      else setBookingStep(1);
+      else setBookingStep(currentBookingStep - 1);
+    });
+  }
+
+  var doctorOptionsWrap = document.getElementById('doctorOptions');
+  if (doctorOptionsWrap) {
+    doctorOptionsWrap.addEventListener('click', function(e){
+      var chip = e.target.closest('.service-option');
+      if (!chip) return;
+      setSelectedDoctor(chip.getAttribute('data-doctor') || '');
     });
   }
 
@@ -3219,6 +3288,10 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       setBookingStep(2);
       return;
     }
+    if (currentBookingStep === 2) {
+      setBookingStep(3);
+      return;
+    }
     var dateVal = apptDateInput.value;
     var timeVal = apptTimeInput.value;
     if (!dateVal) { showToast('⚠️ الرجاء اختيار التاريخ'); return; }
@@ -3239,6 +3312,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       duration_minutes: 30,
       type: selectedType,
       notes: notes,
+      doctor_id: selectedDoctorId || null,
       status: 'requested'
     });
 
