@@ -6,3 +6,5 @@
  */
 export const CLINIC_QR_TOKEN = 'NOOF-CLINIC-CHECKIN';
 export const CLINIC_QR_POINTS = 2;
+export const CLINIC_QR_REASON = 'قراءة QR العيادة';
+export const CLINIC_QR_COOLDOWN_HOURS = 48;

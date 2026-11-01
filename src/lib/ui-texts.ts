@@ -248,9 +248,9 @@ export const UI_TEXT_GROUPS: UiTextGroup[] = [
     label: 'سكان — مسح QR العيادة',
     fields: [
       { key: 'scan.title', label: 'عنوان الصفحة', default: 'سكان' },
-      { key: 'scan.subtitle', label: 'وصف الصفحة', default: 'امسح رمز العيادة واحصل على 2 نقطة' },
+      { key: 'scan.subtitle', label: 'وصف الصفحة', default: 'امسح رمز العيادة واحصل على 2 نقطة مرة واحدة كل 48 ساعة' },
       { key: 'scan.back', label: 'زر الرجوع', default: 'رجوع' },
-      { key: 'scan.reward_badge', label: 'شارة المكافأة', default: '🎁 كل رمز تمسحه = 2 نقطة' },
+      { key: 'scan.reward_badge', label: 'شارة المكافأة', default: '🎁 قراءة واحدة كل 48 ساعة = 2 نقطة' },
       { key: 'scan.placeholder', label: 'نص قبل تشغيل الكاميرا', default: 'اضغط «ابدأ المسح» ثم وجّه الكاميرا نحو رمز QR المعلّق في العيادة' },
       { key: 'scan.hint', label: 'التلميح أسفل الكاميرا', default: 'وجّه الكاميرا نحو رمز QR المعلّق في العيادة' },
       { key: 'scan.start', label: 'زر بدء المسح', default: 'ابدأ المسح' },

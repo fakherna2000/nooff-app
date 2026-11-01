@@ -3,7 +3,7 @@
 import QRCode from 'react-qr-code';
 import Link from 'next/link';
 import { ArrowLeft, Printer, QrCode } from 'lucide-react';
-import { CLINIC_QR_TOKEN, CLINIC_QR_POINTS } from '@/lib/loyalty-qr';
+import { CLINIC_QR_TOKEN, CLINIC_QR_POINTS, CLINIC_QR_COOLDOWN_HOURS } from '@/lib/loyalty-qr';
 
 export default function AdminScanQrPage() {
   const handlePrint = () => {
@@ -44,7 +44,7 @@ export default function AdminScanQrPage() {
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             اطبع هذا الرمز وعلّقه في العيادة — عندما يقرأه المريض من تطبيقه تُضاف{' '}
-            {CLINIC_QR_POINTS} نقطتان إلى محفظته.
+            {CLINIC_QR_POINTS} نقطتان إلى محفظته مرة واحدة كل {CLINIC_QR_COOLDOWN_HOURS} ساعة.
           </p>
         </div>
       </div>
@@ -70,7 +70,7 @@ export default function AdminScanQrPage() {
       </div>
 
       <div className="mt-4 text-xs text-gray-500 leading-relaxed">
-        ملاحظة: الرمز ثابت ولا يتغيّر. كل عملية قراءة ناجحة تضيف {CLINIC_QR_POINTS} نقطتين للمحفظة.
+        ملاحظة: الرمز ثابت ولا يتغيّر. كل مريض يستطيع قراءة الرمز مرة واحدة فقط كل {CLINIC_QR_COOLDOWN_HOURS} ساعة.
       </div>
     </div>
   );
