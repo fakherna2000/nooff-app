@@ -305,6 +305,7 @@ export const UI_TEXT_GROUPS: UiTextGroup[] = [
       { key: 'booking.continue', label: 'زر متابعة', default: 'متابعة' },
       { key: 'booking.sending', label: 'نص أثناء الإرسال', default: 'جاري الإرسال...' },
       { key: 'booking.submit', label: 'زر الإرسال', default: 'إرسال الطلب' },
+      { key: 'booking.slot_taken', label: 'رسالة الوقت المحجوز', default: '⚠️ هذا الوقت محجوز لدى الطبيب، الرجاء اختيار وقت آخر' },
     ],
   },
 ];

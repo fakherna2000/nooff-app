@@ -42,6 +42,12 @@ export async function POST(
     .eq('id', params.id);
 
   if (error) {
+    if ((error as any).code === '23505') {
+      return NextResponse.json(
+        { error: 'هذا الوقت محجوز لدى نفس الطبيب' },
+        { status: 409 },
+      );
+    }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

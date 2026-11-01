@@ -255,8 +255,14 @@ export default function AdminAppointmentsPage() {
                                     toast.error(data.error || 'تعذّر تأكيد الموعد');
                                   }
                                 } else {
-                                  await updateAppointment(appt.id, { status: newStatus as any });
-                                  toast.success('تم تحديث الحالة');
+                                  try {
+                                    await updateAppointment(appt.id, { status: newStatus as any });
+                                    toast.success('تم تحديث الحالة');
+                                  } catch {
+                                    toast.error('هذا الوقت محجوز لدى نفس الطبيب');
+                                    refresh();
+                                    return;
+                                  }
                                 }
                                 refresh();
                               }}
@@ -551,8 +557,13 @@ function NewAppointmentModal({
             disabled={!patientId || saving}
             onClick={async () => {
               setSaving(true);
-              await onSave(patientId, date, time, duration, type, notes);
-              setSaving(false);
+              try {
+                await onSave(patientId, date, time, duration, type, notes);
+              } catch {
+                toast.error('هذا الوقت محجوز لدى نفس الطبيب');
+              } finally {
+                setSaving(false);
+              }
             }}
           >
             {saving ? (

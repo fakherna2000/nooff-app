@@ -270,6 +270,20 @@ linear-gradient(135deg,#d8c0a7,#855f43);box-shadow:0 18px 38px rgba(92,63,38,.2)
 .post-mini .m-discount small{font-size:12px;font-weight:800;color:var(--text-2);margin-right:4px}
 .post-mini .thumb{width:78px;height:78px;border-radius:18px;object-fit:cover;flex:0 0 78px;background:#e2e8f0}
 .posts-empty{padding:26px 10px;text-align:center;color:#94a3b8;font-weight:700}
+.post-mini.is-clickable{cursor:pointer}
+.partners-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:8px}
+.partner-card{background:rgba(255,251,247,.92);border:1px solid rgba(255,255,255,.95);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+.partner-media{height:160px;background:
+radial-gradient(circle at top left,rgba(255,255,255,.28),transparent 34%),
+linear-gradient(180deg,rgba(58,39,26,.05),rgba(58,39,26,.28)),
+linear-gradient(135deg,#d8c0a7,#855f43);background-size:cover;background-position:center}
+.partner-body{padding:16px}
+.partner-badge{display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;background:#f6ecdf;color:var(--brand-2);font-size:11px;font-weight:900;margin-bottom:10px}
+.partner-title{font-size:18px;font-weight:900;color:var(--text);line-height:1.4}
+.partner-desc{font-size:13px;color:var(--text-2);margin-top:6px;line-height:1.8}
+.partner-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+.partner-order{font-size:11px;color:var(--text-3);font-weight:800}
+.partner-link{min-width:110px;text-decoration:none}
 
 .profile-shell{padding-top:6px}
 .profile-page-title{font-size:26px;font-weight:900;color:var(--text);text-align:center;margin-top:6px}
@@ -355,8 +369,8 @@ linear-gradient(135deg,#9a7758,#5e4028);box-shadow:0 20px 42px rgba(103,73,44,.2
 .tx-points.minus{color:var(--rose)}
 
 .nav{position:fixed;inset:auto 0 0 0;z-index:50;padding:0 12px calc(env(safe-area-inset-bottom) + 10px);background:linear-gradient(180deg,rgba(248,241,232,.18),rgba(248,241,232,.76) 24%,rgba(255,252,247,.94));backdrop-filter:saturate(160%) blur(22px);-webkit-backdrop-filter:saturate(160%) blur(22px)}
-.nav-inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:10px;border-radius:26px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.8);box-shadow:0 -10px 30px rgba(104,73,45,.1)}
-.tab{appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:9px 4px 8px;color:#8b7b68;font-weight:800;font-size:10.8px;border-radius:16px;transition:color .12s ease, background .15s ease, transform .08s ease;font-family:inherit}
+.nav-inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:9px;border-radius:26px;border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.8);box-shadow:0 -10px 30px rgba(104,73,45,.1)}
+.tab{appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:9px 2px 8px;color:#8b7b68;font-weight:800;font-size:10.2px;border-radius:16px;transition:color .12s ease, background .15s ease, transform .08s ease;font-family:inherit}
 .tab svg{width:22px;height:22px}
 .tab.active{color:var(--brand-2);background:linear-gradient(180deg,rgba(213,192,168,.4),rgba(213,192,168,.12));transform:translateY(-2px)}
 .tab:active{transform:scale(.98)}
@@ -584,11 +598,11 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
           <div class="q-desc" data-noof-text="home.quick.dental_desc">ابتسامة صحية وجميلة</div>
         </div>
       </button>
-      <button class="quick-card" type="button" data-prefill-type="تنظيف">
+      <button class="quick-card" type="button" data-nav="partners">
         <div class="quick-card-media" id="homeServiceBeautyCard"></div>
         <div class="quick-card-body">
-          <div class="q-title" data-noof-text="home.quick.beauty_title">التجميل</div>
-          <div class="q-desc" data-noof-text="home.quick.beauty_desc">بشرة ناعمة وجمال طبيعي</div>
+          <div class="q-title" data-noof-text="home.quick.beauty_title">شركاؤنا</div>
+          <div class="q-desc" data-noof-text="home.quick.beauty_desc">إعلانات وعروض من شركائنا المميزين</div>
         </div>
       </button>
     </div>
@@ -610,7 +624,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         <div class="ico">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"/></svg>
         </div>
-        <div class="txt" data-noof-text="home.shortcut.loyalty">العروض المميزة</div>
+        <div class="txt" data-noof-text="home.shortcut.loyalty">مكافآتي</div>
       </button>
       <button class="shortcut-btn" type="button" data-action="call-clinic">
         <div class="ico">
@@ -839,6 +853,20 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     </div>
   </section>
 
+  <!-- ================== شركاؤنا ================== -->
+  <section class="page" data-page="partners">
+    <div class="posts-shell">
+      <div class="section-title">
+        <div><span data-noof-text="partners.title">شركاؤنا</span><small data-noof-text="partners.subtitle">إعلانات وعروض من مطاعم وصيدليات وشركاء المركز</small></div>
+        <button class="btn ghost" type="button" data-nav="home" style="padding:9px 14px;font-size:12px" data-noof-text="partners.back">رجوع</button>
+      </div>
+
+      <div class="partners-grid" id="partnersList">
+        <div class="empty" data-noof-text="partners.empty">لا توجد إعلانات شركاء حالياً</div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================== الخطة / التشخيص ================== -->
   <section class="page" data-page="treatment">
     <div class="service-page-head">
@@ -1038,11 +1066,10 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     </div>
   </section>
 
-  <!-- ================== محفظة النقاط والمكافآت ================== -->
-  <section class="page" data-page="loyalty">
+  <!-- ================== مكافآتي: المحفظة + سكان + المكافآت ================== -->
+  <section class="page" data-page="rewards">
     <div class="section-title" style="margin-top:22px">
-      <div><span data-noof-text="loyalty.title">محفظة النقاط</span><small data-noof-text="loyalty.subtitle">اكسبي نقاط واحصلي على مكافآت</small></div>
-      <button class="btn ghost" type="button" data-nav="profile" style="padding:9px 14px;font-size:12px" data-noof-text="loyalty.back">رجوع</button>
+      <div><span data-noof-text="rewards.title">مكافآتي</span><small data-noof-text="rewards.subtitle">محفظتك ومكافآتك ومسح رمز العيادة</small></div>
     </div>
 
     <div class="wallet-card">
@@ -1058,26 +1085,9 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       </div>
     </div>
 
+    <!-- سكان: مسح QR العيادة -->
     <div class="section-title">
-      <div><span data-noof-text="loyalty.rewards.title">المكافآت المتاحة</span><small data-noof-text="loyalty.rewards.subtitle">استبدلي نقاطك</small></div>
-    </div>
-    <div class="rewards-grid" id="rewardsGrid">
-      <div class="empty" data-noof-text="loyalty.loading">جاري تحميل المكافآت...</div>
-    </div>
-
-    <div class="section-title">
-      <div><span data-noof-text="loyalty.history.title">سجل النقاط</span><small data-noof-text="loyalty.history.subtitle">آخر الحركات</small></div>
-    </div>
-    <div class="card list-card" id="loyaltyTxList">
-      <div class="empty" data-noof-text="loyalty.empty">لا توجد حركات بعد</div>
-    </div>
-  </section>
-
-  <!-- ================== سكان (مسح QR العيادة) ================== -->
-  <section class="page" data-page="scan">
-    <div class="section-title" style="margin-top:22px">
       <div><span data-noof-text="scan.title">سكان</span><small data-noof-text="scan.subtitle">امسح رمز العيادة واحصل على 2 نقطة</small></div>
-      <button class="btn ghost" type="button" data-nav="profile" style="padding:9px 14px;font-size:12px" data-noof-text="scan.back">رجوع</button>
     </div>
 
     <div class="scan-shell">
@@ -1098,6 +1108,20 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       <div class="scan-actions">
         <button class="btn primary" type="button" id="scanStartBtn" data-noof-text="scan.start">ابدأ المسح</button>
       </div>
+    </div>
+
+    <div class="section-title">
+      <div><span data-noof-text="loyalty.rewards.title">المكافآت المتاحة</span><small data-noof-text="loyalty.rewards.subtitle">استبدلي نقاطك</small></div>
+    </div>
+    <div class="rewards-grid" id="rewardsGrid">
+      <div class="empty" data-noof-text="loyalty.loading">جاري تحميل المكافآت...</div>
+    </div>
+
+    <div class="section-title">
+      <div><span data-noof-text="loyalty.history.title">سجل النقاط</span><small data-noof-text="loyalty.history.subtitle">آخر الحركات</small></div>
+    </div>
+    <div class="card list-card" id="loyaltyTxList">
+      <div class="empty" data-noof-text="loyalty.empty">لا توجد حركات بعد</div>
     </div>
   </section>
 
@@ -1135,6 +1159,15 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         <line x1="3" y1="10" x2="21" y2="10"/>
       </svg>
       <span data-noof-text="nav.appointments">حجوزاتي</span>
+    </button>
+    <button class="tab" data-tab="rewards" title="مكافآتي">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="8" width="18" height="4" rx="1"/>
+        <path d="M12 8v13"/>
+        <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/>
+        <path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 11.5 5 12 8c.5-3 2-5 4.5-5a2.5 2.5 0 0 1 0 5"/>
+      </svg>
+      <span data-noof-text="nav.rewards">مكافآتي</span>
     </button>
     <button class="tab active" data-tab="home" title="الرئيسية">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1184,6 +1217,13 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     </div>
 
     <div class="booking-pane hidden" id="bookingPane2">
+      <div class="modal-field">
+        <label data-noof-text="booking.doctor_label">اختر الطبيب</label>
+        <div class="service-options" id="doctorOptions"></div>
+      </div>
+    </div>
+
+    <div class="booking-pane hidden" id="bookingPane3">
       <div class="modal-field">
         <label data-noof-text="booking.day_label">اختر اليوم</label>
         <div class="date-slots" id="dateQuickChips"></div>
@@ -1372,6 +1412,14 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     tip: 'نصيحة',
     general: 'منشور'
   };
+
+  function partnerCategoryLabel(category) {
+    if (category === 'restaurant') return T('partners.badge.restaurant', 'مطعم');
+    if (category === 'pharmacy') return T('partners.badge.pharmacy', 'صيدلية');
+    if (category === 'lab') return T('partners.badge.lab', 'مختبر');
+    if (category === 'store') return T('partners.badge.store', 'متجر');
+    return T('partners.badge.other', 'شريك');
+  }
 
   var MONTHS_AR = ['كانون الثاني','شباط','آذار','نيسان','أيار','حزيران','تموز','آب','أيلول','تشرين الأول','تشرين الثاني','كانون الأول'];
   var DAYS_AR = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
@@ -1625,6 +1673,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     );
 
     applyUiTexts();
+    if (typeof renderPartners === 'function') renderPartners();
   }
 
   function loadClinicSettings() {
@@ -1714,6 +1763,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   // ================== الخدمات الديناميكية ==================
   var SERVICES = [];
   var DOCTORS = [];
+  var PARTNERS = [];
   var SERVICE_CATEGORY_ORDER = { dental: 0, beauty: 1 };
 
   function loadServices() {
@@ -1817,6 +1867,57 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
 
     container.innerHTML = html;
     section.classList.add('visible');
+  }
+
+  function loadPartners() {
+    return sbFetchSafe('/rest/v1/partner_ads?is_active=eq.true&select=*&order=sort_order.asc')
+      .then(function(rows) {
+        PARTNERS = Array.isArray(rows) ? rows : [];
+        renderPartners();
+      })
+      .catch(function() {
+        PARTNERS = [];
+        renderPartners();
+      });
+  }
+
+  function renderPartners() {
+    var list = document.getElementById('partnersList');
+    if (!list) return;
+
+    if (!PARTNERS.length) {
+      list.innerHTML = '<div class="empty">' + T('partners.empty', 'لا توجد إعلانات شركاء حالياً') + '</div>';
+      return;
+    }
+
+    var html = '';
+    PARTNERS.forEach(function(partner, idx) {
+      var mediaStyle = partner.image_url
+        ? 'background-image:url(' + escapeHtml(partner.image_url) + ');'
+        : '';
+      var cta = '';
+      if (partner.target_url) {
+        cta =
+          '<a class="btn primary partner-link" href="' + escapeHtml(partner.target_url) + '" target="_blank" rel="noopener noreferrer">' +
+          escapeHtml(partner.cta_label || T('partners.cta_fallback', 'عرض التفاصيل')) +
+          '</a>';
+      }
+
+      html += '<article class="partner-card">' +
+        '<div class="partner-media" style="' + mediaStyle + '"></div>' +
+        '<div class="partner-body">' +
+          '<div class="partner-badge">' + escapeHtml(partnerCategoryLabel(partner.category)) + '</div>' +
+          '<div class="partner-title">' + escapeHtml(partner.title) + '</div>' +
+          '<div class="partner-desc">' + escapeHtml(partner.description || '') + '</div>' +
+          '<div class="partner-footer">' +
+            '<div class="partner-order">#' + String(idx + 1) + '</div>' +
+            cta +
+          '</div>' +
+        '</div>' +
+      '</article>';
+    });
+
+    list.innerHTML = html;
   }
 
   function loadLoyalty() {
@@ -2240,6 +2341,50 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   };
   var selectedBookingCategory = 'dental';
   var currentBookingStep = 1;
+  var selectedDoctorId = '';
+
+  // خيارات اختيار الطبيب في نافذة الحجز
+  function renderDoctorOptions() {
+    var wrap = document.getElementById('doctorOptions');
+    if (!wrap) return;
+    var html = '<button class="service-option" type="button" data-doctor="">' +
+      '<div class="service-option-body">' +
+        '<div class="service-option-title">' + T('booking.doctor_any', 'أي طبيب متاح') + '</div>' +
+        '<div class="service-option-desc">' + T('booking.doctor_any_desc', 'سيحدد المركز الطبيب المناسب لك') + '</div>' +
+      '</div>' +
+      '<div class="service-option-radio"></div>' +
+    '</button>';
+    (DOCTORS || []).forEach(function(d) {
+      var name = d.name ? escapeHtml(String(d.name)) : 'الطبيب';
+      var specialty = d.specialty ? escapeHtml(String(d.specialty)) : '';
+      html += '<button class="service-option" type="button" data-doctor="' + (d.id || '') + '">' +
+        '<div class="service-option-body">' +
+          '<div class="service-option-title">' + name + '</div>' +
+          (specialty ? '<div class="service-option-desc">' + specialty + '</div>' : '') +
+        '</div>' +
+        '<div class="service-option-radio"></div>' +
+      '</button>';
+    });
+    wrap.innerHTML = html;
+    setSelectedDoctor(selectedDoctorId);
+  }
+
+  function setSelectedDoctor(id) {
+    selectedDoctorId = id || '';
+    var wrap = document.getElementById('doctorOptions');
+    if (!wrap) return;
+    wrap.querySelectorAll('.service-option').forEach(function(btn) {
+      btn.classList.toggle('active', (btn.getAttribute('data-doctor') || '') === selectedDoctorId);
+    });
+  }
+
+  function doctorNameById(id) {
+    if (!id) return '';
+    for (var i = 0; i < (DOCTORS || []).length; i++) {
+      if (DOCTORS[i].id === id) return DOCTORS[i].name || '';
+    }
+    return '';
+  }
 
   function urlBase64ToUint8Array(base64String) {
     var padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -2595,6 +2740,8 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       else if (d < now) { statusClass = 'done'; statusLabel = 'منتهي'; rightLabel = 'تم'; }
       var icon = (a.type || '').indexOf('بشرة') !== -1 || (a.type || '').indexOf('بوتكس') !== -1 || (a.type || '').indexOf('فيلر') !== -1 ? '✨' : '🦷';
       var badgeClass = statusClass === 'blue' ? 'requested' : statusClass;
+      var docName = doctorNameById(a.doctor_id);
+      var doctorLine = docName ? escapeHtml(docName) : (a.notes && a.notes.indexOf('إعادة جدولة') !== -1 ? 'طلب إعادة جدولة' : 'موعد لدى المركز');
       html += '<div class="appt-card-modern">' +
         '<div class="appt-card-top">' +
           '<div>' +
@@ -2604,7 +2751,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
           '<div class="appt-card-icon">' + icon + '</div>' +
         '</div>' +
         '<div class="appt-card-service">' + (a.type || 'فحص') + '</div>' +
-        '<div class="appt-card-doctor">' + (a.notes && a.notes.indexOf('إعادة جدولة') !== -1 ? 'طلب إعادة جدولة' : 'موعد لدى المركز') + '</div>' +
+        '<div class="appt-card-doctor">' + doctorLine + '</div>' +
         '<div class="appt-card-badge ' + badgeClass + '">' + statusLabel + '</div>' +
         ((statusClass === 'coming' || statusClass === 'blue') ? '<div class="appt-card-actions"><button class="appt-mini-btn ghost" type="button" data-action="reschedule">' + T('appointments.reschedule', 'إعادة جدولة') + '</button></div>' : '') +
       '</div>';
@@ -2667,11 +2814,14 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       return;
     }
     var featured = POSTS.find(function(p){ return p.type === 'offer' || p.type === 'ad'; }) || POSTS[0];
+    var actionBtn = featured.type === 'ad'
+      ? '<button class="offers-hero-btn" type="button" data-post-nav="partners">' + T('partners.open', 'فتح الإعلان') + '</button>'
+      : '<button class="offers-hero-btn" type="button" data-action="new-appt">' + T('posts.banner.button', 'احجز الآن') + '</button>';
     hero.innerHTML =
       '<span class="offers-kicker">' + (TYPE_LABELS[featured.type] || 'عرض خاص') + '</span>' +
       '<div class="offers-hero-title">' + featured.title + '</div>' +
       '<div class="offers-hero-desc">' + featured.body + '</div>' +
-      '<button class="offers-hero-btn" type="button" data-action="new-appt">' + T('posts.banner.button', 'احجز الآن') + '</button>';
+      actionBtn;
   }
 
   function buildPostsList() {
@@ -2682,18 +2832,19 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       return;
     }
     function extractDiscount(post) {
+      if (post.type === 'ad') return 'شريك';
       var text = (post.title || '') + ' ' + (post.body || '');
       var match = text.match(/(\d+)\s*%/);
       return match ? match[1] + '%' : 'عرض';
     }
     var html = '';
     POSTS.forEach(function(p) {
-      html += '<div class="post-mini">' +
+      html += '<div class="post-mini' + (p.type === 'ad' ? ' is-clickable' : '') + '"' + (p.type === 'ad' ? ' data-post-nav="partners"' : '') + '>' +
         '<div class="post-mini-arrow">‹</div>' +
         '<div class="m-body">' +
           '<div class="m-title">' + p.title + '</div>' +
           '<div class="m-desc">' + p.body + '</div>' +
-          '<div class="m-discount">' + extractDiscount(p) + '<small>خصم</small></div>' +
+          '<div class="m-discount">' + extractDiscount(p) + '<small>' + (p.type === 'ad' ? 'إعلان' : 'خصم') + '</small></div>' +
         '</div>' +
         '<img class="thumb" src="' + p.image + '" alt="" loading="lazy" />' +
       '</div>';
@@ -2745,15 +2896,17 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     currentBookingStep = step;
     var pane1 = document.getElementById('bookingPane1');
     var pane2 = document.getElementById('bookingPane2');
+    var pane3 = document.getElementById('bookingPane3');
     if (pane1) pane1.classList.toggle('hidden', step !== 1);
     if (pane2) pane2.classList.toggle('hidden', step !== 2);
+    if (pane3) pane3.classList.toggle('hidden', step !== 3);
     document.querySelectorAll('.booking-step').forEach(function(el){
       var stepNum = Number(el.getAttribute('data-step') || '1');
-      el.classList.toggle('active', stepNum === step || (step === 2 && stepNum >= 3 && stepNum <= 4));
+      el.classList.toggle('active', stepNum === step || (step === 3 && stepNum === 4));
       el.classList.toggle('done', stepNum < step);
     });
     if (apptPrevBtn) apptPrevBtn.textContent = step === 1 ? T('booking.cancel', 'إلغاء') : T('booking.prev', 'رجوع');
-    if (submitApptBtn) submitApptBtn.textContent = step === 1 ? T('booking.next', 'التالي') : T('booking.continue', 'متابعة');
+    if (submitApptBtn) submitApptBtn.textContent = step === 3 ? T('booking.submit', 'إرسال الطلب') : T('booking.next', 'التالي');
   }
 
   function renderDateSlots(baseDate) {
@@ -2808,9 +2961,10 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     showToast._t = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
   };
   var switchTab = function(id){
-    if (id !== 'scan' && SCAN.running) stopScan();
+    if (id !== 'rewards' && SCAN.running) stopScan();
     pages.forEach(function(p){ p.classList.toggle('active', p.dataset.page === id); });
     tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.tab === id); });
+    if (id === 'rewards') loadLoyalty();
     if (PATIENT) updateNotifUI();
     if (window.scrollTo) window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -2829,6 +2983,24 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
 
   var scanStartBtn = document.getElementById('scanStartBtn');
   if (scanStartBtn) scanStartBtn.addEventListener('click', toggleScan);
+
+  var postsBannerEl = document.getElementById('postsBanner');
+  if (postsBannerEl) {
+    postsBannerEl.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-post-nav]');
+      if (!btn) return;
+      if (btn.dataset.postNav === 'partners') switchTab('partners');
+    });
+  }
+
+  var postsListEl = document.getElementById('postsList');
+  if (postsListEl) {
+    postsListEl.addEventListener('click', function(e){
+      var card = e.target.closest('[data-post-nav]');
+      if (!card) return;
+      if (card.dataset.postNav === 'partners') switchTab('partners');
+    });
+  }
 
   var rewardsGridEl = document.getElementById('rewardsGrid');
   if (rewardsGridEl) {
@@ -2877,6 +3049,10 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   document.querySelectorAll('[data-nav]').forEach(function(item){
     item.addEventListener('click', function(){
       var target = item.dataset.nav;
+      if (target === 'home') {
+        switchTab('home');
+        return;
+      }
       if (target === 'appointments') {
         switchTab('appointments');
         return;
@@ -2885,13 +3061,16 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         switchTab('posts');
         return;
       }
+      if (target === 'partners') {
+        switchTab('partners');
+        return;
+      }
       if (target === 'loyalty') {
-        switchTab('loyalty');
-        loadLoyalty();
+        switchTab('rewards');
         return;
       }
       if (target === 'scan') {
-        switchTab('scan');
+        switchTab('rewards');
         return;
       }
       if (target === 'profile') {
@@ -3032,6 +3211,11 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     setSelectedType(selectedType);
     renderDateSlots(tomorrow);
     renderTimeSlots();
+    selectedDoctorId = '';
+    renderDoctorOptions();
+    if (!DOCTORS.length) {
+      loadDoctors().then(function(){ renderDoctorOptions(); });
+    }
     setBookingStep(1);
     apptModal.classList.remove('hidden');
   }
@@ -3044,7 +3228,16 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   if (apptPrevBtn) {
     apptPrevBtn.addEventListener('click', function(){
       if (currentBookingStep === 1) closeApptModal();
-      else setBookingStep(1);
+      else setBookingStep(currentBookingStep - 1);
+    });
+  }
+
+  var doctorOptionsWrap = document.getElementById('doctorOptions');
+  if (doctorOptionsWrap) {
+    doctorOptionsWrap.addEventListener('click', function(e){
+      var chip = e.target.closest('.service-option');
+      if (!chip) return;
+      setSelectedDoctor(chip.getAttribute('data-doctor') || '');
     });
   }
 
@@ -3095,6 +3288,10 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       setBookingStep(2);
       return;
     }
+    if (currentBookingStep === 2) {
+      setBookingStep(3);
+      return;
+    }
     var dateVal = apptDateInput.value;
     var timeVal = apptTimeInput.value;
     if (!dateVal) { showToast('⚠️ الرجاء اختيار التاريخ'); return; }
@@ -3115,6 +3312,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       duration_minutes: 30,
       type: selectedType,
       notes: notes,
+      doctor_id: selectedDoctorId || null,
       status: 'requested'
     });
 
@@ -3128,6 +3326,11 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       },
       body: body
     }).then(function(r){
+      if (r.status === 409) {
+        var slotErr = new Error('slot-taken');
+        slotErr.slotTaken = true;
+        throw slotErr;
+      }
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     }).then(function(){
@@ -3137,6 +3340,10 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     }).then(function(){
       renderPatient();
     }).catch(function(err){
+      if (err && err.slotTaken) {
+        showToast(T('booking.slot_taken', '⚠️ هذا الوقت محجوز لدى الطبيب، الرجاء اختيار وقت آخر'));
+        return;
+      }
       showToast('❌ فشل إرسال الطلب، حاول مرة أخرى');
     }).finally(function(){
       submitApptBtn.disabled = false;
@@ -3234,7 +3441,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     showLogin();
   });
 
-  Promise.all([loadClinicSettings(), loadServices(), loadDoctors()]).finally(autoLogin);
+  Promise.all([loadClinicSettings(), loadServices(), loadDoctors(), loadPartners()]).finally(autoLogin);
 
   // تجديد تلقائي للرمز قبل انتهاء صلاحيته للحفاظ على تسجيل الدخول
   setInterval(function() {

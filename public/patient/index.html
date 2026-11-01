@@ -3326,6 +3326,11 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       },
       body: body
     }).then(function(r){
+      if (r.status === 409) {
+        var slotErr = new Error('slot-taken');
+        slotErr.slotTaken = true;
+        throw slotErr;
+      }
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     }).then(function(){
@@ -3335,6 +3340,10 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
     }).then(function(){
       renderPatient();
     }).catch(function(err){
+      if (err && err.slotTaken) {
+        showToast(T('booking.slot_taken', '⚠️ هذا الوقت محجوز لدى الطبيب، الرجاء اختيار وقت آخر'));
+        return;
+      }
       showToast('❌ فشل إرسال الطلب، حاول مرة أخرى');
     }).finally(function(){
       submitApptBtn.disabled = false;
