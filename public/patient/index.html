@@ -690,7 +690,6 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       <div class="appt-big">الأحد 12 تشرين الأول</div>
       <div class="appt-sub">الساعة 5:30 مساءً — متابعة وتقويم</div>
       <div class="btn-row">
-        <button class="btn ghost-rose" data-action="reschedule" data-noof-text="home.appt.reschedule">إعادة جدولة</button>
         <button class="btn primary" data-action="confirm" data-noof-text="home.appt.confirm">تأكيد الحضور</button>
       </div>
     </div>
@@ -817,9 +816,6 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
           <div class="appt-card-service">تنظيف الأسنان</div>
           <div class="appt-card-doctor">سمر العبد</div>
           <div class="appt-card-badge coming">موعد مؤكد</div>
-          <div class="appt-card-actions">
-            <button class="appt-mini-btn ghost" type="button" data-action="reschedule">إعادة جدولة</button>
-          </div>
         </div>
       </div>
 
@@ -2786,7 +2782,6 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
         '<div class="appt-card-service">' + (a.type || 'فحص') + '</div>' +
         '<div class="appt-card-doctor">' + doctorLine + '</div>' +
         '<div class="appt-card-badge ' + badgeClass + '">' + statusLabel + '</div>' +
-        ((statusClass === 'coming' || statusClass === 'blue') ? '<div class="appt-card-actions"><button class="appt-mini-btn ghost" type="button" data-action="reschedule">' + T('appointments.reschedule', 'إعادة جدولة') + '</button></div>' : '') +
       '</div>';
     });
     if (rows.length === 0) {
