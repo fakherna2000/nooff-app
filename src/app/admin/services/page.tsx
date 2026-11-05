@@ -23,6 +23,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 const emptyForm = {
   title: '',
   description: '',
+  full_content: '',
   category: 'dental' as 'dental' | 'beauty',
   image_url: '',
   is_active: true,
@@ -69,6 +70,7 @@ export default function AdminServicesPage() {
     setForm({
       title: service.title,
       description: service.description || '',
+      full_content: service.full_content || '',
       category: service.category,
       image_url: service.image_url || '',
       is_active: service.is_active,
@@ -121,6 +123,7 @@ export default function AdminServicesPage() {
       const payload = {
         title: form.title.trim(),
         description: form.description.trim() || null,
+        full_content: form.full_content.trim() || null,
         category: form.category,
         image_url: form.image_url.trim() || null,
         is_active: form.is_active,
@@ -321,12 +324,22 @@ export default function AdminServicesPage() {
               </div>
 
               <div>
-                <label className="label">الوصف</label>
+                <label className="label">الوصف المختصر</label>
                 <textarea
-                  className="input min-h-[90px] resize-y"
+                  className="input min-h-[80px] resize-y"
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                  placeholder="وصف قصير يظهر تحت اسم الخدمة"
+                  placeholder="وصف قصير يظهر في القائمة"
+                />
+              </div>
+
+              <div>
+                <label className="label">تفاصيل الخدمة الكاملة</label>
+                <textarea
+                  className="input min-h-[160px] resize-y"
+                  value={form.full_content}
+                  onChange={(e) => setForm((f) => ({ ...f, full_content: e.target.value }))}
+                  placeholder="التفاصيل الكاملة التي تظهر عند الضغط على الخدمة"
                 />
               </div>
 

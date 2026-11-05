@@ -194,6 +194,7 @@ export const UI_TEXT_GROUPS: UiTextGroup[] = [
       { key: 'treatment.diagnosis.title', label: 'التشخيص — العنوان', default: 'تشخيص الطبيب' },
       { key: 'treatment.diagnosis.subtitle', label: 'التشخيص — الوصف', default: 'تفاصيل الحالة الحالية' },
       { key: 'treatment.diagnosis.note', label: 'التشخيص — الملاحظة', default: 'للتواصل مع الطبيب حول التشخيص، يرجى حجز موعد أو الاتصال بالعيادة.' },
+      { key: 'services.no_details', label: 'تنبيه لا توجد تفاصيل', default: 'لا توجد تفاصيل إضافية لهذه الخدمة حالياً.' },
     ],
   },
   {

@@ -35,6 +35,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     updates.title = title;
   }
   if (body.description !== undefined) updates.description = body.description || null;
+  if (body.full_content !== undefined) updates.full_content = body.full_content || null;
   if (body.image_url !== undefined) updates.image_url = body.image_url || null;
   if (body.is_active !== undefined) updates.is_active = !!body.is_active;
   if (body.sort_order !== undefined) updates.sort_order = Math.trunc(Number(body.sort_order)) || 0;

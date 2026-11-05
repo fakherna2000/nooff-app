@@ -1005,11 +1005,22 @@ export function usePosts() {
       });
     }
     const online = await checkOnline();
-    if (online) {
-      const synced = await syncPostsWithServer(supabase);
-      if (synced.length > 0) return synced;
+    if (!online) {
+      return await getAllPostsOffline();
     }
-    return await getAllPostsOffline();
+
+    const res = await fetch('/api/admin/posts', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(json.error || 'فشل تحميل المنشورات');
+    }
+
+    const posts = (json.data || []) as Post[];
+    await savePostsOffline(posts);
+    return posts;
   }, []);
 
   const getPublishedPosts = useCallback(async (): Promise<Post[]> => {
@@ -1047,13 +1058,14 @@ export function usePosts() {
         DEMO_POSTS.unshift(newPost);
         return newPost;
       }
-      const { data, error } = await supabase
-        .from('posts')
-        .insert(postData)
-        .select()
-        .single();
-      if (error) throw error;
-      return data as Post;
+      const res = await fetch('/api/admin/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || 'فشل إنشاء المنشور');
+      return json.data as Post;
     },
     []
   );
@@ -1072,14 +1084,14 @@ export function usePosts() {
         }
         throw new Error('المنشور غير موجود');
       }
-      const { data, error } = await supabase
-        .from('posts')
-        .update(postData)
-        .eq('id', id)
-        .select()
-        .single();
-      if (error) throw error;
-      return data as Post;
+      const res = await fetch(`/api/admin/posts/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || 'فشل تحديث المنشور');
+      return json.data as Post;
     },
     []
   );
@@ -1090,8 +1102,12 @@ export function usePosts() {
       if (idx >= 0) DEMO_POSTS.splice(idx, 1);
       return { error: null };
     }
-    const { error } = await supabase.from('posts').delete().eq('id', id);
-    if (error) throw error;
+    const res = await fetch(`/api/admin/posts/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(json.error || 'فشل حذف المنشور');
   }, []);
 
   return {

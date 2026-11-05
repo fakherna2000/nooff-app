@@ -58,6 +58,7 @@ export async function POST(request: Request) {
     .insert({
       title,
       description: body.description || null,
+      full_content: body.full_content || null,
       category,
       image_url: body.image_url || null,
       is_active: body.is_active !== false,

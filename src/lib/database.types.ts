@@ -408,6 +408,7 @@ export interface Database {
           id: string;
           title: string;
           description: string | null;
+          full_content: string | null;
           category: 'dental' | 'beauty';
           image_url: string | null;
           is_active: boolean;
@@ -419,6 +420,7 @@ export interface Database {
           id?: string;
           title: string;
           description?: string | null;
+          full_content?: string | null;
           category?: 'dental' | 'beauty';
           image_url?: string | null;
           is_active?: boolean;
@@ -430,6 +432,7 @@ export interface Database {
           id?: string;
           title?: string;
           description?: string | null;
+          full_content?: string | null;
           category?: 'dental' | 'beauty';
           image_url?: string | null;
           is_active?: boolean;

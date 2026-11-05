@@ -187,6 +187,16 @@ radial-gradient(circle at top left,rgba(255,255,255,.28),transparent 34%),
 linear-gradient(180deg,rgba(58,39,26,.04),rgba(58,39,26,.24)),
 linear-gradient(135deg,#d8c0a6,#8b6547);box-shadow:var(--shadow-soft);position:relative}
 .service-item-thumb::after{content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.22);border-radius:inherit}
+.service-item.is-clickable{cursor:pointer}
+.service-details-head{display:flex;align-items:center;gap:14px;margin:4px 2px 14px}
+.service-details-head .back-btn{width:36px;height:36px;border-radius:12px;background:#f3ebe1;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--text);padding:0;flex-shrink:0}
+.service-details-head h2{font-size:24px;font-weight:900;color:var(--text)}
+.service-detail-hero{height:180px;border-radius:30px;overflow:hidden;background-size:cover;background-position:center;margin-bottom:18px;border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow)}
+.service-detail-content{background:rgba(255,251,247,.92);border-radius:30px;padding:22px;border:1px solid rgba(255,255,255,.95);box-shadow:var(--shadow)}
+.service-detail-category{display:inline-flex;padding:6px 12px;border-radius:999px;background:#f6ecdf;color:var(--brand-2);font-size:12px;font-weight:900;margin-bottom:12px}
+.service-detail-desc{font-size:15px;color:var(--text-2);line-height:1.7;font-weight:700;margin-bottom:14px}
+.service-detail-full{font-size:14px;color:var(--text);line-height:1.8;margin-top:14px;white-space:pre-wrap}
+.service-detail-actions{margin-top:24px}
 
 .list-card{padding:8px 16px}
 .list-item{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(232,220,203,.75)}
@@ -968,6 +978,27 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           <span data-noof-text="treatment.diagnosis.note">للتواصل مع الطبيب حول التشخيص، يرجى حجز موعد أو الاتصال بالعيادة.</span>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================== تفاصيل الخدمة ================== -->
+  <section class="page" data-page="service-details">
+    <div class="service-details-head">
+      <button class="btn ghost back-btn" type="button" data-nav="treatment">‹</button>
+      <h2 id="serviceDetailTitle">تفاصيل الخدمة</h2>
+    </div>
+
+    <div class="service-detail-hero" id="serviceDetailHero"></div>
+
+    <div class="service-detail-content container">
+      <div class="service-detail-category" id="serviceDetailCategory"></div>
+      <div class="service-detail-desc" id="serviceDetailDesc"></div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+      <div class="service-detail-full" id="serviceDetailFull"></div>
+
+      <div class="service-detail-actions">
+        <button class="btn primary w-full" type="button" id="serviceDetailBookBtn">احجز موعد لهذه الخدمة</button>
       </div>
     </div>
   </section>
@@ -1775,7 +1806,7 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       var thumbStyle = s.image_url
         ? 'background-image:url(' + s.image_url + ');background-size:cover;background-position:center;'
         : 'background:linear-gradient(145deg,#e8dbc9,#bea07e)';
-      html += '<div class="service-item">' +
+      html += '<div class="service-item is-clickable" data-service-id="' + s.id + '">' +
         '<div class="service-item-arrow">‹</div>' +
         '<div class="service-item-body">' +
           '<div class="service-item-title">' + escapeHtml(s.title) + '</div>' +
@@ -1785,6 +1816,41 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
       '</div>';
     });
     container.innerHTML = html;
+  }
+
+  function openServiceDetails(id) {
+    var service = SERVICES.find(function(s) { return s.id === id; });
+    if (!service) return;
+
+    document.getElementById('serviceDetailTitle').textContent = service.title;
+    document.getElementById('serviceDetailCategory').textContent = service.category === 'beauty' ? 'التجميل' : 'طب الأسنان';
+    document.getElementById('serviceDetailDesc').textContent = service.description || '';
+    document.getElementById('serviceDetailFull').textContent = service.full_content || T('services.no_details', 'لا توجد تفاصيل إضافية لهذه الخدمة حالياً.');
+
+    var hero = document.getElementById('serviceDetailHero');
+    if (service.image_url) {
+      hero.style.backgroundImage = 'url(' + service.image_url + ')';
+      hero.style.display = 'block';
+    } else {
+      hero.style.display = 'none';
+    }
+
+    var bookBtn = document.getElementById('serviceDetailBookBtn');
+    if (bookBtn) {
+      bookBtn.onclick = function() {
+        // تحديد التصنيف والخدمة في مودال الحجز
+        selectedBookingCategory = service.category === 'beauty' ? 'beauty' : 'dental';
+        if (typeof renderServiceOptions === 'function') renderServiceOptions();
+
+        openApptModal(false);
+        if (typeof setSelectedType === 'function') {
+          setSelectedType(service.title);
+          setBookingStep(2); // الانتقال للخطوة التالية (اختيار الطبيب)
+        }
+      };
+    }
+
+    switchTab('service-details');
   }
 
   function loadDoctors() {
@@ -2937,6 +3003,16 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
   };
   tabs.forEach(function(t){ t.addEventListener('click', function(){ switchTab(t.dataset.tab); }); });
 
+  var servicesListCard = document.getElementById('servicesListCard');
+  if (servicesListCard) {
+    servicesListCard.addEventListener('click', function(e) {
+      var item = e.target.closest('.service-item');
+      if (item && item.dataset.serviceId) {
+        openServiceDetails(item.dataset.serviceId);
+      }
+    });
+  }
+
   var apptFilterWrap = document.getElementById('appointmentsFilter');
   if (apptFilterWrap) {
     apptFilterWrap.addEventListener('click', function(e){
@@ -3055,7 +3131,9 @@ linear-gradient(180deg,rgba(255,248,240,.08),rgba(67,44,28,.18));pointer-events:
             infoCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         }, 120);
+        return;
       }
+      switchTab(target);
     });
   });
 
